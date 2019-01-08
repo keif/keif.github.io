@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'gatsby'
 
 import styles from './header.module.scss'
-console.log(styles)
+
 const Header = ({ siteTitle }) => (
   <header className={styles.header}>
     <h1>
