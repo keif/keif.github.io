@@ -1,43 +1,69 @@
-import React from 'react'
-import { Link } from 'gatsby'
+import React from "react";
+import { graphql } from "gatsby";
+import Layout from "../components/layout";
 
-import Layout from '../components/layout'
-import Container from '../components/container'
+import Intro from "../components/Intro";
+import Links from "../blocks/Link";
+import Featured from "../blocks/Featured";
 
-export default () => (
+const IndexPage = ({ data }) => (
   <Layout>
-    <Container>
-      <h1>Hi! I'm building a fake Gatsby site as part of a tutorial!</h1>
-      <p>
-        What do I like to do? Lots of course but definitely enjoy building
-        websites.
-      </p>
-      <Link to="/contact/">Contact</Link>
-      <Link to="/about/">About</Link>
-      <div>
-        <h1>Richard Hamming on Luck</h1>
-        <div>
-          <p>
-            From Richard Hamming’s classic and must-read talk, “
-            <a href="http://www.cs.virginia.edu/~robins/YouAndYourResearch.html">
-              You and Your Research
-            </a>
-            ”.
-          </p>
-          <blockquote>
-            <p>
-              There is indeed an element of luck, and no, there isn’t. The
-              prepared mind sooner or later finds something important and does
-              it. So yes, it is luck.{' '}
-              <em>
-                The particular thing you do is luck, but that you do something
-                is not.
-              </em>
-            </p>
-          </blockquote>
-        </div>
-        <p>Posted April 09, 2011</p>
-      </div>
-    </Container>
+    <Intro />
+    <Featured>
+      <Featured.Text>
+        <h3>Featured article</h3>
+        <p>
+          
+        </p>
+        <Links to="/blog">Read more articles</Links>
+      </Featured.Text>
+      {data.allMarkdownRemark.edges.map(post => (
+        <Featured.Container key={post.node.id}>
+          <Featured.Content>
+            <Featured.Link key={post.node.id} to={post.node.frontmatter.path}>
+              <h2>{post.node.frontmatter.title}</h2>
+            </Featured.Link>
+            <h5>
+              Posted on {post.node.frontmatter.date} -{" "}
+              {post.node.frontmatter.category}
+            </h5>
+            <p>{post.node.excerpt}</p>
+          </Featured.Content>
+          <Featured.Image
+            style={{
+              backgroundImage: `url(${post.node.frontmatter.url})`,
+              backgroundSize: "cover"
+            }}
+          />
+        </Featured.Container>
+      ))}
+    </Featured>
   </Layout>
-)
+);
+
+export const pageQuery = graphql`
+  query IndexQuery {
+    allMarkdownRemark(
+      limit: 1
+      sort: { fields: [frontmatter___date], order: DESC }
+      filter: { frontmatter: { featured: { eq: true } } }
+    ) {
+      edges {
+        node {
+          excerpt(pruneLength: 150)
+          id
+          frontmatter {
+            title
+            path
+            published
+            date
+            category
+            url
+          }
+        }
+      }
+    }
+  }
+`;
+
+export default IndexPage;

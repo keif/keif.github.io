@@ -1,51 +1,39 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
-import { StaticQuery, graphql } from 'gatsby'
+import React from "react";
+import Helmet from "react-helmet";
+import PropTypes from "prop-types";
+import favIcon from "../assets/favicon.png";
+import Navigation from "./Navigation";
+import "../assets/app.css";
 
-import Header from './header'
-import './layout.css'
+require("prismjs/themes/prism-solarizedlight.css");
+require("typeface-raleway");
+require("typeface-roboto-slab");
 
-const Layout = ({ children }) => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
-          }
+const TemplateWrapper = ({ children }) => (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "100%",
+      gridTemplateRows: "60px 1fr auto"
+    }}
+  >
+    <Helmet
+      title="Keith Baker - Developer and Digital Engineer"
+      meta={[
+        { name: "description", content: "Keith Baker - Developer and Digital Engineer" },
+        {
+          name: "keywords",
+          content:
+            "front-end, design, developer, minimal, gatsby, keith, baker, ecommerce, web development"
         }
-      }
-    `}
-    render={data => (
-      <>
-        <Helmet
-          title={data.site.siteMetadata.title}
-          meta={[
-            { name: 'description', content: 'Sample' },
-            { name: 'keywords', content: 'sample, something' },
-          ]}
-        >
-          <html lang="en" />
-        </Helmet>
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
-          style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '0px 1.0875rem 1.45rem',
-            paddingTop: 0,
-          }}
-        >
-          {children}
-        </div>
-      </>
-    )}
-  />
-)
+      ]}
+      link={[{ rel: "shortcut icon", type: "image/png", href: `${favIcon}` }]}
+    >
+      <html lang="en" />
+    </Helmet>
+    <Navigation />
+    {children}
+  </div>
+);
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
-
-export default Layout
+export default TemplateWrapper;

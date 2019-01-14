@@ -1,31 +1,24 @@
 {
-  "name": "keif.github.io",
-  "description": "Personal Website for Keith Baker",
-  "version": "0.0.0",
+  "name": "gatbsy-based-blog",
+  "description": "Gatsby default starter based blog",
+  "version": "1.0.0",
   "author": "Keith Baker <keith@baker.af>",
   "dependencies": {
-    "gatsby": "^2.0.85",
-    "gatsby-image": "^2.0.25",
-    "gatsby-plugin-manifest": "^2.0.13",
-    "gatsby-plugin-offline": "^2.0.20",
-    "gatsby-plugin-postcss": "^2.0.2",
-    "gatsby-plugin-react-helmet": "^3.0.5",
-    "gatsby-plugin-sass": "^2.0.7",
-    "gatsby-plugin-sharp": "^2.0.17",
-    "gatsby-plugin-typography": "^2.2.4",
-    "gatsby-source-filesystem": "^2.0.12",
-    "gatsby-transformer-sharp": "^2.1.10",
-    "node-sass": "^4.11.0",
-    "postcss-preset-env": "^6.5.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "babel-jest": "^23.4.2",
+    "babel-plugin-styled-components": "^1.5.1",
+    "gatsby": "next",
+    "gatsby-plugin-react-helmet": "next",
+    "gatsby-source-filesystem": "next",
+    "prismjs": "^1.15.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-helmet": "^5.2.0",
-    "react-typography": "^0.16.18",
-    "typography": "^0.16.18",
-    "typography-theme-bootstrap": "^0.16.18",
-    "typography-theme-fairy-gates": "^0.15.11",
-    "typography-theme-lawton": "^0.15.10",
-    "typography-theme-us-web-design-standards": "^0.16.18"
+    "react-typography": "^0.16.13",
+    "styled-components": "^3.2.3",
+    "typeface-raleway": "^0.0.54",
+    "typeface-roboto-slab": "^0.0.54",
+    "typography": "^0.16.17"
   },
   "keywords": [
     "gatsby"
@@ -33,19 +26,32 @@
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "develop": "gatsby develop",
-    "start": "npm run develop",
-    "format": "prettier --write \"src/**/*.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write 'src/**/*.js'",
+    "test": "jest --config jest.config.js --no-cache"
   },
   "devDependencies": {
-    "gh-pages": "^2.0.1",
-    "prettier": "^1.15.3",
-    "sass": "^1.15.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "5.3.0",
+    "eslint-config-airbnb": "17.0.0",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-import": "2.13.0",
+    "eslint-plugin-jest": "21.21.0",
+    "eslint-plugin-jsx-a11y": "6.1.1",
+    "eslint-plugin-prettier": "2.6.2",
+    "eslint-plugin-react": "7.10.0",
+    "expect-puppeteer": "3.2.0",
+    "gatsby-plugin-styled-components": "next",
+    "gatsby-plugin-typography": "next",
+    "gatsby-plugin-webpack-bundle-analyzer": "^0.1.1",
+    "gatsby-remark-prismjs": "next",
+    "gatsby-transformer-remark": "next",
+    "jest": "23.5.0",
+    "jest-config": "23.5.0",
+    "jest-puppeteer": "3.2.1",
+    "prettier": "1.14.2",
+    "puppeteer": "1.7.0",
+    "typography-theme-ocean-beach": "^0.15.11"
   }
 }
