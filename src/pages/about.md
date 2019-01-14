@@ -1,0 +1,39 @@
+---
+path: "/about"
+title: "Who, What, When, Where, and Maybe Why"
+page: true
+---
+
+Hello, my name is Keith, and welcome to yet another about page. Over the years, I've held a wide variety of titles, which really has made them ultimately useless. Previous titles include: Web Developer, Web Architect, Solutions Architect, Hope Consultant, Sales Consultant, and Digital Engineer.
+
+## Code Played With:
+
+* JavaScript
+    * [VanillaJS](http://vanilla-js.com/) - the #1 JavaScript Framework used by every major internet property
+    * [Angular 2](https://angular.io/)
+    * [Angular 1.x](https://angularjs.org/)
+    * [jQuery](https://jquery.com/) (in its various iterations)
+    * [jQuery UI](https://jqueryui.com/), because evidently it deserves its own line
+    * [MooTools](https://mootools.net/)
+    * [Dojo](https://dojotoolkit.org/)
+    * [Node.JS](https://nodejs.org/en/)
+* HTML (Yes, XHTML, and HTML5)
+* CSS (Yes, CSS 2 and 3)
+* Java (which is different than JavaScript, recruiters)
+* PHP
+    * [CodeIgniter](https://codeigniter.com/)
+    * [Laravel](https://laravel.com/)
+    * [Zend](http://www.zend.com/)
+    * [WordPress](https://wordpress.com/)
+* MySQL, MSSQL, MongoDB, Redis, NOSQL, etc. etc.
+* .net (both old school ASP.net and newer MVC)
+* XML/XSLT
+* Ruby
+* Gulp
+* Grunt
+
+Point being, I work in technology, I’ve had to delve into different programming paradigms as the client/project called for it. I have no qualms about having to be handed a new technology and learn it, or worse, handed an outdated legacy project and being asked, “can you fix this? We don’t want to upgrade…” - and that’s the first time I becamse acquainted with TinyInt in databases. Primary Key was a TinyInt. It hit the max and just stopped updating.
+
+### Special Thanks
+
+After working with Gatsby, React, and GraphQL, [Stefan Ivić](https://stefanivic.com/) pointed me to his github repo to help me jumpstart my blog!
