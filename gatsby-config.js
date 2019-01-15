@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: "Personal blog"
+    title: 'Personal blog',
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -8,35 +8,49 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/src/posts`,
-        name: `posts`
-      }
+        name: `posts`,
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/src/pages`,
-        name: `about`
-      }
+        name: `about`,
+      },
     },
     {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
           {
+            resolve: 'gatsby-remark-embed-gist',
+            options: {
+              username: 'keif',
+              includeDefaultCss: true,
+            },
+          },
+          {
             resolve: `gatsby-remark-prismjs`,
-            classPrefix: "language-",
+            classPrefix: 'language-',
             inlineCodeMarker: null,
-            aliases: {}
-          }
-        ]
-      }
+            aliases: {},
+          },
+        ],
+      },
     },
     `gatsby-plugin-styled-components`,
     {
       resolve: `gatsby-plugin-typography`,
       options: {
-        pathToConfigModule: `src/utils/typography.js`
-      }
-    }
-  ]
-};
+        pathToConfigModule: `src/utils/typography.js`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        useMozJpeg: false,
+        stripMetadata: true,
+      },
+    },
+  ],
+}
