@@ -16,9 +16,12 @@ But who has time for that? In that time, three new JavaScript frameworks were re
 
 ## What this script does:
 - for my needs, it checks out `develop` and pulls to be sure it's up to date
-- create a branch `test-merge`
+- create a branch `test-merge` that is appended with the day/month/seconds
 - we reference a `branches.txt` file that holds the branches (each branch on a new line)
-- for each branch, we merge (using `refs/remotes/origin/` so we don't need to check out each branch locally)
+- for each branch:
+  - strip out any `# comments` and trim white space
+  - verify that it's not an emptry string
+  - we merge (using `refs/remotes/origin/` so we don't need to check out each branch locally)
 - output "SUCCESS" or "FAIL" to `build-result.txt`
 - output the content of `build-result.txt`
 - we grep against the file to check if "FAIL" is present
