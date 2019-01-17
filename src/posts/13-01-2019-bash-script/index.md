@@ -14,13 +14,15 @@ It's not an ideal scenario, but utilizing Jenkins, the task is fairly easy in th
 
 But who has time for that? In that time, three new JavaScript frameworks were released, and one failed, and the other already replaced Angular!
 
+Also, as the code example lives in a gist - my entry may not always match the code (which will be the most up-to-date version).
+
 ## What this script does:
 - for my needs, it checks out `develop` and pulls to be sure it's up to date
 - create a branch `test-merge` that is appended with the day/month/seconds
 - we reference a `branches.txt` file that holds the branches (each branch on a new line)
 - for each branch:
-  - strip out any `# comments` and trim white space
-  - verify that it's not an emptry string
+  - ignores any `# comments`
+  - fetches the branch
   - we merge (using `refs/remotes/origin/` so we don't need to check out each branch locally)
 - output "SUCCESS" or "FAIL" to `build-result.txt`
 - output the content of `build-result.txt`
