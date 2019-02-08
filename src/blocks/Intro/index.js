@@ -19,6 +19,7 @@ const IntroSection = styled.section`
     align-self: flex-start;
   }
   blockquote {
+    border: 4px solid rgb(221, 57, 15);
     margin-left: 0.7rem;
     padding-left: 1rem;
   }
