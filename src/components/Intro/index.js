@@ -8,7 +8,7 @@ const Intro = () => (
     <IntroSection.Wrapper>
       <IntroSection.Heading>Keith Baker</IntroSection.Heading>
       <IntroSection.SubHeading>
-        Web consultant, hobbyist, father.
+        Troubleshooter, *Maker, Innovator, Consultant, Father.
       </IntroSection.SubHeading>
       <Common.Text>
         <blockquote>"Once you stop learning, you start dying."</blockquote>

@@ -1,10 +1,10 @@
 *::selection {
-    background: #dd390f;
-    color: white;
+    background: #39FF14;
+    color: hsla(200,0%,0%,.7);
 }
 *::-moz-selection {
-    background: #dd390f;
-    color: white;
+    background: #39FF14;
+    color: hsla(200,0%,0%,.7);
 }
 /**
  * Add back the container background-color, border-radius, padding, margin

@@ -14,10 +14,14 @@ const IntroSection = styled.section`
     z-index: -1;
     margin-top: -60px;
   }
+  padding: 60px 0 30px 0;
   a {
     align-self: flex-start;
   }
-  padding: 60px 0 30px 0;
+  blockquote {
+    margin-left: 0.7rem;
+    padding-left: 1rem;
+  }
 `;
 
 IntroSection.Wrapper = Wrapper;
