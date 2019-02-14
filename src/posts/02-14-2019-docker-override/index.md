@@ -26,7 +26,7 @@ To get up and running, I didn't need to do any configuration changes, no command
 
 I brought the containers up - and my original problem I was trying to solved - was complete! I was back in `development` again!
 
-NOTE: _To start a normal environment run `docker-compose up -d`_ - this will skip the `docker-compose.override.yml` file!
+NOTE: _To start a normal environment run `docker-compose up -f docker-compose.yml`_ - this will skip the `docker-compose.override.yml` file!
 
 ## First mistakes
 
@@ -38,4 +38,4 @@ Now, as we've moved forward, there's been talk of additional `docker-compose` fi
 
 ## Additional compose files
 
-This gives birth to additional `docker-compose.whatever.yml` files! So we can (in the future) point to different environments or snapshots and execute them via: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+This gives birth to additional `docker-compose.whatever.yml` files! So we can (in the future) point to different environments or snapshots and execute them via: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up`
