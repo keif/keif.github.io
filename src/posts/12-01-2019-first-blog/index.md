@@ -14,7 +14,8 @@ I opted for Gatsby.js - since it is based in React and GraphQL, it seemed a litt
 
 This will serve as both my guide and my todo list, and growth. You know, like LiveJournal only with less teen angst.
 
-## To Do/Planned Projects:
+## To Do/Planned Projects
+
 * List out GitHub repositories, gists, etc.
 * Create a planned project listing
 * Work on posting demos/tutorial code
@@ -24,7 +25,8 @@ This will serve as both my guide and my todo list, and growth. You know, like Li
 * Documenting Angular2 code I’ve been working with (Directives, pipes, general thoughts).
 * Dig into Wayground (Ruby)
 
-## Things to checkout for inspiration:
+## Things to checkout for inspiration
+
 * [Project Euler](https://projecteuler.net/)
 * [99 Scala Problems](http://aperiodic.net/phil/scala/s-99/) _because I’ve wanted to learn Scala forever_
 * [Reddit: Daily Programmer](http://www.reddit.com/r/dailyprogrammer)
@@ -37,9 +39,8 @@ This will serve as both my guide and my todo list, and growth. You know, like Li
 
 ## GitHub Resources
 
-_As I continue to learn, I’ll probably maintain a list of useful links here, as well as Delicious.com_
-
 * [User, Organization, and Project Pages](https://help.github.com/articles/user-organization-and-project-pages/)
 
 ## Resources
+
 [Markdown Basics](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)
