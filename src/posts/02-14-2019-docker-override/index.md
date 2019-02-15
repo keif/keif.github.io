@@ -32,7 +32,7 @@ NOTE: _To start a normal environment run `docker-compose up -f docker-compose.ym
 
 I didn't think it through - I copied the _entire_ file. I was worried it would drop certain properties. This was unnecessary, and creates a maintenance issue - if they change a property in the main `docker-compose.yml` mine would override it! So I pruned the `docker-compose.override.yml` down to the bare minimums - just the `image:` paths pointing to `:develop`
 
-Through my pairing down, I also discovered that they look at the `version: 0.0` number in both files - if they don't match, it'll throw an error and fail - an ideal scenario since I also added the `docker-compose.override.yml` to `.gitignore` so as long as our developers maintaining the main `docker-compose` file keep it updated, it will make sure any override/extend file will fail and say it needs to be updated as well!
+Through my pairing down, I also discovered that they look at the `version: x.x` number in both files - if they don't match, it'll throw an error and fail.
 
 Now, as we've moved forward, there's been talk of additional `docker-compose` files being necessary. And no one wants to maintain their local `docker-compose.yml` file and change which image it posts to, and not accidentally commit those changes. No matter how rad a developer you are - accidents happen, and we want to minimize the ownership of the group of people who might accidentally break that file.
 
