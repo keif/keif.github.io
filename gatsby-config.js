@@ -7,15 +7,22 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `${__dirname}/src/posts`,
-                name: `posts`,
+                path: `${__dirname}/src/pages`,
+                name: `about`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `${__dirname}/src/pages`,
-                name: `about`,
+                path: `${__dirname}/src/images`,
+                name: `images`,
+            },        
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                path: `${__dirname}/src/posts`,
+                name: `posts`,
             },
         },
         {
@@ -52,5 +59,13 @@ module.exports = {
                 stripMetadata: true,
             },
         },
+        `gatsby-remark-copy-linked-files`,
+        {
+            resolve: `gatsby-remark-images`,
+            options: {
+                maxWidth: 1080,
+            },
+        },
+        `gatsby-transformer-sharp`,
     ],
 };
