@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Layout from '../components/layout';
-import BlogPage from '../blocks/Post';
+import Layout from "../components/layout";
+import BlogPage from "../blocks/Post";
 
-import { graphql } from 'gatsby';
+import { graphql } from "gatsby";
 
 export default function Template({ data }) {
     const { markdownRemark: post } = data;
@@ -15,7 +15,7 @@ export default function Template({ data }) {
                 <BlogPage.Info>
                     <BlogPage.Date>{post.frontmatter.date}</BlogPage.Date>
                     <BlogPage.Data>
-                        {post.timeToRead} {post.timeToRead > 1 ? 'minutes' : 'minute'} read time
+                        {post.timeToRead} {post.timeToRead > 1 ? "minutes" : "minute"} read time
                         <span>-</span>
                         {post.frontmatter.category}
                     </BlogPage.Data>
