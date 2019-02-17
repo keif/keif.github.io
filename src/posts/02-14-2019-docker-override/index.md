@@ -5,7 +5,7 @@ published: true
 date: "14th February, 2019."
 featured: true
 category: Code
-url: https://images.pexels.com/photos/247791/pexels-photo-247791.png?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260
+cover_image: "./docker.png"
 ---
 
 An inherent problem I've ran into at my day job is the necessity to point to different versions of images. Ideally, these images would be tagged, so we could, say, point to each image of a release, or timestamp, or a build. Currently, they don't do that (priorities of different groups, and all that).
