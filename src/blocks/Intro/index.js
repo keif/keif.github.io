@@ -14,10 +14,13 @@ const IntroSection = styled.section`
     z-index: -1;
     margin-top: -60px;
   }
+
   padding: 60px 0 30px 0;
+
   a {
     align-self: flex-start;
   }
+
   blockquote {
     border-left: 4px solid rgb(221, 57, 15);
     margin-left: 0.7rem;

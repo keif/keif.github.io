@@ -1,24 +1,24 @@
 import styled from "styled-components";
 
 const Title = styled.h1`
-  font-weight: normal;
-  position: relative;
-  color: #696969;
   &:after {
+    background-color: #dd390f;
     content: "";
     display: block;
-    width: 100%;
     height: 3px;
-    max-width: 120px;
-    background-color: #dd390f;
     margin: 20px 0 50px;
+    max-width: 120px;
+    width: 100%;
   }
+  color: #696969;
+  font-weight: normal;
+  position: relative;
 `;
 
 const Text = styled.p`
-  max-width: 700px;
-  margin-bottom: 0;
   color: #696969;
+  margin-bottom: 0;
+  max-width: 960px;
 `;
 
 const Container = styled.div`

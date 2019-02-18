@@ -4,13 +4,13 @@ const Typo = styled.div``;
 
 const IntroHeading = styled.h1`
   position: relative;
-  max-width: 800px;
+  max-width: 1080px;
   margin-bottom: 0;
   color: #dd390f;
 `;
 const IntroSubHeading = styled.h1`
   position: relative;
-  max-width: 800px;
+  max-width: 1080px;
   margin-bottom: 0;
   color: #696969;
   &:after {
