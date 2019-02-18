@@ -33,11 +33,11 @@ const IndexPage = ({ data }) => (
                             backgroundSize: "cover",
                         }}
                     >
-                    {post.node.frontmatter.cover_image &&
-                      post.node.frontmatter.cover_image.childImageSharp &&
-                      post.node.frontmatter.cover_image.childImageSharp.fluid &&
-                      <Img fluid={post.node.frontmatter.cover_image.childImageSharp.fluid} />
-                    }
+                        {post.node.frontmatter.cover_image &&
+                            post.node.frontmatter.cover_image.childImageSharp &&
+                            post.node.frontmatter.cover_image.childImageSharp.fluid && (
+                                <Img fluid={post.node.frontmatter.cover_image.childImageSharp.fluid} />
+                            )}
                     </Featured.Image>
                 </Featured.Container>
             ))}
@@ -50,7 +50,7 @@ export const pageQuery = graphql`
         allMarkdownRemark(
             limit: 1
             sort: { fields: [frontmatter___date], order: DESC }
-            filter: { frontmatter: { featured: { eq: true } } }
+            filter: { frontmatter: { featured: { eq: true }, published: { eq: true } } }
         ) {
             edges {
                 node {
@@ -63,12 +63,12 @@ export const pageQuery = graphql`
                         date
                         category
                         cover_image {
-                          publicURL
-                          childImageSharp {
-                            fluid(maxWidth: 1080, quality: 100) {
-                              ...GatsbyImageSharpFluid_noBase64
+                            publicURL
+                            childImageSharp {
+                                fluid(maxWidth: 1080, quality: 100) {
+                                    ...GatsbyImageSharpFluid_noBase64
+                                }
                             }
-                          }
                         }
                         url
                     }
