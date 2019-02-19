@@ -39,3 +39,18 @@ Now, as we've moved forward, there's been talk of additional `docker-compose` fi
 ## Additional compose files
 
 This gives birth to additional `docker-compose.whatever.yml` files! So we can (in the future) point to different environments or snapshots and execute them via: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up`
+
+### What does `-f` do?
+
+From the [docker docs](https://docs.docker.com/compose/reference/overview/):
+
+```
+Options:
+  -f, --file FILE             Specify an alternate compose file
+                              (default: docker-compose.yml)
+```
+
+`docker-compose` runs with `docker-compose.yml` and `docker-compose.override.yml`
+`docker-compose -f` says “don’t do that, use this file” or in the case of multiple `-f` bombs, “use these files” (take note - each `.yml` file has to be preceded by a `-f`, a la `-f docker-compose.yml -f docker-compose.release.yml`).
+
+If you have a `docker-compose.override.yml` and you don't want to deal with removing it/stashing it - you can make it ignored on execution by running `docker-compose -f docker-compose.yml` (or whatever `.yml` file you want).
