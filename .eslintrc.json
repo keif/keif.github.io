@@ -1,15 +1,16 @@
 {
   "root": true,
-  "extends": ["airbnb", "plugin:prettier/recommended"],
-  "settings": {
-    "import/core-modules": ["gatsby"]
+  "env": {
+    "jest": true
   },
+  "extends": ["airbnb", "plugin:prettier/recommended"],
   "globals": {
     "graphql": true,
     "page": true,
     "browser": true,
     "jestPuppeteer": true
   },
+  "plugins": ["prettier"],
   "rules": {
     "jsx-a11y/anchor-is-valid": [
       "error",
@@ -19,10 +20,14 @@
         "aspects": ["noHref", "invalidHref", "preferButton"]
       }
     ],
+    "no-trailing-spaces": "warn",
+    "prettier/prettier": ["error"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
     "react/jsx-one-expression-per-line": [0, { "allow": "none" }]
   },
-  "env": {
-    "jest": true
+  "settings": {
+    "import/core-modules": ["gatsby"]
   }
 }
