@@ -1,11 +1,11 @@
 import React from "react";
 import { graphql } from "gatsby";
+import Img from "gatsby-image";
 import Layout from "../components/layout";
 
 import Intro from "../components/Intro";
 import Links from "../blocks/Link";
 import Featured from "../blocks/Featured";
-import Img from "gatsby-image";
 
 const IndexPage = ({ data }) => (
     <Layout>
