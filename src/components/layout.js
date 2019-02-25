@@ -30,7 +30,7 @@ const TemplateWrapper = ({ children }) => (
                     content: "ojxzHz13Q3TNqNO0VsnyxLDpDb1NL1FIMMQG0GwIIqc",
                 },
             ]}
-        link={[{ rel: "shortcut icon", type: "image/png", href: `${favIcon}` }]}
+            link={[{ rel: "shortcut icon", type: "image/png", href: `${favIcon}` }]}
         >
             <html lang="en" />
         </Helmet>

@@ -1,6 +1,17 @@
+const urljoin = require("url-join");
+const config = require("./data/siteConfig");
+
 module.exports = {
     siteMetadata: {
-        title: "Personal blog",
+        siteUrl: urljoin(config.siteUrl, config.pathPrefix),
+        rssMetadata: {
+            site_url: urljoin(config.siteUrl, config.pathPrefix),
+            feed_url: urljoin(config.siteUrl, config.pathPrefix, config.siteRss),
+            title: config.siteTitle,
+            description: config.siteDescription,
+            // image_url: `${urljoin(config.siteUrl, config.pathPrefix)}/logos/logo-512.png`,
+            copyright: config.copyright,
+        },
     },
     plugins: [
         `gatsby-plugin-react-helmet`,
