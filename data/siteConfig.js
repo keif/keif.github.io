@@ -42,9 +42,11 @@ const config = {
 // Make sure pathPrefix is empty if not needed
 if (config.pathPrefix === "/") {
     config.pathPrefix = "";
-} else {
+} else if (config.pathPrefix) {
     // Make sure pathPrefix only contains the first forward slash
     config.pathPrefix = `/${config.pathPrefix.replace(/^\/|\/$/g, "")}`;
+} else {
+    config.pathPrefix = `/`;
 }
 
 // Make sure siteUrl doesn't have an ending forward slash

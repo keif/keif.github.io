@@ -1,6 +1,8 @@
 const urljoin = require("url-join");
 const config = require("./data/siteConfig");
 
+const path = require(`path`);
+
 module.exports = {
     siteMetadata: {
         siteUrl: urljoin(config.siteUrl, config.pathPrefix),
@@ -18,22 +20,22 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `${__dirname}/src/pages`,
                 name: `about`,
+                path: path.join(__dirname, `src`, `pages`),
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `${__dirname}/src/images`,
                 name: `images`,
+                path: path.join(__dirname, `src`, `images`),
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `${__dirname}/src/posts`,
                 name: `posts`,
+                path: path.join(__dirname, `src`, `posts`),
             },
         },
         {
@@ -43,15 +45,24 @@ module.exports = {
                     {
                         resolve: "gatsby-remark-embed-gist",
                         options: {
-                            username: "keif",
                             includeDefaultCss: true,
+                            username: "keif",
                         },
                     },
                     {
-                        resolve: `gatsby-remark-prismjs`,
+                        resolve: `gatsby-remark-images`,
+                        options: {
+                            // It's important to specify the maxWidth (in pixels) of
+                            // the content container as this plugin uses this as the
+                            // base for generating different widths of each image.
+                            maxWidth: 590,
+                        },
+                    },
+                    {
+                        aliases: {},
                         classPrefix: "language-",
                         inlineCodeMarker: null,
-                        aliases: {},
+                        resolve: `gatsby-remark-prismjs`,
                     },
                 ],
             },
@@ -66,8 +77,8 @@ module.exports = {
         {
             resolve: `gatsby-plugin-sharp`,
             options: {
-                useMozJpeg: false,
                 stripMetadata: true,
+                useMozJpeg: false,
             },
         },
         `gatsby-remark-copy-linked-files`,
