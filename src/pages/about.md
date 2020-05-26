@@ -10,16 +10,22 @@ Hello, my name is Keith, and welcome to yet another about page. Over the years, 
 
 * JavaScript
     * [VanillaJS](http://vanilla-js.com/) - the #1 JavaScript Framework used by every major internet property
+    * [ReactJS](https://reactjs.org/) - my preferred JavaScript toolkit
+    * [React Native](https://reactnative.dev/)
     * [Angular 2](https://angular.io/)
     * [Angular 1.x](https://angularjs.org/)
+    * [Backbone](https://backbonejs.org/)
     * [jQuery](https://jquery.com/) (in its various iterations)
     * [jQuery UI](https://jqueryui.com/), because evidently it deserves its own line
     * [MooTools](https://mootools.net/)
-    * [Dojo](https://dojotoolkit.org/)
+    * [Dojo Toolkit](https://dojotoolkit.org/)
+    * [Prototype](http://prototypejs.org/)
+    * [Scriptaculous](https://script.aculo.us/)
     * [Node.JS](https://nodejs.org/en/)
 * HTML (Yes, XHTML, and HTML5)
 * CSS (Yes, CSS 2 and 3)
 * Java (which is different than JavaScript, recruiters)
+    * [Java Spring](https://spring.io/)
 * PHP
     * [CodeIgniter](https://codeigniter.com/)
     * [Laravel](https://laravel.com/)
@@ -28,11 +34,13 @@ Hello, my name is Keith, and welcome to yet another about page. Over the years, 
 * MySQL, MSSQL, MongoDB, Redis, NOSQL, etc. etc.
 * .net (both old school ASP.net and newer MVC)
 * XML/XSLT
-* Ruby
-* Gulp
-* Grunt
+* [Ruby](https://www.ruby-lang.org/en/)
+    * [Ruby on Rails](https://rubyonrails.org/)
+* Build Tools
+    * [Gulp](https://gulpjs.com/)
+    * [Grunt](https://gruntjs.com/)
 
-Point being, I work in technology, I’ve had to delve into different programming paradigms as the client/project called for it. I have no qualms about having to be handed a new technology and learn it, or worse, handed an outdated legacy project and being asked, “can you fix this? We don’t want to upgrade…” - and that’s the first time I becamse acquainted with TinyInt in databases. Primary Key was a TinyInt. It hit the max and just stopped updating.
+Point being, I work in technology, I’ve had to delve into different programming paradigms as the client/project called for it. I have no qualms about having to be handed a new technology and learn it, or worse, handed an outdated legacy project and being asked, “can you fix this? We don’t want to upgrade…” - and that’s the first time I becamse acquainted with TinyInt in databases. Primary Key was a TinyInt. It hit the max and just stopped updating. So. Much. Fun.
 
 ### Special Thanks
 
