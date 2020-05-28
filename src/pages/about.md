@@ -6,6 +6,10 @@ page: true
 
 Hello, my name is Keith, and welcome to yet another about page. Over the years, I've held a wide variety of titles, which really has made them ultimately useless. Previous titles include: Web Developer, Web Architect, Solutions Architect, Hope Consultant, Sales Consultant, and Digital Engineer.
 
+I don't rank these technologies as "preferrred" or "I'm a master of" - technology constantly moves forward at a fast-pace, and one day you feel like a master, and the next day a new paradigm comes along and you feel like you're just coming to terms with it again.
+
+I define my technology knowledge as "always willing to learn more" and "never shying from a challenge" but also "never afraid to say no."
+
 ## Code Played With:
 
 * JavaScript
@@ -24,13 +28,14 @@ Hello, my name is Keith, and welcome to yet another about page. Over the years, 
     * [Node.JS](https://nodejs.org/en/)
 * HTML (Yes, XHTML, and HTML5)
 * CSS (Yes, CSS 2 and 3)
-* Java (which is different than JavaScript, recruiters)
+* [Java](https://www.java.com/en/) (which is different than JavaScript, recruiters)
     * [Java Spring](https://spring.io/)
-* PHP
+* [PHP](https://www.php.net/)
     * [CodeIgniter](https://codeigniter.com/)
     * [Laravel](https://laravel.com/)
     * [Zend](http://www.zend.com/)
     * [WordPress](https://wordpress.com/)
+* [Python](https://www.python.org/)
 * MySQL, MSSQL, MongoDB, Redis, NOSQL, etc. etc.
 * .net (both old school ASP.net and newer MVC)
 * XML/XSLT
