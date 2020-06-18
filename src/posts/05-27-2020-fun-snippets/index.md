@@ -3,7 +3,7 @@ path: "/fun-code-snippets"
 title: "Fun Code Snippets"
 published: true
 date: "27th May, 2020."
-featured: true
+featured: false
 category: Code
 cover_image: "./code.jpeg"
 ---
