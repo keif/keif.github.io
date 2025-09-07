@@ -21,11 +21,14 @@
     "astro": "^5.12.0",
     "dayjs": "^1.11.13",
     "lodash.kebabcase": "^4.1.1",
+    "react": "^19.1.1",
+    "react-share": "^5.2.2",
     "remark-collapse": "^0.1.2",
     "remark-toc": "^9.0.0",
     "satori": "^0.15.2",
     "sharp": "^0.34.2",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "url-join": "^5.0.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
