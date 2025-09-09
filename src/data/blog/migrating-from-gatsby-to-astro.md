@@ -5,7 +5,7 @@ modDatetime: 2025-09-07T04:00:00Z
 title: Migrating from Gatsby to Astro
 slug: migrating-from-gatsby-to-astro
 featured: true
-draft: false
+draft: true
 tags:
   - astro
   - gatsby
