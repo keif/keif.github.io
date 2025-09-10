@@ -1,12 +1,12 @@
 ---
-import { slugifyStr } from "@/utils/slugify";
-import type { CollectionEntry } from "astro:content";
+import { SITE } from "@/config";
 import { getPath } from "@/utils/getPath";
 import { getReadingTimeFromMarkdown } from "@/utils/readingTime";
+import { slugifyStr } from "@/utils/slugify";
+import type { CollectionEntry } from "astro:content";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { SITE } from "@/config";
+import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -18,7 +18,7 @@ export interface Props extends CollectionEntry<"blog"> {
 const { variant = "h2", data, id, filePath, body } = Astro.props;
 
 const { title, description, pubDatetime, modDatetime, timezone: postTimezone, tags = [] } = data;
-const readingTime = getReadingTimeFromMarkdown(body);
+const readingTime = getReadingTimeFromMarkdown(body || "");
 
 // Format date more simply
 const isModified = modDatetime && modDatetime > pubDatetime;
@@ -47,20 +47,20 @@ const headerProps = {
         )
       }
     </a>
-    
+
     <div class="mt-2 mb-3 flex items-center gap-2 text-sm text-muted-foreground">
       <time datetime={datetime.toISOString()}>{formattedDate}</time>
       <span class="opacity-60">•</span>
       <span>{readingTime}</span>
     </div>
-    
+
     <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
-    
+
     {
       tags.length > 0 && (
         <div class="flex flex-wrap gap-2">
           {tags.slice(0, 3).map((tag: string) => (
-            <a 
+            <a
               href={`/tags/${tag}/`}
               class="tag-pill"
             >

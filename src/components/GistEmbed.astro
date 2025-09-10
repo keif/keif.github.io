@@ -1,7 +1,15 @@
 ---
 const { id, user } = Astro.props;
+const gistSrc = `https://gist.github.com/${user}/${id}.js`;
 ---
-<script src={`https://gist.github.com/${user}/${id}.js`}></script>
-<p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
-  Note: This embedded Gist contains the most up-to-date version of the script, which may differ slightly from the explanation above.
-</p>
+<Fragment>
+  <script is:inline>
+    const script = document.createElement('script');
+    script.src = {JSON.stringify(gistSrc)};
+    document.body.appendChild(script);
+  </script>
+
+  <p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
+    Note: This embedded Gist contains the most up-to-date version of the script, which may differ slightly from the explanation above.
+  </p>
+</Fragment>
