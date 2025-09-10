@@ -1,9 +1,9 @@
 export const SITE = {
-  website: "https://keif.github.io/", // replace this with your deployed domain
+  website: "https://baker.is/", // replace this with your deployed domain
   author: "Keith Baker",
   profile: "https://github.com/keif",
   desc: "Side projects, scripts, systems, and snacks.",
-  title: "keif.github.io",
+  title: "baker.is/",
   tagline: "Side projects, scripts, systems, and snacks.",
   ogImage: "og.jpg",
   lightAndDarkMode: true,

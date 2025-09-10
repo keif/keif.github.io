@@ -4,8 +4,10 @@ import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconGitHub from "@/assets/icons/IconGitHub.svg";
 import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
 import IconMail from "@/assets/icons/IconMail.svg";
+import IconMastodon from "@/assets/icons/IconMastodon.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
+import IconThreads from "@/assets/icons/IconThreads.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import { SITE } from "@/config";
 import type { Props } from "astro";
@@ -29,6 +31,17 @@ export const SOCIALS: Social[] = [
     href: "https://bsky.app/profile/keifers.bsky.social",
     linkTitle: `${SITE.title} on Bluesky`,
     icon: IconBluesky,
+  },
+  {    name: "Mastodon",
+    href: "https://mastodon.social/@keif",
+    linkTitle: `${SITE.title} on Mastodon`,
+    icon: IconMastodon,
+  },
+  {
+    name: "Threads",
+    href: "https://threads.net/ikeif",
+    linkTitle: `${SITE.title} on Threads`,
+    icon: IconThreads,
   },
   {
     name: "X",
