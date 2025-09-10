@@ -71,7 +71,7 @@ _[Docker for Mac: https://docs.docker.com/docker-for-mac/](https://docs.docker.c
 When Docker is launched in this manner, a Docker whale icon appears in the status menu.
 Example:
 
-![Docker Status Bar Icon](./docker-status-bar.png)
+![Docker Status Bar Icon](/assets/img/docker-status-bar.png)
 
 As soon as the whale icon appears, the symbolic links for `docker`, `docker-compose`, `docker-credential-osxkeychain` and `docker-machine` are created in `/usr/local/bin`.
 
@@ -83,9 +83,9 @@ As soon as the whale icon appears, the symbolic links for `docker`, `docker-comp
 
 #### Verify Docker is Running
 
-![Docker is Starting](./docker-starting.png)
+![Docker is Starting](/assets/img/docker-starting.png)
 
-![Docker is Running](./docker-running.png)
+![Docker is Running](/assets/img/docker-running.png)
 
 #### Test Docker Works
 
