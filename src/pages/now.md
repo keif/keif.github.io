@@ -5,7 +5,7 @@ title: "Now"
 
 # What I'm up to now
 
-This is a [now page](https://nownownow.com/about), inspired by Derek Sivers.
+This is a [now page](https://nownownow.com/about), inspired by [Derek Sivers](https://sive.rs/nowff).
 
 ## Currently Working On
 
@@ -13,6 +13,7 @@ This is a [now page](https://nownownow.com/about), inspired by Derek Sivers.
 - Exploring new frameworks and tools in the JavaScript ecosystem
 - Learning more about home automation and smart home setups
 - Writing about side projects and development experiences
+- Planting, landscaping, laying pavers and figuring out concreate and woodworking
 
 ## Recent Projects
 
