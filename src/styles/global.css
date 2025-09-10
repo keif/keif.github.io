@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @import "./typography.css";
 
@@ -6,26 +7,51 @@
 :root,
 html[data-theme="light"] {
   --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --foreground: #2a2a2a;
+  --accent: #ffd78d;
+  --accent-dark: #e6c17a;
+  --accent-light: #fff8e1;
+  --muted: #f5f5f5;
+  --border: #e5e5e5;
+  --card-background: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.05);
+  --shadow-hover: rgba(0, 0, 0, 0.1);
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60;
-  --border: #ab4b08;
+  --background: #1a1a1a;
+  --foreground: #e5e5e5;
+  --accent: #ffd78d;
+  --accent-dark: #e6c17a;
+  --accent-light: #332c1f;
+  --muted: #2a2a2a;
+  --border: #404040;
+  --card-background: #242424;
+  --shadow: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(0, 0, 0, 0.3);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-light: var(--accent-light);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-card-background: var(--card-background);
+  --color-shadow: var(--shadow);
+  --color-shadow-hover: var(--shadow-hover);
+}
+
+@layer utilities {
+  .text-muted-foreground {
+    color: rgba(107, 114, 128, 1);
+  }
+  
+  .dark .text-muted-foreground {
+    color: rgba(156, 163, 175, 1);
+  }
 }
 
 @layer base {
@@ -38,7 +64,19 @@ html[data-theme="dark"] {
     @apply overflow-y-scroll scroll-smooth;
   }
   body {
-    @apply flex min-h-svh flex-col bg-background font-mono text-foreground selection:bg-accent/75 selection:text-background;
+    @apply flex min-h-svh flex-col bg-background text-foreground selection:bg-accent/30 selection:text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   }
   a,
   button {
@@ -55,11 +93,35 @@ html[data-theme="dark"] {
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-4xl;
 }
 
 .active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-4;
+}
+
+.card {
+  @apply bg-card-background border border-border rounded-xl shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+.card-hover {
+  @apply hover:transform hover:-translate-y-1;
+}
+
+.prose-headings {
+  font-family: 'Crimson Text', Georgia, serif;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2;
+}
+
+@utility btn-accent {
+  @apply bg-accent text-foreground hover:bg-accent-dark focus-visible:outline-accent;
+}
+
+.tag-pill {
+  @apply inline-flex items-center rounded-full bg-accent-light px-3 py-1 text-xs font-medium text-accent-dark border border-accent/20 hover:bg-accent/10 transition-colors;
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */

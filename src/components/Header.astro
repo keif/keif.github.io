@@ -7,6 +7,7 @@ import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
+import Socials from "./Socials.astro";
 import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
@@ -23,7 +24,7 @@ const isActive = (path: string) => {
 };
 ---
 
-<header>
+<header class="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
   <a
     id="skip-to-content"
     href="#main-content"
@@ -37,7 +38,7 @@ const isActive = (path: string) => {
   >
     <div
       id="top-nav-wrap"
-      class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"
+      class="relative flex w-full items-baseline justify-between bg-transparent p-4 sm:items-center sm:py-4"
     >
       <a
         href="/"
@@ -62,25 +63,30 @@ const isActive = (path: string) => {
         <ul
           id="menu-items"
           class:list={[
-            "mt-4 grid w-44 grid-cols-2 place-content-center gap-2",
-            "[&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium [&>li>a]:hover:text-accent sm:[&>li>a]:px-2 sm:[&>li>a]:py-1",
+            "mt-4 grid w-48 grid-cols-2 place-content-center gap-2",
+            "[&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium [&>li>a]:hover:text-accent sm:[&>li>a]:px-3 sm:[&>li>a]:py-2",
             "hidden",
-            "sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0",
+            "sm:mt-0 sm:flex sm:w-auto sm:gap-x-6 sm:gap-y-0 sm:items-center",
           ]}
         >
-          <li class="col-span-2">
+          <li class="col-span-2 sm:col-span-1">
             <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
-              Posts
+              Blog
             </a>
           </li>
-          <li class="col-span-2">
+          <li class="col-span-2 sm:col-span-1">
             <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
               Tags
             </a>
           </li>
-          <li class="col-span-2">
+          <li class="col-span-2 sm:col-span-1">
             <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
               About
+            </a>
+          </li>
+          <li class="col-span-2 sm:col-span-1">
+            <a href="/now" class:list={{ "active-nav": isActive("/now") }}>
+              Now
             </a>
           </li>
           {
@@ -103,36 +109,39 @@ const isActive = (path: string) => {
               </li>
             )
           }
-          <li class="col-span-1 flex items-center justify-center">
-            <LinkButton
-              href="/search"
-              class:list={[
-                "focus-outline flex p-3 sm:p-1",
-                { "[&>svg]:stroke-accent": isActive("/search") },
-              ]}
-              ariaLabel="search"
-              title="Search"
-            >
-              <IconSearch />
-              <span class="sr-only">Search</span>
-            </LinkButton>
-          </li>
-          {
-            SITE.lightAndDarkMode && (
-              <li class="col-span-1 flex items-center justify-center">
-                <button
-                  id="theme-btn"
-                  class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent"
-                  title="Toggles light & dark"
-                  aria-label="auto"
-                  aria-live="polite"
+          <li class="col-span-2 sm:col-span-1 flex items-center justify-center sm:justify-start">
+            <div class="flex items-center gap-2 sm:gap-1">
+              <Socials />
+              <div class="flex items-center gap-1 ml-2 sm:ml-1">
+                <LinkButton
+                  href="/search"
+                  class:list={[
+                    "focus-outline flex p-2 sm:p-1",
+                    { "[&>svg]:stroke-accent": isActive("/search") },
+                  ]}
+                  ariaLabel="search"
+                  title="Search"
                 >
-                  <IconMoon class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                  <IconSunHigh class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-                </button>
-              </li>
-            )
-          }
+                  <IconSearch class="size-5" />
+                  <span class="sr-only">Search</span>
+                </LinkButton>
+                {
+                  SITE.lightAndDarkMode && (
+                    <button
+                      id="theme-btn"
+                      class="focus-outline relative p-2 sm:p-1 hover:[&>svg]:stroke-accent"
+                      title="Toggles light & dark"
+                      aria-label="auto"
+                      aria-live="polite"
+                    >
+                      <IconMoon class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 size-5" />
+                      <IconSunHigh class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 size-5" />
+                    </button>
+                  )
+                }
+              </div>
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
