@@ -3,7 +3,7 @@ export const SITE = {
   author: "Keith Baker",
   profile: "https://github.com/keif",
   desc: "Side projects, scripts, systems, and snacks.",
-  title: "keif.dev",
+  title: "keif.github.io",
   tagline: "Side projects, scripts, systems, and snacks.",
   ogImage: "og.jpg",
   lightAndDarkMode: true,
