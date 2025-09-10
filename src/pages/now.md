@@ -26,6 +26,7 @@ This is a [now page](https://nownownow.com/about), inspired by [Derek Sivers](ht
 - Deep diving into modern CSS features and design systems
 - Exploring serverless architecture patterns
 - Reading about sustainable software development practices
+- Running through Golang, Python, writing scripts and making POCs to get used to Golang
 
 ---
 
