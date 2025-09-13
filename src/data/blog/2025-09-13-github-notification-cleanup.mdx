@@ -1,0 +1,49 @@
+---
+title: "Cleaning Up GitHub Notifications with Python"
+pubDatetime: 2025-09-13T10:00:00Z
+slug: "github-notification-cleanup"
+tags:
+  - python
+  - automation
+  - github
+description: "A Python script to automatically clean up GitHub notifications by marking closed or merged issues and pull requests as done."
+---
+import GistEmbed from '@/components/GistEmbed.astro';
+
+If you use GitHub heavily, you might find your notifications piling up with issues and pull requests that are already closed or merged. Manually clearing these notifications can be tedious and time-consuming.
+
+To solve this, I created a Python script that:
+
+- Connects to your GitHub account using a personal access token.  
+- Scans your notifications for issues and pull requests that are already closed or merged.  
+- Automatically marks these notifications as done, helping you keep your inbox clean.  
+- Provides logs so you can track what was processed.  
+
+This script can be run periodically or integrated into your workflow to keep your GitHub notifications manageable without manual effort.
+
+Here’s the full script:
+
+<GistEmbed user="keif" id="ece2fa9372d038f89a64ab14895ce462" />
+
+### Basic Usage
+
+To use the script, you can run commands like:
+
+- Mark all notifications as done:  
+  `python mark_as_done.py --all`  
+
+- Mark notifications from a specific repository:  
+  `python mark_as_done.py --repo owner/repo`  
+
+- Use a custom GitHub token:  
+  `python mark_as_done.py --token YOUR_GITHUB_TOKEN`  
+
+These options help tailor the cleanup process to your needs.
+
+### What’s New in This Version
+
+- Improved error handling to gracefully manage API issues.  
+- Added protection against GitHub rate limiting to avoid interruptions.  
+- Enhanced functionality to better detect and mark notifications as done.  
+- Improved logging for clearer insights into the cleanup process.  
+- Added a command-line interface (CLI) for easier usage and flexibility.
