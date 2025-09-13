@@ -10,11 +10,12 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import { SITE } from "@/config";
+import { getFeaturedPosts } from "@/utils/getFeaturedPosts";
 
 const posts = await getCollection("blog");
 
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const featuredPosts = await getFeaturedPosts(5);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 ---
 
