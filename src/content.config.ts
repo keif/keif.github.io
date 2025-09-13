@@ -9,18 +9,19 @@ const blog = defineCollection({
   schema: ({ image }) =>
     z.object({
       author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
-      title: z.string(),
+      canonicalURL: z.string().optional(),
+      description: z.string(),
+      draft: z.boolean().optional(),
       evergreen: z.boolean().optional(),
       featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),
+      modDatetime: z.date().optional().nullable(),
+      ogImage: image().or(z.string()).optional(),
+      pubDatetime: z.date(),
+      slug: z.string().optional(),
+      tags: z.array(z.string()).default(["others"]),
       timezone: z.string().optional(),
+      title: z.string(),
     }),
 });
 
