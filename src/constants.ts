@@ -100,4 +100,22 @@ export const SHARE_LINKS: Social[] = [
     linkTitle: `Share this post via email`,
     icon: IconMail,
   },
+  {
+    name: "Bluesky",
+    href: "https://bsky.app/intent/compose?text=",
+    linkTitle: `Share this post on Bluesky`,
+    icon: IconBluesky,
+  },
+  {
+    name: "Mastodon",
+    href: "https://mastodon.social/share?text=",
+    linkTitle: `Share this post on Mastodon`,
+    icon: IconMastodon,
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/sharing/share-offsite/?url=",
+    linkTitle: `Share this post on LinkedIn`,
+    icon: IconLinkedin,
+  },
 ] as const;
