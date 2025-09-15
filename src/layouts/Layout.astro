@@ -133,10 +133,12 @@ const structuredData = {
     <script is:inline src="/toggle-theme.js"></script>
 
     <!-- GoatCounter Analytics -->
-    <script 
-      data-goatcounter="https://baker.goatcounter.com/count"
-      async src="//baker.goatcounter.com/count.js">
-    </script>
+    {import.meta.env.PROD && (
+      <script 
+        data-goatcounter="https://baker.goatcounter.com/count"
+        async src="https://baker.goatcounter.com/count.js">
+      </script>
+    )}
   </head>
   <body>
     <slot />
