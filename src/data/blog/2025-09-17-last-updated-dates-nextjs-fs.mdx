@@ -1,0 +1,79 @@
+---
+title: "Automating 'Last Updated' Dates in Next.js with Node's fs Module"
+description: "How to eliminate human error in blog timestamps by pulling the last modified date directly from the filesystem in Next.js."
+pubDatetime: 2025-09-17T00:00:00Z
+featured: true
+slug: "last-updated-dates-nextjs-fs"
+tags: ["next.js", "node.js", "automation", "fs"]
+---
+import GistEmbed from '@/components/GistEmbed.astro';
+
+Keeping timestamps accurate on blog posts, documentation, or static pages can be a surprisingly tedious task. It's easy to forget to update a “Last Updated” line when publishing new content. That's where a little automation can save you from human error.
+
+Recently, I solved this in a Next.js project by pulling the **file's modified date** directly from the filesystem using Node's built-in `fs` module. In this scenario, it was important for one particular file to have the "date published" match the date the change is made/goes live - which in my case is usually the same day it's handed to me.
+
+## The Helper Function
+
+Here's the utility function I wrote:
+
+<GistEmbed user="keif" id="faee0f369096fd74463a7c1fda05b13e" />
+
+This does one thing: given a file path, it looks up the file's metadata and returns the last modified date in a nicely formatted string, like `September 17, 2025`.
+
+If the file doesn't exist or there's some other issue, it catches the error and returns null.
+
+## Plugging Into Next.js
+
+[Next.js](https://nextjs.org/) makes it easy to expose environment variables at build time. In `next.config.js`, I called the function and set the result as an environment variable:
+
+```js
+const { getFileTimestamp } = require('./getFileTimestamp');
+
+const filePath = './content/my-doc.md'; // wherever your source file lives
+
+const nextConfig = {
+  env: {
+    FILE_TIMESTAMP: getFileTimestamp(filePath),
+  },
+};
+
+module.exports = nextConfig;
+```
+
+Now, the `FILE_TIMESTAMP` is baked into the build and available throughout the app.
+
+## Using It in a Page
+
+On any page, you can grab the environment variable:
+
+```js
+const fileTimestamp = process.env.FILE_TIMESTAMP;
+```
+
+And render it in your template:
+
+```jsx
+<p>Last Updated: {fileTimestamp}</p>
+```
+
+That's it — your page will always show the true last modified date of the source file without you lifting a finger.
+
+## Why This Matters
+
+- **Zero manual updates**: Never forget to change a “last updated” date again.
+- **Single source of truth**: The filesystem metadata always reflects the reality of when a file was last changed.
+- **Low effort, high reward**: Just a few lines of code eliminate an entire class of human error.
+
+For documentation sites, blogs, or anything where freshness matters, this small utility goes a long way.
+
+## Improvement Ideas
+
+This simple utility works great as-is for my specific use-case, but there are a few ways to extend or refine it:
+
+- **Support multiple files**: Instead of hardcoding a single file path, accept an array of files and return the most recently modified one. Could be useful for docs that span multiple files.
+- **Cache results**: Since filesystem lookups happen at build time, caching results in memory can speed up builds for larger projects.
+- **Handle timezones**: Right now, the date uses the system's locale. For consistency across deployments, we could explicitly set UTC or a preferred timezone.
+- **Custom formatting**: Swap out `toLocaleDateString` for libraries like [date-fns](https://date-fns.org/) or [dayjs](https://day.js.org/) for more advanced formatting options. I opted not, for simplicity.
+- **Astro integration**: This same approach works in Astro too — I could expose `getFileTimestamp` inside the `astro.config.mjs` and inject the timestamp into frontmatter or page props at build time.
+
+A small script like this can scale nicely depending on your project's needs.
