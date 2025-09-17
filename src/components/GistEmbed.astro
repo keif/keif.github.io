@@ -1,11 +1,15 @@
 ---
-const { id, user } = Astro.props;
-const gistSrc = `https://gist.github.com/${user}/${id}.js`;
+const { id, user } = Astro.props
+const gistSrc = `https://gist.github.com/${user}/${id}.js`
 ---
-<Fragment>
-  <script set:html={`document.write('<script src="${gistSrc}"><\\/script>')`}></script>
 
-  <p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
-    Note: This embedded Gist contains the most up-to-date version of the script, which may differ slightly from the explanation above.
-  </p>
+<Fragment>
+    <script set:html={`document.write('<script src="${gistSrc}"><\\/script>')`} />
+
+    <p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
+        <em
+            >Note: This embedded Gist contains the most up-to-date version of the script, which may differ slightly from
+            the explanation.</em
+        >
+    </p>
 </Fragment>
