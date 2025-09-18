@@ -1,11 +1,12 @@
 ---
 const { id, user } = Astro.props
-const gistSrc = `https://gist.github.com/${user}/${id}.js`
+const res = await fetch(`https://gist.github.com/${user}/${id}.json`)
+const { div, stylesheet } = await res.json()
 ---
 
 <Fragment>
-    <script set:html={`document.write('<script src="${gistSrc}"><\\/script>')`} />
-
+    <link rel="stylesheet" href={stylesheet} />
+    <Fragment set:html={div} />
     <p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
         <em
             >Note: This embedded Gist contains the most up-to-date version of the script, which may differ slightly from
