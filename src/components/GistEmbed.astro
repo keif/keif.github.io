@@ -15,25 +15,34 @@ const { div, stylesheet } = await res.json()
     </p>
 </div>
 
-<style>
+<style is:global>
     /* Keep gist box within layout and prevent typography plugin or theme from overriding it */
     .app-prose .gist-embed .gist {
         max-width: 100%;
         overflow: auto;
     }
 
+    .app-prose .gist-embed .gist .file {
+        margin: 0 !important;
+    }
+
     /* Kill host table borders/padding that leak into gist tables */
     .app-prose .gist-embed table,
     .app-prose .gist-embed table td,
-    .app-prose .gist-embed table td:first-child,
-    .app-prose .gist-embed table th,
-    .app-prose .gist-embed table th:first-child {
+    .app-prose .gist-embed table th {
         border: 0 !important;
         border-color: transparent !important;
         box-shadow: none !important;
-        padding: 0 !important; /* let GitHub gist CSS handle spacing */
+        padding: 1 10 !important; /* let GitHub gist CSS handle spacing */
     }
-
+    .app-prose .gist-embed table td,
+    .app-prose .gist-embed table th {
+        box-sizing: content-box !important;
+    }
+    .app-prose .gist-embed table td:first-child,
+    .app-prose .gist-embed table th:first-child {
+        border-right: 1px solid #e5e7eb !important;
+    }
     /* Be explicit for common GitHub gist cells */
     .app-prose .gist-embed .blob-num,
     .app-prose .gist-embed .blob-code,
