@@ -1,101 +1,96 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import Card from "@/components/Card.astro";
-import Hr from "@/components/Hr.astro";
-import getSortedPosts from "@/utils/getSortedPosts";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import { SITE } from "@/config";
-import { getFeaturedPosts } from "@/utils/getFeaturedPosts";
+import { getCollection } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Header from "@/components/Header.astro"
+import Footer from "@/components/Footer.astro"
+import LinkButton from "@/components/LinkButton.astro"
+import Card from "@/components/Card.astro"
+import Hr from "@/components/Hr.astro"
+import getSortedPosts from "@/utils/getSortedPosts"
+import IconRss from "@/assets/icons/IconRss.svg"
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg"
+import { SITE } from "@/config"
+import { getFeaturedPosts } from "@/utils/getFeaturedPosts"
 
-const posts = await getCollection("blog");
+const posts = await getCollection("blog")
 
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = await getFeaturedPosts(5);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const sortedPosts = getSortedPosts(posts)
+const featuredPosts = await getFeaturedPosts()
+const recentPosts = sortedPosts.filter(({ data }) => !data.featured)
 ---
 
 <Layout>
-  <Header />
-  <main id="main-content" data-layout="index">
-    <section id="hero" class="pt-12 pb-8">
-      <div class="text-center">
-        <h1 class="my-4 inline-block text-4xl font-bold sm:my-6 sm:text-6xl prose-headings">
-          {SITE.title}
-        </h1>
-        <a
-          target="_blank"
-          href="/rss.xml"
-          class="inline-block ml-3 opacity-70 hover:opacity-100 transition-opacity"
-          aria-label="rss feed"
-          title="RSS Feed"
-        >
-          <IconRss
-            width={24}
-            height={24}
-            class="stroke-accent stroke-2"
-          />
-          <span class="sr-only">RSS Feed</span>
-        </a>
-      </div>
-
-      <p class="mt-6 text-lg text-center text-muted-foreground max-w-2xl mx-auto">
-        {SITE.tagline}
-      </p>
-    </section>
-
-    <Hr />
-
-    {
-      featuredPosts.length > 0 && (
-        <>
-          <section id="featured" class="pt-12 pb-8">
-            <h2 class="text-2xl font-semibold tracking-wide prose-headings mb-6">Featured</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {featuredPosts.map(data => (
-                <Card variant="h3" {...data} />
-              ))}
+    <Header />
+    <main id="main-content" data-layout="index">
+        <section id="hero" class="pt-12 pb-8">
+            <div class="text-center">
+                <h1 class="my-4 inline-block text-4xl font-bold sm:my-6 sm:text-6xl prose-headings">
+                    {SITE.title}
+                </h1>
+                <a
+                    target="_blank"
+                    href="/rss.xml"
+                    class="inline-block ml-3 opacity-70 hover:opacity-100 transition-opacity"
+                    aria-label="rss feed"
+                    title="RSS Feed"
+                >
+                    <IconRss width={24} height={24} class="stroke-accent stroke-2" />
+                    <span class="sr-only">RSS Feed</span>
+                </a>
             </div>
-          </section>
-          {recentPosts.length > 0 && <Hr />}
-        </>
-      )
-    }
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-8">
-          <h2 class="text-2xl font-semibold tracking-wide prose-headings mb-6">Recent Posts</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {recentPosts.map(
-              (data, index) =>
-                index < SITE.postPerIndex && <Card variant="h3" {...data} />
-            )}
-          </div>
+            <p class="mt-6 text-lg text-center text-muted-foreground max-w-2xl mx-auto">
+                {SITE.tagline}
+            </p>
         </section>
-      )
-    }
 
-    <div class="my-12 text-center">
-      <LinkButton href="/posts/" class="inline-flex items-center justify-center rounded-lg bg-accent text-black hover:bg-accent-dark px-6 py-3 text-base font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-sm border border-accent-dark/20">
-        More Posts
-        <IconArrowRight class="inline-block ml-2 size-4 rtl:-rotate-180" />
-      </LinkButton>
-    </div>
-  </main>
-  <Footer />
+        <Hr />
+
+        {
+            featuredPosts.length > 0 && (
+                <>
+                    <section id="featured" class="pt-12 pb-8">
+                        <h2 class="text-2xl font-semibold tracking-wide prose-headings mb-6">Featured</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {featuredPosts.map((data) => (
+                                <Card variant="h3" {...data} />
+                            ))}
+                        </div>
+                    </section>
+                    {recentPosts.length > 0 && <Hr />}
+                </>
+            )
+        }
+
+        {
+            recentPosts.length > 0 && (
+                <section id="recent-posts" class="pt-12 pb-8">
+                    <h2 class="text-2xl font-semibold tracking-wide prose-headings mb-6">Recent Posts</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {recentPosts.map((data, index) => index < SITE.postPerIndex && <Card variant="h3" {...data} />)}
+                    </div>
+                </section>
+            )
+        }
+
+        <div class="my-12 text-center">
+            <LinkButton
+                href="/posts/"
+                class="inline-flex items-center justify-center rounded-lg bg-accent text-black hover:bg-accent-dark px-6 py-3 text-base font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-sm border border-accent-dark/20"
+            >
+                More Posts
+                <IconArrowRight class="inline-block ml-2 size-4 rtl:-rotate-180" />
+            </LinkButton>
+        </div>
+    </main>
+    <Footer />
 </Layout>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
-    if (indexLayout) {
-      sessionStorage.setItem("backUrl", "/");
-    }
-  });
+    document.addEventListener("astro:page-load", () => {
+        const indexLayout = (document.querySelector("#main-content") as HTMLElement)?.dataset?.layout
+        if (indexLayout) {
+            sessionStorage.setItem("backUrl", "/")
+        }
+    })
 </script>
