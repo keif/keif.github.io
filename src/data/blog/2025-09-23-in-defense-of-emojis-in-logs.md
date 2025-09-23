@@ -3,6 +3,7 @@ title: "In Defense of Emojis in Developer Logs"
 slug: "in-defense-of-emojis-in-logs"
 description: "AI may overuse emojis, but in developer logs they're more than decoration. Here's why ✅, ❌, ⚠️, and ℹ️ deserve a place in your terminal."
 pubDatetime: 2025-09-23T12:00:00Z
+modDatetime: 2025-09-23T6:22:00Z
 featured: true
 tags: ["logging", "developer-experience", "javascript", "cli", "productivity"]
 
@@ -62,20 +63,27 @@ I'd argue: **yes, we need them.**
 ## Why Emojis Work in Logs
 
 1.	Color Isn't Always Enough
-	Not every terminal or CI/CD environment renders color. Strip the ANSI codes away and all you've got left is plain text. Emojis remain intact and still communicate meaning.
-	```bash
-	✅ Build succeeded
-	❌ Build failed
-	⚠️  Warning: deprecated API
-	ℹ️  Info: using cached image
+
+Not every terminal or CI/CD environment renders color. Strip the ANSI codes away and all you've got left is plain text. Emojis remain intact and still communicate meaning.
+
+```bash
+✅ Build succeeded
+❌ Build failed
+⚠️  Warning: deprecated API
+ℹ️  Info: using cached image
 ```
 
-2.	Instant Pattern Recognition
-	When you're scanning hundreds of lines of output, the brain locks onto shapes faster than words. Emojis act as anchors - errors "pop" with ❌, warnings stand out with ⚠️, and successes are easy to spot with ✅.
-3.	Universality
-	Across languages and cultures, ✅ and ❌ communicate faster than "SUCCESS" or "FAILURE." Developers in Tokyo, São Paulo, or Berlin all read them the same way.
-4.	Noise Reduction, Not Noise Addition
-	Paradoxically, adding emojis reduces noise. They make the signal stronger by giving you instant "at a glance" context.
+2. Instant Pattern Recognition
+
+When you're scanning hundreds of lines of output, the brain locks onto shapes faster than words. Emojis act as anchors - errors "pop" with ❌, warnings stand out with ⚠️, and successes are easy to spot with ✅.
+
+3. Universality
+
+Across languages and cultures, ✅ and ❌ communicate faster than "SUCCESS" or "FAILURE." Developers in Tokyo, São Paulo, or Berlin all read them the same way.
+
+4. Noise Reduction, Not Noise Addition
+
+Paradoxically, adding emojis reduces noise. They make the signal stronger by giving you instant "at a glance" context.
 
 ---
 
