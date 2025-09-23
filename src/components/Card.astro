@@ -1,77 +1,67 @@
 ---
-import { SITE } from "@/config";
-import { getPath } from "@/utils/getPath";
-import { getReadingTimeFromMarkdown } from "@/utils/readingTime";
-import { slugifyStr } from "@/utils/slugify";
-import type { CollectionEntry } from "astro:content";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { SITE } from "@/config"
+import { getPath } from "@/utils/getPath"
+import { getReadingTimeFromMarkdown } from "@/utils/readingTime"
+import { slugifyStr } from "@/utils/slugify"
+import type { CollectionEntry } from "astro:content"
+import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export interface Props extends CollectionEntry<"blog"> {
-  variant?: "h2" | "h3";
+    variant?: "h2" | "h3"
 }
 
-const { variant = "h2", data, id, filePath, body } = Astro.props;
+const { variant = "h2", data, id, filePath, body } = Astro.props
 
-const { title, description, pubDatetime, modDatetime, timezone: postTimezone, tags = [] } = data;
-const readingTime = getReadingTimeFromMarkdown(body || "");
+const { title, description, pubDatetime, modDatetime, timezone: postTimezone, tags = [] } = data
+const readingTime = getReadingTimeFromMarkdown(body || "")
 
 // Format date more simply
-const isModified = modDatetime && modDatetime > pubDatetime;
-const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
-  postTimezone || SITE.timezone
-);
-const formattedDate = datetime.format("MMM D, YYYY");
+const isModified = modDatetime && modDatetime > pubDatetime
+const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(postTimezone || SITE.timezone)
+const formattedDate = datetime.format("MMM D, YYYY")
 
 const headerProps = {
-  style: { viewTransitionName: slugifyStr(title) },
-  class: "text-xl font-semibold text-foreground hover:text-accent transition-colors prose-headings group-hover:text-accent",
-};
+    style: { viewTransitionName: slugifyStr(title) },
+    class: "text-xl font-semibold text-foreground hover:text-accent transition-colors prose-headings group-hover:text-accent",
+}
 ---
 
 <article class="card card-hover group mb-3">
-  <div class="p-6">
-    <a
-      href={getPath(id, filePath)}
-      class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-    >
-      {
-        variant === "h2" ? (
-          <h2 {...headerProps}>{title}</h2>
-        ) : (
-          <h3 {...headerProps}>{title}</h3>
-        )
-      }
-    </a>
+    <div class="p-6">
+        <a
+            href={getPath(id, filePath)}
+            class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+            {variant === "h2" ? <h2 {...headerProps}>{title}</h2> : <h3 {...headerProps}>{title}</h3>}
+        </a>
 
-    <div class="mt-2 mb-3 flex items-center gap-2 text-sm text-muted-foreground">
-      <time datetime={datetime.toISOString()}>{formattedDate}</time>
-      <span class="opacity-60">•</span>
-      <span>{readingTime}</span>
-    </div>
-
-    <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
-
-    {
-      tags.length > 0 && (
-        <div class="flex flex-wrap gap-2">
-          {tags.slice(0, 3).map((tag: string) => (
-            <a
-              href={`/tags/${tag}/`}
-              class="tag-pill"
-            >
-              {tag}
-            </a>
-          ))}
-          {tags.length > 3 && (
-            <span class="text-xs text-muted-foreground">+{tags.length - 3} more</span>
-          )}
+        <div class="mt-2 mb-3 flex items-center gap-2 text-sm text-muted-foreground">
+            <time datetime={datetime.toISOString()}>
+                {isModified ? "Updated" : "Published"}
+                {formattedDate}
+            </time>
+            <span class="opacity-60">•</span>
+            <span>{readingTime}</span>
         </div>
-      )
-    }
-  </div>
+
+        <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
+
+        {
+            tags.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                    {tags.slice(0, 3).map((tag: string) => (
+                        <a href={`/tags/${tag}/`} class="tag-pill">
+                            {tag}
+                        </a>
+                    ))}
+                    {tags.length > 3 && <span class="text-xs text-muted-foreground">+{tags.length - 3} more</span>}
+                </div>
+            )
+        }
+    </div>
 </article>
