@@ -2,6 +2,8 @@
 title: "10 Git Commands Every Developer Should Know"
 description: "Practical Git commands that save you time, recover lost work, and help you debug faster. Think of this as your essential Git cheatsheet."
 pubDatetime: 2025-09-22T00:00:00Z
+modDatetime: 2025-09-22T00:00:00Z
+modPubtime: 2025-09-26T00:00:00Z
 featured: true
 slug: essential-git-commands
 tags: ["git", "cheatsheet", "developer-tools", "cli"]
@@ -25,7 +27,7 @@ git checkout -b recovery-branch <hash>
 
 ---
 
-2. git bisect – The Bug Hunter
+2. `git bisect` – The Bug Hunter
 
 You know something broke, but not when? Let Git binary search it for you.
 
@@ -38,7 +40,7 @@ git bisect good <known-good-commit>
 
 ---
 
-3. git stash --include-untracked – The Context Switcher
+3. `git stash --include-untracked` – The Context Switcher
 
 Need to switch branches but don't want to commit messy work?
 
@@ -50,7 +52,7 @@ git stash pop
 
 ---
 
-4. git cherry-pick – The Surgical Strike
+4. `git cherry-pick` – The Surgical Strike
 
 Grab just the commit(s) you want from another branch.
 
@@ -63,7 +65,7 @@ git cherry-pick <start-hash>^..<end-hash>
 
 ---
 
-5. git worktree – The Parallel Universe
+5. `git worktree` – The Parallel Universe
 
 Work on multiple branches at once in separate directories.
 
@@ -74,7 +76,7 @@ git worktree add ../feature-branch feature-branch
 
 ---
 
-6. git clean – The Janitor
+6. `git clean` – The Janitor
 
 Clear out untracked files and directories.
 Perfect for cleaning up after switching branches.
@@ -85,7 +87,7 @@ git clean -fd
 
 ---
 
-7. git shortlog – The Historian
+7. `git shortlog` – The Historian
 
 Summarize commits by author or message.
 Useful for release notes or contributor stats.
@@ -96,7 +98,7 @@ git shortlog -sn
 
 ---
 
-8. git blame – The Detective
+8. `git blame` – The Detective
 
 Find out who last touched a specific line of code.
 
@@ -106,7 +108,7 @@ git blame <file>
 
 ---
 
-9. git log --graph – The Storyteller
+9. `git log --graph` – The Storyteller
 
 Get a clean, visual commit history.
 
@@ -116,7 +118,7 @@ git log --graph --oneline --decorate --all
 
 ---
 
-10. git reset – The Undo Button
+10. `git reset` – The Undo Button
 
 Rollback commits safely, either keeping or discarding changes.
 
@@ -133,7 +135,9 @@ git reset --hard <commit>
 ## Honorable Mentions: Modern Alternatives
 
 - `git switch -c new-branch` → friendlier than `git checkout -b`
+   - Why? Because `git switch` is dedicated just to switching/creating branches, while `git checkout` is overloaded (it can also reset files, detach HEAD, etc.). This makes `switch` safer, clearer, and easier to learn.
 - `git restore <file>` → safer way to discard changes
+   - Why? Because `git restore` only affects working directory changes, while `git checkout` could also switch branches or detach `HEAD`. This narrower scope makes it less error-prone for beginners.
 
 ---
 
