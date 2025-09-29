@@ -1,0 +1,22 @@
+---
+export async function getStaticPaths() {
+  // import all your posts
+  const allPosts = Object.values(import.meta.glob('../data/blog/*.md', { eager: true }));
+  return allPosts.map((post: any) => ({
+    params: { slug: post.frontmatter.slug },
+    props: { slug: post.frontmatter.slug },
+  }));
+}
+
+const { slug } = Astro.props;
+---
+
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=/posts/${slug}`} />
+    <link rel="canonical" href={`/posts/${slug}`} />
+  </head>
+  <body>
+    Redirecting to <a href={`/posts/${slug}`}>/posts/{slug}</a>...
+  </body>
+</html>
