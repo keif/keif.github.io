@@ -22,6 +22,7 @@ const blog = defineCollection({
       tags: z.array(z.string()).default(["others"]),
       timezone: z.string().optional(),
       title: z.string(),
+      aliases: z.array(z.string()).optional(),
     }),
 });
 

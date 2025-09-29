@@ -1,22 +1,32 @@
 ---
 export async function getStaticPaths() {
-  // import all your posts
-  const allPosts = Object.values(import.meta.glob('../data/blog/*.md', { eager: true }));
-  return allPosts.map((post: any) => ({
-    params: { slug: post.frontmatter.slug },
-    props: { slug: post.frontmatter.slug },
-  }));
+  const posts = Object.values(import.meta.glob(['../data/blog/*.md', '../data/blog/*.mdx'], { eager: true }));
+  const aliasPaths = posts.flatMap((post: any) => {
+    const canonicalSlug = post.frontmatter.slug;
+    const aliases = post.frontmatter.aliases || [];
+    return aliases.map((alias: string) => ({
+      params: { slug: alias },
+      props: { canonicalSlug },
+    }));
+  });
+
+  console.log(`Total posts: ${posts.length}`);
+  console.log('frontmatters:', posts.map(p => p.frontmatter));
+  console.log(`Total alias paths: ${aliasPaths.length}`);
+  console.log("Alias paths:", aliasPaths.map(p => p.params.slug));
+
+  return aliasPaths;
 }
 
-const { slug } = Astro.props;
+const { canonicalSlug } = Astro.props;
 ---
 
 <html>
   <head>
-    <meta http-equiv="refresh" content={`0; url=/posts/${slug}`} />
-    <link rel="canonical" href={`/posts/${slug}`} />
+    <meta http-equiv="refresh" content={`0; url=/posts/${canonicalSlug}`} />
+    <link rel="canonical" href={`/posts/${canonicalSlug}`} />
   </head>
   <body>
-    Redirecting to <a href={`/posts/${slug}`}>/posts/{slug}</a>...
+    Redirecting to <a href={`/posts/${canonicalSlug}`}>{canonicalSlug}</a>…
   </body>
 </html>
