@@ -10,41 +10,85 @@ import Pagination from "@/components/Pagination.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
 import { SITE } from "@/config";
+import sanitizeTag from "@/utils/sanitizeTag";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = await getCollection("blog");
-  const tags = getUniqueTags(posts);
+    const posts = await getCollection("blog");
+    const tags = getUniqueTags(posts);
 
-  return tags.flatMap(({ tag, tagName }) => {
-    const tagPosts = getPostsByTag(posts, tag);
+    // legacy tag map for old tags to new tags
+    const legacyTagMap: Record<string, string> = {
+        "node.js": "node-js",
+    };
 
-    return paginate(tagPosts, {
-      params: { tag },
-      props: { tagName },
-      pageSize: SITE.postPerPage,
+    return tags.flatMap(({ tag: rawTag, tagName }) => {
+        const tagPosts = getPostsByTag(posts, rawTag);
+
+        // canonical sanitized slug
+        const safeTag = sanitizeTag(rawTag);
+
+        // canonical pages
+        const canonicalPages = paginate(tagPosts, {
+            params: { tag: safeTag },
+            props: { tagName },
+            pageSize: SITE.postPerPage,
+        });
+
+        // alias page (only generate if rawTag !== safeTag)
+        const aliasPages = rawTag !== safeTag ? [
+            {
+                params: { tag: rawTag },
+                props: { redirectTo: `/tags/${safeTag}/` },
+            },
+        ] : [];
+
+        // legacy aliases for old tags redirecting to new sanitized tags
+        const legacyAliases = Object.entries(legacyTagMap)
+            .filter(([oldTag, newTag]) => newTag === safeTag)
+            .map(([oldTag]) => ({
+                params: { tag: oldTag },
+                props: { redirectTo: `/tags/${safeTag}/` },
+            }));
+
+        return [...canonicalPages, ...aliasPages, ...legacyAliases];
     });
-  });
 }
 
 const params = Astro.params;
 const { tag } = params;
-const { page, tagName } = Astro.props;
+const { page, tagName, redirectTo } = Astro.props;
 ---
 
-<Layout title={`Tag: ${tagName} | ${SITE.title}`}>
-  <Header />
-  <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
-    titleTransition={tag}
-    pageDesc={`All the articles with the tag "${tagName}".`}
-  >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
-    <ul>
-      {page.data.map(data => <Card {...data} />)}
-    </ul>
-  </Main>
+{
+    redirectTo ? (
+        <html>
+            <head>
+                <meta http-equiv="refresh" content={`0; url=${redirectTo}`} />
+                <link rel="canonical" href={redirectTo} />
+            </head>
+            <body>
+                Redirecting to <a href={redirectTo}>{redirectTo}</a>…
+            </body>
+        </html>
+    ) : (
+        <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
+            <Header />
+            <Main
+                pageTitle={[`Tag:`, `${tagName}`]}
+                titleTransition={tag}
+                pageDesc={`All the articles with the tag "${tagName}".`}
+            >
+                <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
+                <ul>
+                    {page.data.map((data) => (
+                        <Card {...data} />
+                    ))}
+                </ul>
+            </Main>
 
-  <Pagination {page} />
+            <Pagination {page} />
 
-  <Footer noMarginTop={page.lastPage > 1} />
-</Layout>
+            <Footer noMarginTop={page.lastPage > 1} />
+        </Layout>
+    )
+}
