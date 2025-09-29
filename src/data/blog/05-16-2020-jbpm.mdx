@@ -41,9 +41,11 @@ If you do not have these installed already, Homebrew will attempt to install the
 
 If you'd like to install them yourself:
 
-    xcode-select --install
+```bash
+xcode-select --install
+```
 
-Alternatively, they can be downloaded from: [developer.apple.com/downloads](developer.apple.com/downloads) or the iTunes Store: [Xcode](https://itunes.apple.com/us/app/xcode/id497799835)
+Alternatively, they can be downloaded from: [developer.apple.com/downloads](https://developer.apple.com/downloads) or the iTunes Store: [Xcode](https://itunes.apple.com/us/app/xcode/id497799835)
 
 ### Homebrew
 [Homebrew: https://brew.sh/](https://brew.sh/)
@@ -51,7 +53,9 @@ Alternatively, they can be downloaded from: [developer.apple.com/downloads](deve
 #### Install Homebrew:
 (below copied from the Homebrew site):
 
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
 
 Paste that in a macOS Terminal or Linux shell prompt.
 
@@ -59,18 +63,24 @@ The script explains what it will do and then pauses before it does it.
 
 _You will probably need to close and reopen your terminal window._
 
-    $> brew --version
-    // should output:
-    Homebrew 2.2.14-14-g0404ce2
+```bash
+$> brew --version
+// should output:
+Homebrew 2.2.14-14-g0404ce2
+```
 
 (or some other more recent version)
 
 ### Docker
+
 _[Docker Installation: https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)_
+
 _[Docker for Mac: https://docs.docker.com/docker-for-mac/](https://docs.docker.com/docker-for-mac/)_
 
 #### Installation via CLI:
-    brew cask install docker
+```bash
+brew cask install docker
+```
 
 #### Launch:
 1. Press `⌘ + Space` to bring up Spotlight Search and enter Docker to launch Docker.
@@ -84,11 +94,13 @@ Example:
 
 As soon as the whale icon appears, the symbolic links for `docker`, `docker-compose`, `docker-credential-osxkeychain` and `docker-machine` are created in `/usr/local/bin`.
 
+    ```bash
     $> ls -l /usr/local/bin/docker*
     lrwxr-xr-x  1 susam  domain Users  67 Apr 12 14:14 /usr/local/bin/docker -> /Users/susam/Library/Group Containers/group.com.docker/bin/docker
     lrwxr-xr-x  1 susam  domain Users  75 Apr 12 14:14 /usr/local/bin/docker-compose -> /Users/susam/Library/Group Containers/group.com.docker/bin/docker-compose
     lrwxr-xr-x  1 susam  domain Users  90 Apr 12 14:14 /usr/local/bin/docker-credential-osxkeychain -> /Users/susam/Library/Group Containers/group.com.docker/bin/docker-credential-osxkeychain
     lrwxr-xr-x  1 susam  domain Users  75 Apr 12 14:14 /usr/local/bin/docker-machine
+    ```
 
 #### Verify Docker is Running
 
@@ -98,6 +110,7 @@ As soon as the whale icon appears, the symbolic links for `docker`, `docker-comp
 
 #### Test Docker Works
 
+    ```bash
     $> docker run hello-world
     Unable to find image 'hello-world:latest' locally
     latest: Pulling from library/hello-world
@@ -119,11 +132,13 @@ As soon as the whale icon appears, the symbolic links for `docker`, `docker-comp
     https://cloud.docker.com/
     For more examples and ideas, visit:
     https://docs.docker.com/engine/userguide/
+    ```
 
 Followed by:
 
 _of course, your versions may differ_
 
+    ```bash
     $> docker version
     Client:
     Version:      17.03.1-ce
@@ -140,18 +155,23 @@ _of course, your versions may differ_
     Built:        Fri Mar 24 00:00:50 2017
     OS/Arch:      linux/amd64
     Experimental: true
+    ```
 
 ##### EXTRA - NOT REQUIRED - PURELY INFORMATIONAL
 
 _If you are going to use docker-machine to create virtual machines, install VirtualBox._
 
+    ```bash
     $> brew cask install virtualbox
+    ```
 
 _Note that if VirtualBox is not installed, then docker-machine fails with the following error._
 
+    ```bash
     $> docker-machine create manager
     Running pre-create checks...
     Error with pre-create check: "VBoxManage not found. Make sure VirtualBox is installed and VBoxManage is in the path"
+    ```
 
 ### jBPM
 
@@ -161,11 +181,13 @@ _(below copied from the jBPM site):_
 
 #### Running jBPM Docker image
 
+    ```bash
     $> docker run -p 8080:8080 -p 8001:8001 -d --name jbpm-server-full jboss/jbpm-server-full:latest
+    ```
 
 Once container and web applications started, you can navigate to it and login using the username wbadmin and password wbadmin or any of the users available in the Business Central listed in the section below.
 
-http://localhost:8080/business-central
+`http://localhost:8080/business-central`
 
 **Username:** wbadmin
 
