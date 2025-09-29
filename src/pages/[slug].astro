@@ -10,11 +10,6 @@ export async function getStaticPaths() {
     }));
   });
 
-  console.log(`Total posts: ${posts.length}`);
-  console.log('frontmatters:', posts.map(p => p.frontmatter));
-  console.log(`Total alias paths: ${aliasPaths.length}`);
-  console.log("Alias paths:", aliasPaths.map(p => p.params.slug));
-
   return aliasPaths;
 }
 
