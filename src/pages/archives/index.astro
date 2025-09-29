@@ -8,10 +8,8 @@ import Card from "@/components/Card.astro";
 import getPostsByGroupCondition from "@/utils/getPostsByGroupCondition";
 import { SITE } from "@/config";
 
-// Redirect to 404 page if `showArchives` config is false
-if (!SITE.showArchives) {
-  return Astro.redirect("/404");
-}
+// Check if archives are enabled
+const archivesEnabled = SITE.showArchives;
 
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 
@@ -34,7 +32,7 @@ const months = [
 <Layout title={`Archives | ${SITE.title}`}>
   <Header />
   <Main pageTitle="Archives" pageDesc="All the articles I've archived.">
-    {
+    {archivesEnabled ? (
       Object.entries(
         getPostsByGroupCondition(posts, post =>
           post.data.pubDatetime.getFullYear()
@@ -77,7 +75,11 @@ const months = [
               ))}
           </div>
         ))
-    }
+    ) : (
+      <div class="text-center">
+        <p class="text-lg text-gray-600">Archives are currently disabled.</p>
+      </div>
+    )}
   </Main>
   <Footer />
 </Layout>

@@ -19,9 +19,14 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     // legacy tag map for old tags to new tags
     const legacyTagMap: Record<string, string> = {
         "node.js": "node-js",
+        "Python": "python",
+        "YouTube": "you-tube",
     };
 
     return tags.flatMap(({ tag: rawTag, tagName }) => {
+        // skip "archives" tag to avoid conflict with /archives page
+        if (rawTag.toLowerCase() === "archives") return [];
+
         const tagPosts = getPostsByTag(posts, rawTag);
 
         // canonical sanitized slug
@@ -80,15 +85,15 @@ const { page, tagName, redirectTo } = Astro.props;
             >
                 <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
                 <ul>
-                    {page.data.map((data) => (
+                    {page && page.data.map((data) => (
                         <Card {...data} />
                     ))}
                 </ul>
             </Main>
 
-            <Pagination {page} />
+            {page && <Pagination page={page} />}
 
-            <Footer noMarginTop={page.lastPage > 1} />
+            <Footer noMarginTop={(page?.lastPage ?? 1) > 1} />
         </Layout>
     )
 }

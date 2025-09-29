@@ -10,7 +10,7 @@ export const SITE = {
   postPerIndex: 6,
   postPerPage: 6,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
-  showArchives: false,
+  showArchives: true,
   showBackButton: true, // show back button in post detail
   editPost: {
     enabled: false,

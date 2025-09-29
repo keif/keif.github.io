@@ -3,7 +3,10 @@ export async function getStaticPaths() {
   const posts = Object.values(import.meta.glob(['../data/blog/*.md', '../data/blog/*.mdx'], { eager: true }));
   const aliasPaths = posts.flatMap((post: any) => {
     const canonicalSlug = post.frontmatter.slug;
-    const aliases = post.frontmatter.aliases || [];
+    const reserved = ["about", "archives", "now", "search", "tags"];
+    const aliases = (post.frontmatter.aliases || []).filter(
+      (alias: string) => !reserved.includes(alias.toLowerCase())
+    );
     return aliases.map((alias: string) => ({
       params: { slug: alias },
       props: { canonicalSlug },
@@ -13,6 +16,10 @@ export async function getStaticPaths() {
   return aliasPaths;
 }
 
+const reserved = ["about", "archives", "now", "search", "tags"];
+if (reserved.includes(Astro.params.slug)) {
+  throw new Error(`Reserved slug: ${Astro.params.slug}`);
+}
 const { canonicalSlug } = Astro.props;
 ---
 
