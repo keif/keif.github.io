@@ -159,58 +159,45 @@ function hasContentChanged(filePath) {
       return false;
     }
     
-    // Simple approach: if there are frontmatter changes only, they will appear as
-    // changes between the opening and closing --- markers in the diff.
-    // If there are no --- markers in the diff, or changes appear after closing ---,
-    // then we have body content changes.
+    // Strategy: Read the actual file and check if changes are only in frontmatter
+    // This is more reliable than trying to parse git diff output
     
-    const lines = diff.split('\n');
-    let frontmatterStartSeen = false;
-    let frontmatterEndSeen = false;
-    let hasBodyChanges = false;
-    
-    for (const line of lines) {
-      // Skip diff headers and file paths
-      if (line.startsWith('@@') || line.startsWith('+++') || line.startsWith('---') || 
-          line.startsWith('index ') || line.startsWith('diff --git') || 
-          line.startsWith('\\ No newline at end of file')) {
-        continue;
-      }
+    try {
+      const fullPath = join(ROOT_DIR, filePath);
+      const fileContent = readFileSync(fullPath, 'utf-8');
+      const { content: bodyContent } = matter(fileContent);
       
-      // Check for frontmatter boundary markers
-      if (line === '+---' || line === '----') {
-        if (!frontmatterStartSeen) {
-          frontmatterStartSeen = true;
-        } else if (frontmatterStartSeen && !frontmatterEndSeen) {
-          frontmatterEndSeen = true;
-        }
-        continue;
-      }
+      // Get the body content from the previous commit
+      const prevFileContent = execSync(`git show HEAD:"${filePath}"`, { 
+        encoding: 'utf-8', 
+        cwd: ROOT_DIR 
+      });
+      const { content: prevBodyContent } = matter(prevFileContent);
       
-      // If we haven't seen any frontmatter markers and we see changes, it's body content
-      if (!frontmatterStartSeen && (line.startsWith('+') || line.startsWith('-'))) {
-        hasBodyChanges = true;
-        break;
-      }
+      // If the body content is different, then it's a content change
+      return bodyContent.trim() !== prevBodyContent.trim();
+    } catch {
+      // If we can't get the previous version, fall back to diff analysis
+      const lines = diff.split('\n');
       
-      // If we've seen both frontmatter markers and now see changes, it's body content
-      if (frontmatterStartSeen && frontmatterEndSeen && (line.startsWith('+') || line.startsWith('-'))) {
-        hasBodyChanges = true;
-        break;
-      }
-    }
-    
-    // If we didn't see any frontmatter markers at all, assume any changes are body changes
-    if (!frontmatterStartSeen) {
+      // Look for changes that are clearly in the body (after line numbers that would be frontmatter)
       for (const line of lines) {
-        if (line.startsWith('+') || line.startsWith('-')) {
-          hasBodyChanges = true;
-          break;
+        // Skip diff headers
+        if (line.startsWith('@@') || line.startsWith('+++') || line.startsWith('---') || 
+            line.startsWith('index ') || line.startsWith('diff --git') || 
+            line.startsWith('\\ No newline at end of file')) {
+          continue;
+        }
+        
+        // If we see changes and the change includes body content indicators
+        if ((line.startsWith('+') || line.startsWith('-')) && 
+            (line.includes('##') || line.includes('#') || line.length > 100)) {
+          return true;
         }
       }
+      
+      return false;
     }
-    
-    return hasBodyChanges;
   } catch {
     // If git command fails, assume content changed
     return true;
