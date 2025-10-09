@@ -1,0 +1,5 @@
+{
+  "contentGlob": "src/data/blog/**/*.{md,mdx}",
+  "defaultAuthor": "Your Name",
+  "blogDir": "src/data/blog"
+}

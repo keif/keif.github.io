@@ -1,0 +1,11 @@
+echo "🕒 Updating blog post dates…"
+
+# Run the date management script
+node scripts/update-post-dates.js --pre-commit
+
+# Run lint-staged if it exists
+if command -v npx >/dev/null 2>&1 && npx lint-staged --version >/dev/null 2>&1; then
+  npx lint-staged
+else
+  echo "ℹ️  lint-staged not found, skipping"
+fi
