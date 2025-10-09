@@ -1,175 +1,236 @@
-# AstroPaper 📄
+# Keith's Blog 📝
 
-![AstroPaper](public/astropaper-og.jpg)
-[![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/community/file/1356898632249991861)
-![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![GitHub](https://img.shields.io/github/license/satnaing/astro-paper?color=%232F3741&style=for-the-badge)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white&style=for-the-badge)](https://conventionalcommits.org)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=for-the-badge)](http://commitizen.github.io/cz-cli/)
+[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build/)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+[![MIT License](https://img.shields.io/github/license/satnaing/astro-paper?color=%232F3741&style=for-the-badge)](LICENSE)
 
-AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This theme is designed and crafted based on [my personal blog](https://satnaing.dev/blog).
-
-Read [the blog posts](https://astro-paper.pages.dev/posts/) or check [the README Documentation Section](#-documentation) for more info.
+A developer's blog built on the AstroPaper theme, featuring automatic date management, modern tooling, and a focus on developer experience.
 
 ## 🔥 Features
 
-- [x] type-safe markdown
-- [x] super fast performance
-- [x] accessible (Keyboard/VoiceOver)
-- [x] responsive (mobile ~ desktops)
-- [x] SEO-friendly
-- [x] light & dark mode
-- [x] fuzzy search
-- [x] draft posts & pagination
-- [x] sitemap & rss feed
-- [x] followed best practices
-- [x] highly customizable
-- [x] dynamic OG image generation for blog posts [#15](https://github.com/satnaing/astro-paper/pull/15) ([Blog Post](https://astro-paper.pages.dev/posts/dynamic-og-image-generation-in-astropaper-blog-posts/))
+### Blog Features
 
-_Note: I've tested screen-reader accessibility of AstroPaper using **VoiceOver** on Mac and **TalkBack** on Android. I couldn't test all other screen-readers out there. However, accessibility enhancements in AstroPaper should be working fine on others as well._
+- [x] Type-safe markdown with frontmatter validation
+- [x] **Automatic date management** with Git hooks
+- [x] Interactive post creation with CLI tools
+- [x] Draft posts & pagination support
+- [x] Fuzzy search functionality
+- [x] Dynamic OG image generation
+- [x] RSS feed & sitemap generation
 
-## ✅ Lighthouse Score
+### Developer Experience
 
-<p align="center">
-  <a href="https://pagespeed.web.dev/report?url=https%3A%2F%2Fastro-paper.pages.dev%2F&form_factor=desktop">
-    <img width="710" alt="AstroPaper Lighthouse Score" src="AstroPaper-lighthouse-score.svg">
-  <a>
-</p>
+- [x] **Pre-commit hooks** for automatic date updates
+- [x] Modern tooling (ESLint, Prettier, Husky, lint-staged)
+- [x] Cross-platform compatibility (macOS/Linux/Windows)
+- [x] CLI tools for post management
+- [x] TypeScript support throughout
+
+### Performance & Accessibility
+
+- [x] Super fast performance (Lighthouse 100)
+- [x] Responsive design (mobile to desktop)
+- [x] Accessible (Keyboard/VoiceOver tested)
+- [x] SEO-friendly with meta tags
+- [x] Light & dark mode support
+
+## 🚀 Quick Start
+
+### Creating New Posts
+
+```bash
+# Interactive mode - prompts for all details
+pnpm new-post
+
+# Command line mode
+pnpm new-post "My Post Title" --tags "javascript,tutorial" --featured --published
+```
+
+### Managing Post Dates
+
+Dates are automatically managed via Git hooks, but you can also run manually:
+
+```bash
+# Update dates for changed files
+pnpm update-dates
+
+# Force update all posts
+pnpm update-dates:force
+
+# Preview changes without writing
+pnpm update-dates --dry-run
+```
+
+For more details, see [Date Management Documentation](docs/DATE_MANAGEMENT.md).
 
 ## 🚀 Project Structure
 
-Inside of AstroPaper, you'll see the following folders and files:
-
 ```bash
 /
-├── public/
+├── .husky/                  # Git hooks for automation
+│   └── pre-commit          # Automatic date management
+├── docs/                   # Documentation
+│   └── DATE_MANAGEMENT.md  # Date system docs
+├── public/                 # Static assets
 │   ├── assets/
-|   ├── pagefind/ # auto-generated when build
-│   └── favicon.svg
-│   └── astropaper-og.jpg
-│   └── favicon.svg
-│   └── toggle-theme.js
+│   └── pagefind/           # Generated search index
+├── scripts/                # Automation scripts
+│   ├── new-post.js         # Post creation CLI
+│   └── update-post-dates.js # Date management
 ├── src/
-│   ├── assets/
-│   │   └── icons/
-│   │   └── images/
-│   ├── components/
+│   ├── components/         # Reusable UI components
 │   ├── data/
-│   │   └── blog/
-│   │       └── some-blog-posts.md
-│   ├── layouts/
-│   └── pages/
-│   └── styles/
-│   └── utils/
-│   └── config.ts
-│   └── constants.ts
-│   └── content.config.ts
-└── astro.config.ts
+│   │   └── blog/           # Blog posts (markdown)
+│   ├── layouts/            # Page layouts
+│   ├── pages/              # Astro pages/routes
+│   ├── styles/             # Global styles
+│   └── utils/              # Helper functions
+├── date-manager.config.json # Optional config
+├── .lintstagedrc           # Lint-staged config
+└── package.json            # Dependencies & scripts
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Key Directories:
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-All blog posts are stored in `src/data/blog` directory.
+- **Blog posts**: `src/data/blog/` - All markdown blog posts
+- **Scripts**: `scripts/` - CLI tools for post management
+- **Documentation**: `docs/` - Project documentation
 
 ## 📖 Documentation
 
-Documentation can be read in two formats\_ _markdown_ & _blog post_.
+### Blog Management
 
-- Configuration - [markdown](src/data/blog/how-to-configure-astropaper-theme.md) | [blog post](https://astro-paper.pages.dev/posts/how-to-configure-astropaper-theme/)
-- Add Posts - [markdown](src/data/blog/adding-new-post.md) | [blog post](https://astro-paper.pages.dev/posts/adding-new-posts-in-astropaper-theme/)
-- Customize Color Schemes - [markdown](src/data/blog/customizing-astropaper-theme-color-schemes.md) | [blog post](https://astro-paper.pages.dev/posts/customizing-astropaper-theme-color-schemes/)
-- Predefined Color Schemes - [markdown](src/data/blog/predefined-color-schemes.md) | [blog post](https://astro-paper.pages.dev/posts/predefined-color-schemes/)
+- **[Date Management System](docs/DATE_MANAGEMENT.md)** - Automatic date management with Git hooks
+- **[Theme Configuration](src/data/blog/how-to-configure-astropaper-theme.md)** - Customize the blog theme
+- **[Adding Posts](src/data/blog/adding-new-post.md)** - Manual post creation guide
+- **[Color Schemes](src/data/blog/customizing-astropaper-theme-color-schemes.md)** - Customize colors and themes
 
 ## 💻 Tech Stack
 
-**Main Framework** - [Astro](https://astro.build/)  
-**Type Checking** - [TypeScript](https://www.typescriptlang.org/)  
-**Styling** - [TailwindCSS](https://tailwindcss.com/)  
-**UI/UX** - [Figma Design File](https://www.figma.com/community/file/1356898632249991861)  
-**Static Search** - [FuseJS](https://pagefind.app/)  
-**Icons** - [Tablers](https://tabler-icons.io/)  
-**Code Formatting** - [Prettier](https://prettier.io/)  
-**Deployment** - [Cloudflare Pages](https://pages.cloudflare.com/)  
-**Illustration in About Page** - [https://freesvgillustration.com](https://freesvgillustration.com/)  
-**Linting** - [ESLint](https://eslint.org)
+### Core
 
-## 👨🏻‍💻 Running Locally
+**Framework** - [Astro](https://astro.build/) - Static site generation  
+**Language** - [TypeScript](https://www.typescriptlang.org/) - Type safety  
+**Styling** - [TailwindCSS](https://tailwindcss.com/) - Utility-first CSS  
+**Package Manager** - [pnpm](https://pnpm.io/) - Fast, efficient package management
 
-You can start using this project locally by running the following command in your desired directory:
+### Developer Tools
+
+**Linting** - [ESLint](https://eslint.org) - Code quality  
+**Formatting** - [Prettier](https://prettier.io/) - Code formatting  
+**Git Hooks** - [Husky](https://typicode.github.io/husky/) - Pre-commit automation  
+**Staged Files** - [lint-staged](https://github.com/okonet/lint-staged) - Run linters on staged files
+
+### Content & Search
+
+**Frontmatter** - [gray-matter](https://github.com/jonschlinkert/gray-matter) - Parse markdown frontmatter  
+**YAML Processing** - [yaml](https://www.npmjs.com/package/yaml) - YAML parsing and generation  
+**Search** - [Pagefind](https://pagefind.app/) - Static search  
+**Icons** - [Tabler Icons](https://tabler-icons.io/) - Clean SVG icons
+
+### CLI & Automation
+
+**Interactive Prompts** - [prompts](https://github.com/terkelg/prompts) - CLI user input  
+**Date Management** - Custom scripts with Git integration  
+**Post Creation** - Interactive and command-line post generation
+
+## 👨🏻‍💻 Development Setup
+
+Clone and set up the project:
 
 ```bash
-# pnpm
-pnpm create astro@latest --template satnaing/astro-paper
+# Clone the repository
+git clone https://github.com/your-username/keif.github.io.git
+cd keif.github.io
 
-# npm
-npm create astro@latest -- --template satnaing/astro-paper
-
-# yarn
-yarn create astro --template satnaing/astro-paper
-
-# bun
-bun create astro@latest -- --template satnaing/astro-paper
-```
-
-Then start the project by running the following commands:
-
-```bash
-# install dependencies if you haven't done so in the previous step.
+# Install dependencies
 pnpm install
 
-# start running the project
-pnpm run dev
+# Set up Git hooks
+npx husky init
+
+# Start development server
+pnpm dev
 ```
 
-As an alternative approach, if you have Docker installed, you can use Docker to run this project locally. Here's how:
+The blog will be available at `http://localhost:4321`.
+
+## 🔧 Configuration
+
+### Environment Variables
 
 ```bash
-# Build the Docker image
-docker build -t astropaper .
-
-# Run the Docker container
-docker run -p 4321:80 astropaper
-```
-
-## Google Site Verification (optional)
-
-You can easily add your [Google Site Verification HTML tag](https://support.google.com/webmasters/answer/9008080#meta_tag_verification&zippy=%2Chtml-tag) in AstroPaper using an environment variable. This step is optional. If you don't add the following environment variable, the google-site-verification tag won't appear in the HTML `<head>` section.
-
-```bash
-# in your environment variable file (.env)
+# .env (optional)
 PUBLIC_GOOGLE_SITE_VERIFICATION=your-google-site-verification-value
 ```
 
-> See [this discussion](https://github.com/satnaing/astro-paper/discussions/334#discussioncomment-10139247) for adding AstroPaper to the Google Search Console.
+### Date Manager Configuration
 
-## 🧞 Commands
+Customize the date management system by creating `date-manager.config.json`:
 
-All commands are run from the root of the project, from a terminal:
+```json
+{
+    "contentGlob": "src/data/blog/**/*.{md,mdx}",
+    "defaultAuthor": "Your Name",
+    "blogDir": "src/data/blog"
+}
+```
 
-> **_Note!_** For `Docker` commands we must have it [installed](https://docs.docker.com/engine/install/) in your machine.
+## 🧞 Available Commands
 
-| Command                              | Action                                                                                                                           |
-| :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm install`                       | Installs dependencies                                                                                                            |
-| `pnpm run dev`                       | Starts local dev server at `localhost:4321`                                                                                      |
-| `pnpm run build`                     | Build your production site to `./dist/`                                                                                          |
-| `pnpm run preview`                   | Preview your build locally, before deploying                                                                                     |
-| `pnpm run format:check`              | Check code format with Prettier                                                                                                  |
-| `pnpm run format`                    | Format codes with Prettier                                                                                                       |
-| `pnpm run sync`                      | Generates TypeScript types for all Astro modules. [Learn more](https://docs.astro.build/en/reference/cli-reference/#astro-sync). |
-| `pnpm run lint`                      | Lint with ESLint                                                                                                                 |
-| `docker compose up -d`               | Run AstroPaper on docker, You can access with the same hostname and port informed on `dev` command.                              |
-| `docker compose run app npm install` | You can run any command above into the docker container.                                                                         |
-| `docker build -t astropaper .`       | Build Docker image for AstroPaper.                                                                                               |
-| `docker run -p 4321:80 astropaper`   | Run AstroPaper on Docker. The website will be accessible at `http://localhost:4321`.                                             |
+### Development
 
-> **_Warning!_** Windows PowerShell users may need to install the [concurrently package](https://www.npmjs.com/package/concurrently) if they want to [run diagnostics](https://docs.astro.build/en/reference/cli-reference/#astro-check) during development (`astro check --watch & astro dev`). For more info, see [this issue](https://github.com/satnaing/astro-paper/issues/113).
+| Command        | Action                               |
+| -------------- | ------------------------------------ |
+| `pnpm install` | Install dependencies                 |
+| `pnpm dev`     | Start dev server at `localhost:4321` |
+| `pnpm build`   | Build for production to `./dist/`    |
+| `pnpm preview` | Preview production build locally     |
 
-## ✨ Feedback & Suggestions
+### Blog Management
 
-If you have any suggestions/feedback, you can contact me via [my email](mailto:contact@satnaing.dev). Alternatively, feel free to open an issue if you find bugs or want to request new features.
+| Command                                                | Action                               |
+| ------------------------------------------------------ | ------------------------------------ |
+| `pnpm new-post`                                        | Create a new blog post (interactive) |
+| `pnpm new-post "Title" --published --tags "tag1,tag2"` | Create post with CLI args            |
+| `pnpm update-dates`                                    | Update dates for changed files       |
+| `pnpm update-dates:force`                              | Update dates for all posts           |
+| `pnpm update-dates --dry-run`                          | Preview date changes                 |
+
+### Code Quality
+
+| Command             | Action                              |
+| ------------------- | ----------------------------------- |
+| `pnpm format:check` | Check code format with Prettier     |
+| `pnpm format`       | Format code with Prettier           |
+| `pnpm lint`         | Lint code with ESLint               |
+| `pnpm sync`         | Generate TypeScript types for Astro |
+
+## 🎯 Key Enhancements
+
+This blog setup includes several enhancements over the standard AstroPaper theme:
+
+### Automatic Date Management
+
+- **Pre-commit hooks** automatically update `modDatetime` when posts are modified
+- **New posts** automatically get `pubDatetime` set during creation
+- **ISO 8601 format** with milliseconds for precise timestamps
+- **Cross-platform** support (Windows, macOS, Linux)
+
+### Developer Experience
+
+- **Interactive CLI** for creating posts with prompts
+- **Command-line flags** for automated post creation
+- **Dry-run mode** to preview changes before applying
+- **Modern tooling** with ESLint, Prettier, Husky, and lint-staged
+
+### Workflow Integration
+
+- **Git hooks** ensure dates are always current
+- **Lint-staged** keeps code clean on commit
+- **Type safety** throughout with TypeScript
+- **Comprehensive documentation** for all features
 
 ## 📜 License
 
@@ -177,4 +238,5 @@ Licensed under the MIT License, Copyright © 2025
 
 ---
 
-Made with 🤍 by [Sat Naing](https://satnaing.dev) 👨🏻‍💻 and [contributors](https://github.com/satnaing/astro-paper/graphs/contributors).
+Built on [AstroPaper](https://github.com/satnaing/astro-paper) by [Sat Naing](https://satnaing.dev) 👨🏻‍💻  
+Enhanced with automatic date management and modern developer tooling.
