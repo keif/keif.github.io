@@ -1,12 +1,18 @@
 ---
-title: "Automating 'Last Updated' Dates in Next.js with Node's fs Module"
-description: "How to eliminate human error in blog timestamps by pulling the last modified date directly from the filesystem in Next.js."
-pubDatetime: 2025-09-17T00:00:00Z
-featured: true
-slug: "last-updated-dates-nextjs-fs"
-tags: ["next.js", "node.js", "automation", "fs"]
+title: Automating 'Last Updated' Dates in Next.js with Node's fs Module
+pubDatetime: 2025-09-17T00:00:00.000Z
+modDatetime: 2025-10-09T06:53:52.715Z
+slug: last-updated-dates-nextjs-fs
+featured: false
+tags:
+    - next.js
+    - node.js
+    - automation
+    - fs
+description: How to eliminate human error in blog timestamps by pulling the last modified date directly from the filesystem in Next.js.
 ---
-import GistEmbed from '@/components/GistEmbed.astro';
+
+import GistEmbed from "@/components/GistEmbed.astro";
 
 Keeping timestamps accurate on blog posts, documentation, or static pages can be a surprisingly tedious task. It's easy to forget to update a “Last Updated” line when publishing new content. That's where a little automation can save you from human error.
 
@@ -27,14 +33,14 @@ If the file doesn't exist or there's some other issue, it catches the error and 
 [Next.js](https://nextjs.org/) makes it easy to expose environment variables at build time. In `next.config.js`, I called the function and set the result as an environment variable:
 
 ```js
-const { getFileTimestamp } = require('./getFileTimestamp');
+const { getFileTimestamp } = require("./getFileTimestamp");
 
-const filePath = './content/my-doc.md'; // wherever your source file lives
+const filePath = "./content/my-doc.md"; // wherever your source file lives
 
 const nextConfig = {
-  env: {
-    FILE_TIMESTAMP: getFileTimestamp(filePath),
-  },
+    env: {
+        FILE_TIMESTAMP: getFileTimestamp(filePath),
+    },
 };
 
 module.exports = nextConfig;

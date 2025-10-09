@@ -6,7 +6,7 @@ title: How to add LaTeX Equations in Astro blog posts
 slug: how-to-add-latex-equations-in-blog-posts
 draft: true
 tags:
-  - docs
+    - docs
 description: Learn how to add LaTeX equations in Astro blog posts using Markdown, KaTeX, and remark/rehype plugins.
 ---
 
@@ -30,78 +30,78 @@ In this section, you will find instructions on how to add support for LaTeX in y
 
 1. Install the necessary remark and rehype plugins by running:
 
-   ```bash
-   pnpm install rehype-katex remark-math katex
-   ```
+    ```bash
+    pnpm install rehype-katex remark-math katex
+    ```
 
 2. Update the Astro configuration to use the these plugins:
 
-   ```ts file=astro.config.ts
-   // ...
-   import remarkMath from "remark-math";
-   import rehypeKatex from "rehype-katex";
+    ```ts file=astro.config.ts
+    // ...
+    import remarkMath from "remark-math";
+    import rehypeKatex from "rehype-katex";
 
-   export default defineConfig({
-     // ...
-     markdown: {
-       remarkPlugins: [
-         remarkMath, // [!code ++]
-         remarkToc,
-         [remarkCollapse, { test: "Table of contents" }],
-       ],
-       rehypePlugins: [rehypeKatex], // [!code ++]
-       shikiConfig: {
-         // For more themes, visit https://shiki.style/themes
-         themes: { light: "min-light", dark: "night-owl" },
-         wrap: false,
-       },
-     },
-     // ...
-   });
-   ```
+    export default defineConfig({
+        // ...
+        markdown: {
+            remarkPlugins: [
+                remarkMath, // [!code ++]
+                remarkToc,
+                [remarkCollapse, { test: "Table of contents" }],
+            ],
+            rehypePlugins: [rehypeKatex], // [!code ++]
+            shikiConfig: {
+                // For more themes, visit https://shiki.style/themes
+                themes: { light: "min-light", dark: "night-owl" },
+                wrap: false,
+            },
+        },
+        // ...
+    });
+    ```
 
 3. Import KaTeX CSS in the main layout file
 
-   ```astro file=src/layouts/Layout.astro
-   ---
-   import { SITE } from "@config";
+    ```astro file=src/layouts/Layout.astro
+    ---
+    import { SITE } from "@config";
 
-   // astro code
-   ---
+    // astro code
+    ---
 
-   <!doctype html>
-   <!-- others... -->
-   <script is:inline src="/toggle-theme.js"></script>
+    <!doctype html>
+    <!-- others... -->
+    <script is:inline src="/toggle-theme.js"></script>
 
-   <!-- [!code highlight:4] -->
-   <link
-     rel="stylesheet"
-     href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
-   />
+    <!-- [!code highlight:4] -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+    />
 
-   <body>
-     <slot />
-   </body>
-   ```
+    <body>
+      <slot />
+    </body>
+    ```
 
 4. As the last step, add a text-color for `katex` in `typography.css`.
 
-   ```css file=src/styles/typography.css
-   @plugin '@tailwindcss/typography';
+    ```css file=src/styles/typography.css
+    @plugin '@tailwindcss/typography';
 
-   @layer base {
-     /* other classes */
+    @layer base {
+        /* other classes */
 
-     /* Katex text color */
-     /* [!code highlight:3] */
-     .prose .katex-display {
-       @apply text-foreground;
-     }
+        /* Katex text color */
+        /* [!code highlight:3] */
+        .prose .katex-display {
+            @apply text-foreground;
+        }
 
-     /* ===== Code Blocks & Syntax Highlighting ===== */
-     /* other classes */
-   }
-   ```
+        /* ===== Code Blocks & Syntax Highlighting ===== */
+        /* other classes */
+    }
+    ```
 
 And _voilà_, this setup allows you to write LaTeX equations in your Markdown files, which will be rendered properly when the site is built. Once you do it, the rest of the document will appear rendered correctly.
 

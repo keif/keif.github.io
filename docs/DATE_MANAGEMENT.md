@@ -44,6 +44,19 @@ pnpm update-dates -- --dry-run
 pnpm update-dates src/data/blog/my-post.md
 ```
 
+### Rotate Featured Posts
+
+```bash
+# Rotate featured posts (default: 6 posts)
+pnpm rotate-featured
+
+# Preview what would change
+pnpm rotate-featured:dry-run
+
+# Custom count (via config file or script modification)
+node scripts/rotate-featured.js --count=8 --dry-run
+```
+
 ## Pre-commit Hook
 
 The pre-commit hook automatically:
@@ -70,9 +83,19 @@ Create optional `date-manager.config.json` in project root:
 {
   "contentGlob": "src/data/blog/**/*.{md,mdx}",
   "defaultAuthor": "Your Name",
-  "blogDir": "src/data/blog"
+  "blogDir": "src/data/blog",
+  "featuredCount": 6,
+  "excludePatterns": ["_releases/", "examples/"]
 }
 ```
+
+### Configuration Options
+
+- **`contentGlob`** - Glob pattern for finding blog posts
+- **`defaultAuthor`** - Default author for new posts
+- **`blogDir`** - Directory where blog posts are created
+- **`featuredCount`** - Number of posts to keep featured (default: 6)
+- **`excludePatterns`** - Directory patterns to exclude from featured rotation
 
 ## Frontmatter Format
 
@@ -117,6 +140,11 @@ pnpm update-dates -- --dry-run
 ### Force Update All Posts
 ```bash
 pnpm update-dates:force
+```
+
+### Randomize Featured Posts
+```bash
+pnpm rotate-featured:dry-run
 ```
 
 ## Troubleshooting

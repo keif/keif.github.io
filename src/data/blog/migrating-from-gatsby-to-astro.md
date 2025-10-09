@@ -1,18 +1,17 @@
 ---
-author: Keith Baker
-pubDatetime: 2025-09-07T04:00:00Z
-modDatetime: 2025-09-07T04:00:00Z
 title: Migrating from Gatsby to Astro
+author: Keith Baker
+pubDatetime: 2025-09-07T04:00:00.000Z
+modDatetime: 2025-10-09T06:53:52.822Z
 slug: migrating-from-gatsby-to-astro
-featured: true
+featured: false
 draft: true
 tags:
-  - astro
-  - gatsby
-  - migration
-  - blog
-description:
-  A summary of the process and decisions behind migrating our blog from Gatsby to Astro, including content migration, performance benefits, and simplification of the stack.
+    - astro
+    - gatsby
+    - migration
+    - blog
+description: A summary of the process and decisions behind migrating our blog from Gatsby to Astro, including content migration, performance benefits, and simplification of the stack.
 ---
 
 I recently completed the migration of my (meager) blog from **Gatsby** to **Astro**. This decision was driven by my desire to simplify the tech stack, speed up builds, and eliminate unnecessary GraphQL and plugin complexity.

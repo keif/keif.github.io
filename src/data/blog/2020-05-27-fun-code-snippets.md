@@ -1,16 +1,15 @@
 ---
-author: Keith Baker
-pubDatetime: 2020-05-27T00:00:00Z
-modDatetime: 2025-09-07T03:27:00Z
 title: Fun Code Snippets
+author: Keith Baker
+pubDatetime: 2020-05-27T00:00:00.000Z
+modDatetime: 2025-10-09T06:53:52.797Z
 slug: fun-code-snippets
-featured: false
+featured: true
 tags:
-  - cli
-  - shell
-  - node
-description:
-  A few handy CLI snippets and notes to remember how to quickly create or overwrite files using the terminal.
+    - cli
+    - shell
+    - node
+description: A few handy CLI snippets and notes to remember how to quickly create or overwrite files using the terminal.
 ---
 
 I keep looking up how to do little command-line code tricks (for fun) so I figure I should probably start writing them down somewhere so I can just look them up on my own site.

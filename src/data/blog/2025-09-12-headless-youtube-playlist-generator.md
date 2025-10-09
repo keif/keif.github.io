@@ -1,17 +1,24 @@
 ---
-title: "Building a Headless YouTube Playlist Generator with OAuth and Quota Management"
-pubDatetime: 2025-09-11T19:32:00Z
-description: "How I built a CLI tool to create YouTube playlists from my subscriptions, with quota-aware API calls, OAuth caching, and no frontend."
-author: "Keith Baker"
-tags: ["YouTube", "API", "Python", "CLI", "OAuth", "Google API", "DevTools", "Automation"]
-slug: "headless-youtube-playlist-generator"
+title: Building a Headless YouTube Playlist Generator with OAuth and Quota Management
+author: Keith Baker
+pubDatetime: 2025-09-11T19:32:00.000Z
+modDatetime: 2025-10-09T06:53:52.680Z
+slug: headless-youtube-playlist-generator
+featured: false
+tags:
+    - YouTube
+    - API
+    - Python
+    - CLI
+    - OAuth
+    - Google API
+    - DevTools
+    - Automation
+description: How I built a CLI tool to create YouTube playlists from my subscriptions, with quota-aware API calls, OAuth caching, and no frontend.
 image: ""
-featured: true
 ---
 
 > **TL;DR**: I built a CLI tool that creates YouTube playlists from your subscriptions without a frontend. It uses OAuth, respects API quota, handles caching and retries, and works great as a cron job. [Source code on GitHub](https://github.com/keif/playlist-from-subs).
-
-
 
 As someone subscribed to _too many_ YouTube channels, I wanted a simple way to keep up with new content while I worked—a reliable, personal channel of new(ish) videos from the creators I actually care about. YouTube’s feed couldn’t keep up, and manual playlisting was a tedious mess. I wanted a better solution. So I built one! A headless CLI tool that turns my recent subscriptions into an actual playlist, with intelligent caching and quota-aware design.
 
@@ -35,12 +42,12 @@ The YouTube Data API v3 is powerful but comes with strict [quota limitations](ht
 
 ```json
 {
-"subscriptions.list": 1,        // Get user subscriptions
-"channels.list": 1,             // Get channel details
-"playlistItems.list": 1,        // List playlist contents
-"videos.list": 1,               // Get video metadata
-"playlistItems.insert": 50,     // Add video to playlist
-"search.list": 100              // Search for videos (expensive!)
+    "subscriptions.list": 1, // Get user subscriptions
+    "channels.list": 1, // Get channel details
+    "playlistItems.list": 1, // List playlist contents
+    "videos.list": 1, // Get video metadata
+    "playlistItems.insert": 50, // Add video to playlist
+    "search.list": 100 // Search for videos (expensive!)
 }
 ```
 
@@ -327,6 +334,7 @@ months, automatically maintaining a playlist of recent content filtered by my pr
 The complete source code is available on GitHub: [yt-sub-playlist](https://github.com/keif/playlist-from-subs)
 
 Key areas for contribution:
+
 - Web dashboard interface for non-technical users
 - Advanced filtering rules (regex patterns, custom criteria)
 - Multiple playlist targets and playlist cleanup features
@@ -336,4 +344,4 @@ Key areas for contribution:
 The project demonstrates that with careful API design and quota management, it's possible to build powerful automation tools that work within platform constraints. The key is treating
 API quotas not as an afterthought, but as a fundamental architectural constraint that guides every design decision.
 
-*Interested in building your own YouTube automation tools? The techniques described here apply broadly to any quota-limited API. Start with comprehensive tracking, implement intelligent caching, and always batch your operations.*
+_Interested in building your own YouTube automation tools? The techniques described here apply broadly to any quota-limited API. Start with comprehensive tracking, implement intelligent caching, and always batch your operations._

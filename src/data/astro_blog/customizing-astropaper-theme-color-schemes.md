@@ -7,11 +7,10 @@ featured: false
 draft: true
 slug: customizing-astropaper-theme-color-schemas
 tags:
-  - color-schemes
-  - docs
-description:
-  How you can enable/disable light & dark mode; and customize color schemes
-  of AstroPaper theme.
+    - color-schemes
+    - docs
+description: How you can enable/disable light & dark mode; and customize color schemes
+    of AstroPaper theme.
 ---
 
 This post will explain how you can enable/disable light & dark mode for the website. Moreover, you'll learn how you can customize color schemes of the entire website.
@@ -87,19 +86,19 @@ Both light & dark color schemes of AstroPaper theme can be customized in the `gl
 
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+    --background: #fdfdfd;
+    --foreground: #282728;
+    --accent: #006cac;
+    --muted: #e6e6e6;
+    --border: #ece9e9;
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60bf;
-  --border: #ab4b08;
+    --background: #212737;
+    --foreground: #eaedf3;
+    --accent: #ff6b01;
+    --muted: #343f60bf;
+    --border: #ab4b08;
 }
 /* ... */
 ```
@@ -124,11 +123,11 @@ Here is an example of changing the light color scheme.
 /* ... */
 :root,
 html[data-theme="light"] {
-  --background: #f6eee1;
-  --foreground: #012c56;
-  --accent: #e14a39;
-  --muted: #efd8b0;
-  --border: #dc9891;
+    --background: #f6eee1;
+    --foreground: #012c56;
+    --accent: #e14a39;
+    --muted: #efd8b0;
+    --border: #dc9891;
 }
 /* ... */
 ```

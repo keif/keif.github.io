@@ -16,7 +16,9 @@
         "prepare": "husky",
         "new-post": "node scripts/new-post.js",
         "update-dates": "node scripts/update-post-dates.js",
-        "update-dates:force": "node scripts/update-post-dates.js --force"
+        "update-dates:force": "node scripts/update-post-dates.js --force",
+        "rotate-featured": "node scripts/rotate-featured.js",
+        "rotate-featured:dry-run": "node scripts/rotate-featured.js --dry-run"
     },
     "dependencies": {
         "@astrojs/mdx": "^4.3.6",

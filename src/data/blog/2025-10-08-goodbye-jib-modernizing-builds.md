@@ -1,8 +1,9 @@
 ---
 title: "Goodbye Jib: Modernizing Container Builds for a Simpler CI/CD Workflow"
 pubDatetime: 2025-10-07T21:00:00.000Z
-modDatetime: 2025-10-09T06:24:26.399Z
+modDatetime: 2025-10-09T06:53:52.741Z
 slug: goodbye-jib-modernizing-builds
+featured: true
 tags:
     - DevOps
     - CI/CD

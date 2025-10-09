@@ -7,8 +7,8 @@ featured: false
 draft: true
 slug: setting-dates-via-git-hooks
 tags:
-  - docs
-  - FAQ
+    - docs
+    - FAQ
 canonicalURL: https://smale.codes/posts/setting-dates-via-git-hooks/
 description: How to use Git Hooks to set your Created and Modified Dates on AstroPaper
 ---
@@ -145,22 +145,22 @@ To allow the key to be there with no value we need to edit line 10 to add the `.
 
 ```ts
 const blog = defineCollection({
-  type: "content",
-  schema: ({ image }) =>
-    z.object({
-      author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional(), // [!code --]
-      modDatetime: z.date().optional().nullable(), // [!code ++]
-      title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      readingTime: z.string().optional(),
-    }),
+    type: "content",
+    schema: ({ image }) =>
+        z.object({
+            author: z.string().default(SITE.author),
+            pubDatetime: z.date(),
+            modDatetime: z.date().optional(), // [!code --]
+            modDatetime: z.date().optional().nullable(), // [!code ++]
+            title: z.string(),
+            featured: z.boolean().optional(),
+            draft: z.boolean().optional(),
+            tags: z.array(z.string()).default(["others"]),
+            ogImage: image().or(z.string()).optional(),
+            description: z.string(),
+            canonicalURL: z.string().optional(),
+            readingTime: z.string().optional(),
+        }),
 });
 ```
 
@@ -168,23 +168,23 @@ To stop the IDE complaining in the blog engine files I have also done the follow
 
 1. added `| null` to line 15 in `src/layouts/Layout.astro` so that it looks like
 
-   ```typescript
-   export interface Props {
-     title?: string;
-     author?: string;
-     description?: string;
-     ogImage?: string;
-     canonicalURL?: string;
-     pubDatetime?: Date;
-     modDatetime?: Date | null;
-   }
-   ```
+    ```typescript
+    export interface Props {
+        title?: string;
+        author?: string;
+        description?: string;
+        ogImage?: string;
+        canonicalURL?: string;
+        pubDatetime?: Date;
+        modDatetime?: Date | null;
+    }
+    ```
 
 2. added `| null` to line 5 in `src/components/Datetime.tsx` so that it looks like
 
-   ```typescript
-   interface DatetimesProps {
-     pubDatetime: string | Date;
-     modDatetime: string | Date | undefined | null;
-   }
-   ```
+    ```typescript
+    interface DatetimesProps {
+        pubDatetime: string | Date;
+        modDatetime: string | Date | undefined | null;
+    }
+    ```

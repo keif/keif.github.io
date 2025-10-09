@@ -7,10 +7,9 @@ slug: predefined-color-schemes
 featured: false
 draft: true
 tags:
-  - color-schemes
-description:
-  Some of the well-crafted, predefined color schemes for AstroPaper blog
-  theme.
+    - color-schemes
+description: Some of the well-crafted, predefined color schemes for AstroPaper blog
+    theme.
 ---
 
 I've crafted some predefined color schemes for this AstroPaper blog theme. You can replace these color schemes with the original ones.
@@ -30,11 +29,11 @@ Light color scheme has to be defined using the css selector `:root` and `html[da
 ```css
 :root,
 html[data-theme="light"] {
-  --background: #f6eee1;
-  --foreground: #012c56;
-  --accent: #e14a39;
-  --muted: #efd8b0;
-  --border: #dc9891;
+    --background: #f6eee1;
+    --foreground: #012c56;
+    --accent: #e14a39;
+    --muted: #efd8b0;
+    --border: #dc9891;
 }
 ```
 
@@ -45,11 +44,11 @@ html[data-theme="light"] {
 ```css
 :root,
 html[data-theme="light"] {
-  --background: #f2f5ec;
-  --foreground: #353538;
-  --accent: #1158d1;
-  --muted: #bbc789;
-  --border: #7cadff;
+    --background: #f2f5ec;
+    --foreground: #353538;
+    --accent: #1158d1;
+    --muted: #bbc789;
+    --border: #7cadff;
 }
 ```
 
@@ -60,11 +59,11 @@ html[data-theme="light"] {
 ```css
 :root,
 html[data-theme="light"] {
-  --background: #fafcfc;
-  --foreground: #222e36;
-  --accent: #d3006a;
-  --muted: #f1bad4;
-  --border: #e3a9c6;
+    --background: #fafcfc;
+    --foreground: #222e36;
+    --accent: #d3006a;
+    --muted: #f1bad4;
+    --border: #e3a9c6;
 }
 ```
 
@@ -78,11 +77,11 @@ Dark color scheme has to be defined as `html[data-theme="dark"]`.
 
 ```css
 html[data-theme="dark"] {
-  --background: #2f3741;
-  --foreground: #e6e6e6;
-  --accent: #1ad9d9;
-  --muted: #596b81;
-  --border: #3b4655;
+    --background: #2f3741;
+    --foreground: #e6e6e6;
+    --accent: #1ad9d9;
+    --muted: #596b81;
+    --border: #3b4655;
 }
 ```
 
@@ -92,11 +91,11 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #21233d;
-  --foreground: #f4f7f5;
-  --accent: #ff5256;
-  --muted: #4a4e86;
-  --border: #b12f32;
+    --background: #21233d;
+    --foreground: #f4f7f5;
+    --accent: #ff5256;
+    --muted: #4a4e86;
+    --border: #b12f32;
 }
 ```
 
@@ -106,11 +105,11 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #353640;
-  --foreground: #e9edf1;
-  --accent: #ff78c8;
-  --muted: #715566;
-  --border: #86436b;
+    --background: #353640;
+    --foreground: #e9edf1;
+    --accent: #ff78c8;
+    --muted: #715566;
+    --border: #86436b;
 }
 ```
 
@@ -120,11 +119,11 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #8a3302;
-  --border: #ab4b08;
+    --background: #212737;
+    --foreground: #eaedf3;
+    --accent: #ff6b01;
+    --muted: #8a3302;
+    --border: #ab4b08;
 }
 ```
 
@@ -134,11 +133,11 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #212737; /* lower contrast background */
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #8a3302;
-  --border: #ab4b08;
+    --background: #212737; /* lower contrast background */
+    --foreground: #eaedf3;
+    --accent: #ff6b01;
+    --muted: #8a3302;
+    --border: #ab4b08;
 }
 ```
 
@@ -148,11 +147,11 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #eb3fd3;
-  --muted: #7d4f7c;
-  --border: #642451;
+    --background: #212737;
+    --foreground: #eaedf3;
+    --accent: #eb3fd3;
+    --muted: #7d4f7c;
+    --border: #642451;
 }
 ```
 
@@ -162,10 +161,10 @@ html[data-theme="dark"] {
 
 ```css
 html[data-theme="dark"] {
-  --background: #000123;
-  --accent: #617bff;
-  --foreground: #eaedf3;
-  --muted: #0c0e4f;
-  --border: #303f8a;
+    --background: #000123;
+    --accent: #617bff;
+    --foreground: #eaedf3;
+    --muted: #0c0e4f;
+    --border: #303f8a;
 }
 ```

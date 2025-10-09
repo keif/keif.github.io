@@ -1,5 +1,7 @@
 {
   "contentGlob": "src/data/blog/**/*.{md,mdx}",
   "defaultAuthor": "Your Name",
-  "blogDir": "src/data/blog"
+  "blogDir": "src/data/blog",
+  "featuredCount": 6,
+  "excludePatterns": ["_releases/", "examples/"]
 }

@@ -13,6 +13,7 @@ A developer's blog built on the AstroPaper theme, featuring automatic date manag
 
 - [x] Type-safe markdown with frontmatter validation
 - [x] **Automatic date management** with Git hooks
+- [x] **Featured post rotation** with smart selection
 - [x] Interactive post creation with CLI tools
 - [x] Draft posts & pagination support
 - [x] Fuzzy search functionality
@@ -197,6 +198,8 @@ Customize the date management system by creating `date-manager.config.json`:
 | `pnpm update-dates`                                    | Update dates for changed files       |
 | `pnpm update-dates:force`                              | Update dates for all posts           |
 | `pnpm update-dates --dry-run`                          | Preview date changes                 |
+| `pnpm rotate-featured`                                 | Randomize featured posts (6 posts)   |
+| `pnpm rotate-featured:dry-run`                         | Preview featured post rotation       |
 
 ### Code Quality
 
@@ -217,6 +220,13 @@ This blog setup includes several enhancements over the standard AstroPaper theme
 - **New posts** automatically get `pubDatetime` set during creation
 - **ISO 8601 format** with milliseconds for precise timestamps
 - **Cross-platform** support (Windows, macOS, Linux)
+
+### Featured Post Rotation
+
+- **Smart selection** combining recent posts with random older content
+- **Configurable count** (default: 6 featured posts)
+- **Directory exclusions** (skips \_releases/, examples/ folders)
+- **Dry-run mode** to preview changes before applying
 
 ### Developer Experience
 

@@ -7,10 +7,9 @@ slug: adding-new-posts-in-astropaper-theme
 featured: true
 draft: true
 tags:
-  - docs
-description:
-  Some rules & recommendations for creating or adding new posts using AstroPaperr
-  theme.
+    - docs
+description: Some rules & recommendations for creating or adding new posts using AstroPaperr
+    theme.
 ---
 
 Here are some rules/recommendations, tips & ticks for creating new posts in AstroPaper blog theme.
@@ -88,11 +87,11 @@ If you omit `tags` in a blog post (in other words, if no tag is specified), the 
 
 ```ts file="src/content.config.ts"
 export const blogSchema = z.object({
-  // ...
-  draft: z.boolean().optional(),
-  // [!code highlight:1]
-  tags: z.array(z.string()).default(["others"]), // replace "others" with whatever you want
-  // ...
+    // ...
+    draft: z.boolean().optional(),
+    // [!code highlight:1]
+    tags: z.array(z.string()).default(["others"]), // replace "others" with whatever you want
+    // ...
 });
 ```
 
@@ -109,9 +108,9 @@ slug: the-title-of-the-post
 featured: true
 draft: false
 tags:
-  - some
-  - example
-  - tags
+    - some
+    - example
+    - tags
 ogImage: ../../assets/images/example.png # src/assets/images/example.png
 # ogImage: "https://example.org/remote-image.png" # remote URL
 description: This is the example description of the example post.
