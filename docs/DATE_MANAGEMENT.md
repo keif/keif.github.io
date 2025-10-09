@@ -71,9 +71,18 @@ The pre-commit hook automatically:
 | Scenario | Action |
 |----------|--------|
 | New post (no `pubDatetime`) | Set `pubDatetime = now` |
-| Existing post | Set `modDatetime = now` |
+| Existing post with content changes | Set `modDatetime = now` |
+| Frontmatter-only changes (e.g., featured status) | No date update |
 | Unchanged post | No action |
 | Non-blog file | Ignored |
+
+### Smart Content Detection
+
+The system uses Git diff analysis to distinguish between:
+- **Content changes**: Modifications to the post body trigger `modDatetime` updates
+- **Frontmatter-only changes**: Updates to metadata (featured, tags, etc.) don't affect `modDatetime`
+
+This ensures that `modDatetime` accurately reflects when the actual content was last modified, not just when metadata was updated.
 
 ## Configuration
 

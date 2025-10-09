@@ -142,6 +142,81 @@ function findBlogFiles(specificFiles = []) {
   return allFiles;
 }
 
+function hasContentChanged(filePath) {
+  if (!isGitAvailable() || !isInGitRepo()) {
+    return true; // If no git, assume content changed
+  }
+
+  try {
+    // Get the diff for this specific file
+    const diff = execSync(`git diff HEAD -- "${filePath}"`, { 
+      encoding: 'utf-8', 
+      cwd: ROOT_DIR 
+    }).trim();
+    
+    if (!diff) {
+      // File hasn't changed since last commit
+      return false;
+    }
+    
+    // Simple approach: if there are frontmatter changes only, they will appear as
+    // changes between the opening and closing --- markers in the diff.
+    // If there are no --- markers in the diff, or changes appear after closing ---,
+    // then we have body content changes.
+    
+    const lines = diff.split('\n');
+    let frontmatterStartSeen = false;
+    let frontmatterEndSeen = false;
+    let hasBodyChanges = false;
+    
+    for (const line of lines) {
+      // Skip diff headers and file paths
+      if (line.startsWith('@@') || line.startsWith('+++') || line.startsWith('---') || 
+          line.startsWith('index ') || line.startsWith('diff --git') || 
+          line.startsWith('\\ No newline at end of file')) {
+        continue;
+      }
+      
+      // Check for frontmatter boundary markers
+      if (line === '+---' || line === '----') {
+        if (!frontmatterStartSeen) {
+          frontmatterStartSeen = true;
+        } else if (frontmatterStartSeen && !frontmatterEndSeen) {
+          frontmatterEndSeen = true;
+        }
+        continue;
+      }
+      
+      // If we haven't seen any frontmatter markers and we see changes, it's body content
+      if (!frontmatterStartSeen && (line.startsWith('+') || line.startsWith('-'))) {
+        hasBodyChanges = true;
+        break;
+      }
+      
+      // If we've seen both frontmatter markers and now see changes, it's body content
+      if (frontmatterStartSeen && frontmatterEndSeen && (line.startsWith('+') || line.startsWith('-'))) {
+        hasBodyChanges = true;
+        break;
+      }
+    }
+    
+    // If we didn't see any frontmatter markers at all, assume any changes are body changes
+    if (!frontmatterStartSeen) {
+      for (const line of lines) {
+        if (line.startsWith('+') || line.startsWith('-')) {
+          hasBodyChanges = true;
+          break;
+        }
+      }
+    }
+    
+    return hasBodyChanges;
+  } catch {
+    // If git command fails, assume content changed
+    return true;
+  }
+}
+
 function updateFrontmatter(filePath, isPreCommit = false, forceUpdate = false) {
   const fullPath = join(ROOT_DIR, filePath);
   const content = readFileSync(fullPath, 'utf-8');
@@ -155,8 +230,12 @@ function updateFrontmatter(filePath, isPreCommit = false, forceUpdate = false) {
       frontmatter.pubDatetime = now;
       updated = true;
     } else {
-      frontmatter.modDatetime = now;
-      updated = true;
+      // Only update modDatetime if the actual content (not just frontmatter) changed
+      const contentChanged = hasContentChanged(filePath);
+      if (contentChanged) {
+        frontmatter.modDatetime = now;
+        updated = true;
+      }
     }
   } else if (forceUpdate) {
     if (!frontmatter.pubDatetime) {

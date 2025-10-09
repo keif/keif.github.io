@@ -1,17 +1,20 @@
 ---
-title: "In Defense of Emojis in Developer Logs"
-slug: "in-defense-of-emojis-in-logs"
-description: "AI may overuse emojis, but in developer logs they're more than decoration. Here's why ✅, ❌, ⚠️, and ℹ️ deserve a place in your terminal."
-pubDatetime: 2025-09-23T12:00:00Z
-modDatetime: 2025-09-23T6:22:00Z
+title: In Defense of Emojis in Developer Logs
+pubDatetime: 2025-09-23T12:00:00.000Z
+modDatetime: 2025-10-09T07:08:46.501Z
+slug: in-defense-of-emojis-in-logs
 featured: true
-tags: ["logging", "developer-experience", "javascript", "cli", "productivity"]
-
-# Short intro shown in previews and feeds
+tags:
+    - logging
+    - developer-experience
+    - javascript
+    - cli
+    - productivity
+description: AI may overuse emojis, but in developer logs they're more than decoration. Here's why ✅, ❌, ⚠️, and ℹ️ deserve a place in your terminal.
 excerpt: |
-  Emojis are often criticized as noisy or gimmicky - especially with AI dropping them into every sentence.
-  But in developer logs, they're a powerful tool for clarity and speed.
-  Here's why these tiny symbols can make your terminal output more useful.
+    Emojis are often criticized as noisy or gimmicky - especially with AI dropping them into every sentence.
+    But in developer logs, they're a powerful tool for clarity and speed.
+    Here's why these tiny symbols can make your terminal output more useful.
 ---
 
 # In Defense of Emojis in Developer Logs
@@ -25,32 +28,32 @@ Let's look at a simple logging utility:
 ```js
 // Colors for console output
 const colors = {
-  green: '\x1b[32m',
-  red: '\x1b[31m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  reset: '\x1b[0m',
-  bold: '\x1b[1m'
+    green: "\x1b[32m",
+    red: "\x1b[31m",
+    yellow: "\x1b[33m",
+    blue: "\x1b[34m",
+    reset: "\x1b[0m",
+    bold: "\x1b[1m",
 };
 
 function log(message, color = colors.reset) {
-  console.log(`${color}${message}${colors.reset}`);
+    console.log(`${color}${message}${colors.reset}`);
 }
 
 function logSuccess(message) {
-  log(`✅ ${message}`, colors.green);
+    log(`✅ ${message}`, colors.green);
 }
 
 function logError(message) {
-  log(`❌ ${message}`, colors.red);
+    log(`❌ ${message}`, colors.red);
 }
 
 function logWarning(message) {
-  log(`⚠️  ${message}`, colors.yellow);
+    log(`⚠️  ${message}`, colors.yellow);
 }
 
 function logInfo(message) {
-  log(`ℹ️  ${message}`, colors.blue);
+    log(`ℹ️  ${message}`, colors.blue);
 }
 ```
 
@@ -62,7 +65,7 @@ I'd argue: **yes, we need them.**
 
 ## Why Emojis Work in Logs
 
-1.	Color Isn't Always Enough
+1. Color Isn't Always Enough
 
 Not every terminal or CI/CD environment renders color. Strip the ANSI codes away and all you've got left is plain text. Emojis remain intact and still communicate meaning.
 
@@ -90,10 +93,10 @@ Paradoxically, adding emojis reduces noise. They make the signal stronger by giv
 ## Striking the Balance
 
 There's a big difference between sprinkling 🦄🔥🌈 all over your code comments and using a **minimal set of functional emojis in logs**. The key is restraint:
-	•	✅ Success
-	•	❌ Error
-	•	⚠️ Warning
-	•	ℹ️ Info
+• ✅ Success
+• ❌ Error
+• ⚠️ Warning
+• ℹ️ Info
 
 That's it. No pizza slices, no rocket ships, no ironic skulls. Just a small visual toolkit to make logs easier to scan.
 
@@ -116,3 +119,5 @@ It's just ❌.
 ## Caveats
 
 There is nuance to all things development. There will always be instances when this may not be feasible - and that's fine. But when it's available to use? It's a nice addition to your toolkit.
+
+Test content addition to trigger modDatetime update.
