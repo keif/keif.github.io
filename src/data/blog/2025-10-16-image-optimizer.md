@@ -1,9 +1,10 @@
 ---
 title: "Building Image Optimizer: From Personal Tool to Developer API"
 pubDatetime: 2025-10-16T19:00:00.000Z
-modDatetime: 2025-10-16T23:29:45.894Z
+modDatetime: 2025-10-16T23:55:21.310Z
 slug: image-optimizer
 featured: true
+draft: true
 tags:
     - Go
     - API
@@ -19,7 +20,7 @@ description: |
 
 Like most side projects, this one started with frustration.
 
-I was optimizing images for my site manually — resize, compress, convert formats, rinse, repeat. Every "simple" online tool I tried either required a subscription, had file size limits that were too restrictive, or produced subpar results that destroyed image quality. I needed something better, something I could control, and something that respected my privacy.
+We started this to help my son out, who was working on images for his own projects and trying to squeeze every byte out he could from the loading process. He kept running into the same limitations: subscription walls, file size caps, or tools that destroyed image quality. I needed something better, something I could control, and something that respected my privacy.
 
 So I built it.
 
