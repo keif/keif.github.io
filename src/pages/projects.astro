@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Header from "@/components/Header.astro"
+import Footer from "@/components/Footer.astro"
+import ProjectCard from "@/components/ProjectCard.astro"
+import Hr from "@/components/Hr.astro"
+
+const allProjects = await getCollection("projects")
+
+// Filter out drafts and sort by launch date (newest first)
+const projects = allProjects
+  .filter(({ data }) => !data.draft)
+  .sort((a, b) => b.data.launchDate.valueOf() - a.data.launchDate.valueOf())
+---
+
+<Layout
+  title="Projects"
+  description="A collection of side projects, tools, and experiments — things I build to learn, to fix frustrations, or just for fun."
+>
+  <Header activeNav="projects" />
+  <main id="main-content" class="mx-auto max-w-screen-xl px-4 md:px-8">
+    <section class="pt-12 pb-8">
+      <h1 class="text-4xl font-bold sm:text-5xl prose-headings mb-4">Projects</h1>
+      <p class="text-lg text-muted-foreground max-w-3xl leading-relaxed">
+        A collection of side projects, tools, and experiments — things I build to learn, to fix
+        frustrations, or just for fun.
+      </p>
+    </section>
+
+    <Hr />
+
+    {
+      projects.length > 0 ? (
+        <section class="pt-12 pb-16">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <ProjectCard {...project} />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section class="pt-12 pb-16">
+          <p class="text-muted-foreground text-center">No projects yet. Check back soon!</p>
+        </section>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

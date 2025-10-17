@@ -1,0 +1,89 @@
+---
+import { slugifyStr } from "@/utils/slugify"
+import type { CollectionEntry } from "astro:content"
+import dayjs from "dayjs"
+
+export interface Props extends CollectionEntry<"projects"> {}
+
+const { data } = Astro.props
+const { title, description, url, image, tags = [], launchDate, status } = data
+
+const formattedDate = dayjs(launchDate).format("MMM YYYY")
+
+const statusColors = {
+  active: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  beta: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  archived: "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-400",
+}
+---
+
+<article class="card card-hover group">
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+  >
+    {
+      image && (
+        <div class="w-full h-48 overflow-hidden rounded-t-xl bg-muted">
+          <img
+            src={image}
+            alt={`${title} screenshot`}
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
+      )
+    }
+
+    <div class="p-6">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <h3
+          style={{ viewTransitionName: slugifyStr(title) }}
+          class="text-xl font-semibold text-foreground hover:text-accent transition-colors prose-headings group-hover:text-accent"
+        >
+          {title}
+        </h3>
+        {status && (
+          <span
+            class={`text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${statusColors[status]}`}
+          >
+            {status}
+          </span>
+        )}
+      </div>
+
+      <div class="mb-3 text-sm text-muted-foreground">
+        <time datetime={launchDate.toISOString()}>Launched {formattedDate}</time>
+      </div>
+
+      <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
+
+      {
+        tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag: string) => (
+              <span class="tag-pill">{tag}</span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="mt-4 flex items-center text-accent text-sm font-medium">
+        Visit project
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="ml-1 size-4 transition-transform group-hover:translate-x-1"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
