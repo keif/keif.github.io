@@ -1,7 +1,7 @@
 ---
 title: "Building Image Optimizer: From Personal Tool to Developer API"
 pubDatetime: 2025-10-16T19:00:00.000Z
-modDatetime: 2025-10-16T23:55:21.310Z
+modDatetime: 2025-10-17T03:44:44.778Z
 slug: image-optimizer
 featured: true
 draft: true
@@ -128,11 +128,11 @@ GET /health
 
 **Security and rate limiting:**
 
-- SQLite-backed API key management
+- SQLite-backed API key management with cryptographically secure generation
 - Bearer token authentication
 - Sliding window rate limiter (100 requests/minute per IP)
+- Comprehensive SSRF protection (domain whitelist + private IP blocking)
 - Configurable via environment variables
-- Domain whitelist prevents SSRF attacks
 
 ### CLI Tool: imgopt
 
@@ -143,19 +143,20 @@ For developers who prefer command-line workflows, the `imgopt` CLI provides batc
 imgopt -input ./photos -output ./optimized -quality 85 -format webp
 
 # Custom API endpoint
-imgopt -input ./photos -api https://image-optimizer-1t9i.onrender.com/optimize
+imgopt -input ./photos -api https://squish-api.baker.is/optimize
 ```
 
 Features:
 
 - Progress tracking for batch operations
 - Configurable quality, dimensions, and output format
+- Configuration file support (`.imgoptrc`) for project-specific defaults
 - Human-readable output with file size formatting
 - Summary statistics (total saved, compression ratio)
 
 ### Developer Experience: Swagger/OpenAPI Documentation
 
-Every endpoint is fully documented with interactive Swagger UI at [`/swagger/index.html`](https://image-optimizer-1t9i.onrender.com/swagger/index.html).
+Every endpoint is fully documented with interactive Swagger UI at [`/swagger/index.html`](https://squish-api.baker.is/swagger/index.html).
 
 The documentation includes:
 
@@ -180,11 +181,12 @@ One of the core principles of this project: **your images are your business, not
 
 **Security Measures:**
 
-- Size limits prevent memory exhaustion attacks
-- Request timeouts protect against slowloris-style attacks
-- Input validation on all parameters
-- Content-type verification
-- Domain whitelist for URL fetching (prevents SSRF)
+- **HTTP Security Headers**: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy, and HSTS (over HTTPS)
+- **SSRF Protection**: Domain whitelist combined with private IP blocking (loopback, RFC 1918 ranges, cloud metadata endpoints)
+- **Production Error Handling**: Environment-aware error responses prevent internal details from leaking
+- **API Key Security**: Cryptographically secure key generation (256-bit entropy) with SQLite-backed storage
+- **Input Validation**: Comprehensive validation on all parameters with content-type verification
+- **Resource Limits**: Size limits (10MB) and request timeouts prevent memory exhaustion and slowloris attacks
 
 **GDPR Compliant:**
 
@@ -207,7 +209,7 @@ One of the core principles of this project: **your images are your business, not
 - Persistent SQLite database on mounted disk volume
 - Environment variable configuration
 - Automatic HTTPS
-- Live at: `image-optimizer-1t9i.onrender.com`
+- Custom domain: `squish-api.baker.is`
 
 **Local Development:**
 
@@ -279,7 +281,7 @@ The service is live and production-ready, but there are areas for enhancement:
 ## Try It Out
 
 **Web UI:** [squish.baker.is](https://squish.baker.is)
-**API Docs:** [image-optimizer-1t9i.onrender.com/swagger/index.html](https://image-optimizer-1t9i.onrender.com/swagger/index.html)
+**API Docs:** [squish-api.baker.is/swagger/index.html](https://squish-api.baker.is/swagger/index.html)
 **Source Code:** [github.com/keif/image-optimizer](https://github.com/keif/image-optimizer)
 
 The project demonstrates that it's possible to build a fast, privacy-focused image optimization service without complex infrastructure or expensive third-party services. The combination of Go's performance, libvips' quality, and modern frontend tooling creates a developer-friendly platform that respects user privacy.
