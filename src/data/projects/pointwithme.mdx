@@ -1,0 +1,48 @@
+---
+title: PointWith.me
+slug: pointwithme
+description: Forked and modernized planning poker app for remote teams. Complete technical refresh with Vite, Tailwind CSS, and 52% bundle size reduction.
+url: https://pointwith.baker.is
+image: /images/projects/pointwithme.png
+tags:
+    - web
+    - react
+    - firebase
+    - collaboration
+    - modernization
+    - fork
+launchDate: 2023-11-08
+status: active
+draft: false
+---
+
+A real-time story pointing and planning poker application for distributed teams to collaboratively estimate work during sprint planning sessions.
+
+Originally created by [Phil Palmieri](https://github.com/philpalmieri/pointwith.me) in 2019, I forked this project in November 2023 to modernize it. When the original author didn't respond to pull requests, I built out my own improved version with extensive modernizations and enhancements.
+
+## Features
+
+- **Real-time Collaboration**: Firebase-powered instant updates across all connected devices
+- **Fibonacci Voting**: Story pointing using the Fibonacci sequence (0, 1, 1, 2, 3, 5, 8, 13...)
+- **Smart Final Scoring**: Automatic prime number rounding with manual override capability
+- **Vote Controls**: Show/hide votes, lock/unlock voting rounds
+- **Multiple Auth Options**: OAuth providers (Google, GitHub, Twitter, Facebook, Microsoft) plus anonymous login
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Statistics Dashboard**: Average, mode, and suggested final scores
+
+## Modernization Journey
+
+**November 2023 - Initial Fork:**
+
+- Updated React to 18.2.0
+- Migrated Firebase to v10
+- Initial refactoring and code quality improvements
+
+**October 2025 - Comprehensive Refresh:**
+
+- **Vite Migration**: Replaced Create React App for dramatically faster development and builds
+- **Tailwind CSS**: Complete UI migration from Semantic UI (96% CSS reduction, removed 1.5 MB of unused icon fonts)
+- **52% Bundle Reduction**: Total bundle size dropped from 1,402 KB → 679 KB (316 KB → 172 KB gzipped)
+- **Modern Dependencies**: Migrated to pnpm, Vitest, date-fns, lucide-react icons
+- **Enhanced UX**: Added toast notifications, improved anonymous login, refined prime number voting system
+- **Performance**: Significantly faster build times and better tree-shaking throughout
