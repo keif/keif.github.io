@@ -1,7 +1,7 @@
 ---
 title: "Building Image Optimizer: From Personal Tool to Developer API"
 pubDatetime: 2025-10-16T19:00:00.000Z
-modDatetime: 2025-10-17T03:44:44.778Z
+modDatetime: 2025-10-19T07:03:30.968Z
 slug: image-optimizer
 featured: true
 draft: true
@@ -12,11 +12,13 @@ tags:
     - Developer Tools
     - Performance
     - Next.js
+    - Game Development
+    - Spritesheet Packing
 description: |
-    A deep dive into building Image Optimizer — a privacy-focused image optimization service that started as a simple utility and grew into a full-featured API with CLI tools and developer-friendly features.
+    A deep dive into building Image Optimizer — a privacy-focused image optimization service that started as a simple utility and grew into a full-featured API with CLI tools, spritesheet packing, and developer-friendly features.
 ---
 
-> **TL;DR**: Built a production-ready image optimization service with Go + libvips, featuring a Next.js UI, CLI tool, API key authentication, rate limiting, and comprehensive Swagger documentation. Zero server storage, fully ephemeral processing, live at [squish.baker.is](https://squish.baker.is).
+> **TL;DR**: Built a production-ready image optimization service with Go + libvips, featuring a Next.js UI, CLI tool, spritesheet packing with game engine support, API key authentication, rate limiting, and comprehensive Swagger documentation. Zero server storage, fully ephemeral processing, live at [sosquishy.io](https://sosquishy.io).
 
 Like most side projects, this one started with frustration.
 
@@ -33,6 +35,7 @@ It evolved into:
 - A **web UI** for drag-and-drop optimization
 - A **REST API** for programmatic access
 - A **CLI tool** for batch processing
+- A **spritesheet packer** for game development with deduplication
 - A **developer platform** with API keys, rate limiting, and Swagger docs
 
 All while maintaining a core principle: **zero server-side storage**. Images are processed entirely in-memory and discarded immediately. No logs, no history, no tracking.
@@ -102,7 +105,7 @@ The service supports multiple optimization strategies:
 
 ### API Design
 
-The REST API exposes three primary endpoints:
+The REST API exposes multiple endpoints for different use cases:
 
 ```bash
 # Single image optimization (file upload or URL)
@@ -112,6 +115,16 @@ Authorization: Bearer YOUR_API_KEY
 
 # Batch optimization (multiple images)
 POST /batch-optimize
+Content-Type: multipart/form-data
+Authorization: Bearer YOUR_API_KEY
+
+# Spritesheet packing (pack multiple sprites into optimized sheets)
+POST /pack-sprites
+Content-Type: multipart/form-data
+Authorization: Bearer YOUR_API_KEY
+
+# Spritesheet optimization (import existing sheet, deduplicate, repack)
+POST /optimize-spritesheet
 Content-Type: multipart/form-data
 Authorization: Bearer YOUR_API_KEY
 
@@ -143,7 +156,7 @@ For developers who prefer command-line workflows, the `imgopt` CLI provides batc
 imgopt -input ./photos -output ./optimized -quality 85 -format webp
 
 # Custom API endpoint
-imgopt -input ./photos -api https://squish-api.baker.is/optimize
+imgopt -input ./photos -api https://api.sosquishy.io/optimize
 ```
 
 Features:
@@ -156,7 +169,7 @@ Features:
 
 ### Developer Experience: Swagger/OpenAPI Documentation
 
-Every endpoint is fully documented with interactive Swagger UI at [`/swagger/index.html`](https://squish-api.baker.is/swagger/index.html).
+Every endpoint is fully documented with interactive Swagger UI at [`/swagger/index.html`](https://api.sosquishy.io/swagger/index.html).
 
 The documentation includes:
 
@@ -200,7 +213,7 @@ One of the core principles of this project: **your images are your business, not
 **Frontend: GitHub Pages**
 
 - Next.js static export via GitHub Actions
-- Custom domain: [squish.baker.is](https://squish.baker.is)
+- Custom domain: [sosquishy.io](https://sosquishy.io)
 - Zero server costs for frontend hosting
 
 **API: Render.com**
@@ -209,7 +222,7 @@ One of the core principles of this project: **your images are your business, not
 - Persistent SQLite database on mounted disk volume
 - Environment variable configuration
 - Automatic HTTPS
-- Custom domain: `squish-api.baker.is`
+- Custom domain: `api.sosquishy.io`
 
 **Local Development:**
 
@@ -261,14 +274,85 @@ Single-binary deployment with minimal dependencies made Docker images tiny (~50M
 
 Using Next.js static export eliminated the need for a Node.js server. The entire frontend is just HTML/CSS/JS served from GitHub Pages. Zero server maintenance, zero costs, infinite scalability for the UI.
 
+## Recent Updates: Spritesheet Packing for Game Development
+
+After the initial launch, I added comprehensive spritesheet packing capabilities — a feature my son specifically requested for his Friday Night Funkin' mod development.
+
+### Spritesheet Packer
+
+The spritesheet packer uses the **MaxRects bin packing algorithm** (BSSF heuristic) to achieve 85-95% space utilization when combining multiple sprite images into optimized texture atlases.
+
+**Key Features:**
+
+- **Multi-format input**: PNG, JPEG, GIF, WebP sprites
+- **Configurable packing**: Padding, power-of-2 dimensions, max sheet size
+- **Transparency trimming**: Automatic removal of transparent borders
+- **Game engine support**: Export metadata in 9+ formats
+- **Multi-sheet output**: Automatically splits into multiple sheets when needed
+
+**Supported Output Formats:**
+
+- **Sparrow/Starling XML** - HaxeFlixel, Friday Night Funkin'
+- **TexturePacker XML** - Generic XML format
+- **Cocos2d plist** - Cocos2d-x game engine
+- **Unity** - TextureImporter metadata
+- **Godot** - AtlasTexture resource format
+- **JSON** - Generic coordinate data
+- **CSS** - Background-position sprite classes
+- **CSV** - Simple coordinate export
+- **XML** - Generic XML format
+
+### Spritesheet Import & Optimization
+
+For game developers working with existing spritesheets, the optimizer can:
+
+1. **Import existing spritesheets** with Sparrow XML metadata
+2. **Extract individual frames** using XML coordinates
+3. **Deduplicate sprites** with pixel-perfect byte-level comparison (70-75% reduction on typical FNF spritesheets)
+4. **Repack optimally** using MaxRects algorithm
+5. **Export in any format** - convert between game engine formats
+
+**Real-world performance:**
+
+Testing with Friday Night Funkin' spritesheets:
+
+- Mario sprite: 165 frames → 41 unique (75% duplicate reduction)
+- Turmoil sprite: 104 frames → 31 unique (70% duplicate reduction)
+- Forest King: 100+ frames optimized and repacked into efficient atlases
+
+This workflow solved a major pain point in FNF modding where artists often create animations with many duplicate frames (idle poses, held notes, etc.), wasting texture memory and loading time.
+
+### Why This Matters for Game Development
+
+**Texture Memory Optimization:**
+
+- Smaller spritesheets = less GPU memory usage
+- Better packing efficiency = fewer draw calls
+- Deduplication = significant file size reduction
+
+**Cross-Engine Compatibility:**
+
+- Convert between HaxeFlixel, Unity, Godot, Cocos2d formats
+- No manual coordinate recalculation
+- Preserve sprite metadata (frame offsets, original dimensions)
+
+**Developer Workflow:**
+
+- Command-line batch processing for build pipelines
+- Web UI for quick optimizations
+- API integration for automated asset pipelines
+
+The 8MB upload limit supports even large game spritesheets, and the ephemeral processing means your game assets stay private.
+
 ## What's Next
 
 The service is live and production-ready, but there are areas for enhancement:
 
 **Planned Features:**
 
-- **Smart format selection**: Automatically choose optimal format based on image content (photo vs. graphic vs. transparency needs)
-- **Batch API improvements**: Better error reporting for partial failures
+- **Spritesheet UI improvements**: Frontend interface for the import/optimization workflow
+- **Additional XML formats**: Support for more game engine metadata formats
+- **Smart format selection**: Automatically choose optimal format based on image content
 - **Usage analytics**: Per-API-key metrics dashboard (requests, bandwidth saved, optimization stats)
 - **Advanced filtering**: Custom optimization profiles (e.g., "social media", "hero image", "thumbnail")
 
@@ -277,11 +361,12 @@ The service is live and production-ready, but there are areas for enhancement:
 - Monetization tiers (currently completely free)
 - CDN integration for cached, optimized image delivery
 - WebSocket support for real-time progress on large batch operations
+- Atlas auto-generation from sprite animations
 
 ## Try It Out
 
-**Web UI:** [squish.baker.is](https://squish.baker.is)
-**API Docs:** [squish-api.baker.is/swagger/index.html](https://squish-api.baker.is/swagger/index.html)
+**Web UI:** [sosquishy.io](https://sosquishy.io)
+**API Docs:** [api.sosquishy.io/swagger/index.html](https://api.sosquishy.io/swagger/index.html)
 **Source Code:** [github.com/keif/image-optimizer](https://github.com/keif/image-optimizer)
 
 The project demonstrates that it's possible to build a fast, privacy-focused image optimization service without complex infrastructure or expensive third-party services. The combination of Go's performance, libvips' quality, and modern frontend tooling creates a developer-friendly platform that respects user privacy.
