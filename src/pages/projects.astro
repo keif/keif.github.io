@@ -7,11 +7,22 @@ import ProjectCard from "@/components/ProjectCard.astro"
 import Hr from "@/components/Hr.astro"
 
 const allProjects = await getCollection("projects")
+const allBlogPosts = await getCollection("blog")
 
 // Filter out drafts and sort by launch date (newest first)
 const projects = allProjects
   .filter(({ data }) => !data.draft)
   .sort((a, b) => b.data.launchDate.valueOf() - a.data.launchDate.valueOf())
+
+// Map projects to include their related blog posts
+const projectsWithRelatedPosts = projects.map(project => {
+  const relatedPosts = project.data.relatedPosts
+    ? allBlogPosts.filter(post =>
+        project.data.relatedPosts?.includes(post.data.slug || post.id.split('/').pop()?.replace(/\.mdx?$/, '') || '')
+      )
+    : []
+  return { ...project, relatedPosts }
+})
 ---
 
 <Layout
@@ -31,10 +42,10 @@ const projects = allProjects
     <Hr />
 
     {
-      projects.length > 0 ? (
+      projectsWithRelatedPosts.length > 0 ? (
         <section class="pt-12 pb-16">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
+            {projectsWithRelatedPosts.map((project) => (
               <ProjectCard {...project} />
             ))}
           </div>

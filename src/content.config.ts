@@ -40,6 +40,7 @@ const projects = defineCollection({
             launchDate: z.date(),
             status: z.enum(["active", "archived", "beta"]).default("active"),
             draft: z.boolean().optional(),
+            relatedPosts: z.array(z.string()).optional(),
         }),
 });
 
