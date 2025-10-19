@@ -1,7 +1,7 @@
 ---
 title: "Forking and Modernizing PointWith.me: 52% Smaller, Dramatically Faster"
 pubDatetime: 2025-10-18T12:00:00.000Z
-modDatetime: 2025-10-18T06:59:55.190Z
+modDatetime: 2025-10-19T01:39:19.473Z
 slug: modernizing-pointwithme
 featured: true
 draft: false
@@ -379,7 +379,7 @@ The real win with Tailwind is that you only ship CSS for classes you actually us
 
 ### 4. Don't Sleep on date-fns
 
-Moment.js has been deprecated since 2020. If you're still using it, migrate now. date-fns is smaller, faster, tree-shakeable, and actively maintained.
+[Moment.js](https://momentjs.com/) has been deprecated since 2020. If you're still using it, migrate now. [date-fns](https://date-fns.org/) is smaller, faster, tree-shakeable, and actively maintained.
 
 ### 5. Toast Notifications Dramatically Improve UX
 
@@ -399,6 +399,138 @@ This 6-year-old codebase now has:
 - All original functionality intact
 
 The time investment (a few days) paid off immediately. Forking and modernizing beat building from scratch.
+
+## Phase 7: Feature Enhancements and Security Hardening (Late October 2025)
+
+After the core modernization was complete, I continued improving the application with new features and critical security fixes.
+
+### Spectator Role
+
+Added a complete spectator mode allowing users to observe poker planning sessions without participating in voting.
+
+**Features:**
+
+- **Role Selection Modal**: Clean UI presenting two options when joining a table
+    - Voter: Full participation with voting rights
+    - Spectator: Observe-only mode without voting UI
+- **localStorage Persistence**: Role preference saved per-table, automatically restored on refresh
+- **Click-to-Toggle**: Intuitive interaction - click your own name in the participant list to switch roles
+- **Real-time Sync**: Role changes instantly visible to all participants via Firebase
+- **Visual Indicators**: Spectator badge (eye icon) displayed in participant lists
+- **Smart Filtering**: Spectators excluded from vote status tracking (✅/⭕ indicators)
+
+**Implementation Highlights:**
+
+```javascript
+// Role persisted per table
+localStorage.setItem(`pokerRole_${tableId}`, role);
+
+// Participants enhanced with role field
+{
+  uid: string,
+  displayName: string,
+  joinedAt: ISO8601,
+  isHost: boolean,
+  role: 'voter' | 'spectator'  // NEW
+}
+```
+
+**UX Design:**
+
+- Removed toggle buttons in favor of click-on-name interaction
+- Spectators see helpful message: "Click your name above to switch to voter mode"
+- Hover effects and tooltips guide users to the interaction
+- Net code reduction: -27 lines while improving usability
+
+This feature enables team members, managers, or clients to observe sprint planning sessions without influencing the voting process.
+
+### Security Hardening
+
+Conducted comprehensive security audit and fixed **3 CRITICAL vulnerabilities** in Firebase database rules.
+
+**Critical Issues Found:**
+
+1. **Unauthorized Data Modification**
+    - ANY authenticated user could delete or modify ANY table
+    - Malicious users could destroy the entire database
+    - Fixed: Restricted writes to table owners only
+
+2. **World-Readable Votes**
+    - Anyone (even unauthenticated users) could read all votes globally
+    - Privacy violation exposing all voting data
+    - Fixed: Require authentication for vote reading
+
+3. **No Data Validation**
+    - Users could write malformed data structures
+    - No string length limits (DoS vulnerability)
+    - No type checking on fields
+    - Fixed: Comprehensive validation rules
+
+**New Security Rules:**
+
+```json
+{
+    "pokerTables": {
+        "$ownerId": {
+            ".read": "auth != null",
+            ".write": "$ownerId === auth.uid", // Owner-only writes
+            "tableName": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
+            }
+        }
+    },
+    "votes": {
+        "$tableIssueId": {
+            ".read": "auth != null", // Authenticated-only reads
+            "$userId": {
+                ".write": "$userId === auth.uid" // Self-only writes
+            }
+        }
+    }
+}
+```
+
+**Data Validation Added:**
+
+- Table names: 1-100 characters (string, required)
+- Issue titles: 1-200 characters (string, required)
+- Display names: 1-100 characters (string, required)
+- Roles: must be 'voter' or 'spectator'
+- Vote values: numbers >= 0 or null
+- All fields type-checked (strings, booleans, numbers)
+- Unknown fields explicitly denied
+
+**Security Posture:**
+
+- Before: 🔴 CRITICAL RISK (database vulnerable to destruction)
+- After: 🟢 SECURE (all critical vulnerabilities patched)
+
+### UX Polish: Issue Creation
+
+Enhanced the issue creation form with a submit button for better accessibility and discoverability.
+
+**Changes:**
+
+- Added "Add Issue" button with Plus icon next to input field
+- Button disabled when input is empty (50% opacity, cursor-not-allowed)
+- Works with both Enter key AND button click
+- Input validation prevents empty submissions
+
+**Before:**
+
+```
+[Input Field____________________]
+(Enter key only)
+```
+
+**After:**
+
+```
+[Input Field____________] [+ Add Issue]
+(Enter key OR button click)
+```
+
+Simple change with significant usability impact - users no longer have to discover that Enter submits the form.
 
 ## What's Next
 
@@ -423,6 +555,7 @@ The modernization is complete, but there are always improvements to consider:
 
 **Live App:** [pointwith.baker.is](https://pointwith.baker.is)
 **Original Project:** [github.com/philpalmieri/pointwith.me](https://github.com/philpalmieri/pointwith.me) (Phil Palmieri)
+**Updated Project:** [github.com/keif/pointwith.me](https://github.com/keif/pointwith.me) (My updates)
 
 This project demonstrates two important lessons:
 
