@@ -14,10 +14,11 @@ const projects = allProjects
   .filter(({ data }) => !data.draft)
   .sort((a, b) => b.data.launchDate.valueOf() - a.data.launchDate.valueOf())
 
-// Map projects to include their related blog posts
+// Map projects to include their related blog posts (excluding drafts)
 const projectsWithRelatedPosts = projects.map(project => {
   const relatedPosts = project.data.relatedPosts
     ? allBlogPosts.filter(post =>
+        !post.data.draft &&
         project.data.relatedPosts?.includes(post.data.slug || post.id.split('/').pop()?.replace(/\.mdx?$/, '') || '')
       )
     : []
