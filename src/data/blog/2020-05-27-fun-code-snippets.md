@@ -6,9 +6,9 @@ modDatetime: 2025-10-09T06:53:52.797Z
 slug: fun-code-snippets
 featured: true
 tags:
-    - cli
-    - shell
-    - node
+    - CLI
+    - Shell
+    - Node.js
 description: A few handy CLI snippets and notes to remember how to quickly create or overwrite files using the terminal.
 ---
 

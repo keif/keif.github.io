@@ -1,7 +1,7 @@
 ---
 title: "Building Image Optimizer: From Personal Tool to Developer API"
 pubDatetime: 2025-10-16T19:00:00.000Z
-modDatetime: 2025-10-19T07:03:30.968Z
+modDatetime: 2025-10-21T14:29:40.389Z
 slug: image-optimizer
 featured: true
 draft: false
@@ -216,13 +216,15 @@ One of the core principles of this project: **your images are your business, not
 - Custom domain: [sosquishy.io](https://sosquishy.io)
 - Zero server costs for frontend hosting
 
-**API: Render.com**
+**API: Render.com** _(See updates below)_
 
 - Docker container deployment
 - Persistent SQLite database on mounted disk volume
 - Environment variable configuration
 - Automatic HTTPS
 - Custom domain: `api.sosquishy.io`
+
+> **Update (Oct 2024):** The API has since been migrated from Render → Fly.io (to address memory constraints) → Hetzner (for cost optimization). See [Migrating from Render to Fly.io](/posts/migrating-from-render-to-flyio/) and [Migrating to Hetzner](/posts/migration-to-hetzner/) for the full migration story. Current hosting: **Hetzner VPS**.
 
 **Local Development:**
 

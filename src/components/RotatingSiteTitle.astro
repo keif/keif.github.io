@@ -1,0 +1,79 @@
+---
+// Rotating site title component - cycles through different activities
+const words = ["coding", "writing", "gaming", "making", "cooking", "learning", "building", "creating"];
+---
+
+<span class="site-title">
+  <span class="static-text">baker.is/</span><span id="rotating-word" class="rotating-word">{words[0]}</span>
+</span>
+
+<style>
+  .site-title {
+    display: inline-block;
+  }
+
+  .static-text {
+    display: inline;
+  }
+
+  .rotating-word {
+    display: inline-block;
+    min-width: 5ch; /* Reserve space to prevent layout shift */
+    text-align: left;
+  }
+
+  .rotating-word.fade-out {
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  }
+
+  .rotating-word.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+  }
+</style>
+
+<script>
+  function initRotatingTitle() {
+    const words = ["coding", "writing", "gaming", "making", "cooking", "learning", "building", "creating"];
+    const wordElement = document.getElementById("rotating-word");
+
+    if (!wordElement) return;
+
+    let currentIndex = 0;
+
+    function rotateWord() {
+      if (!wordElement) return;
+
+      // Fade out
+      wordElement.classList.remove("fade-in");
+      wordElement.classList.add("fade-out");
+
+      // Change word after fade out completes
+      setTimeout(() => {
+        if (!wordElement) return;
+
+        currentIndex = (currentIndex + 1) % words.length;
+        wordElement.textContent = words[currentIndex];
+
+        // Fade in
+        wordElement.classList.remove("fade-out");
+        wordElement.classList.add("fade-in");
+      }, 300);
+    }
+
+    // Start with fade-in
+    wordElement.classList.add("fade-in");
+
+    // Rotate every 3 seconds
+    setInterval(rotateWord, 3000);
+  }
+
+  // Initialize on page load
+  initRotatingTitle();
+
+  // Re-initialize on Astro view transitions
+  document.addEventListener("astro:after-swap", initRotatingTitle);
+</script>

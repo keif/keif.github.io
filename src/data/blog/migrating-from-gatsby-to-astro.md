@@ -7,10 +7,10 @@ slug: migrating-from-gatsby-to-astro
 featured: false
 draft: true
 tags:
-    - astro
-    - gatsby
-    - migration
-    - blog
+    - Astro
+    - Gatsby
+    - Migration
+    - Blog
 description: A summary of the process and decisions behind migrating our blog from Gatsby to Astro, including content migration, performance benefits, and simplification of the stack.
 ---
 

@@ -1,0 +1,37 @@
+---
+title: YouTube Playlist Generator
+slug: youtube-playlist-generator
+description: A headless CLI tool that creates YouTube playlists from your subscriptions with intelligent quota management and OAuth caching.
+url: https://github.com/keif/playlist-from-subs
+image: /images/projects/youtube-playlist-generator.png
+tags: [cli, automation, python, youtube, personal]
+launchDate: 2025-09-11
+status: beta
+relatedPosts:
+    - headless-youtube-playlist-generator
+---
+
+A Python CLI tool that automatically creates and maintains YouTube playlists from your channel subscriptions. Built with quota-aware API design, OAuth caching, and intelligent filtering to stay within YouTube's strict API limits.
+
+## Features
+
+- **Quota-aware design** - 85-90% reduction in API quota usage through intelligent batching
+- **OAuth with refresh tokens** - Seamless authentication that persists across runs
+- **Smart caching** - 12-hour TTL cache to minimize redundant API calls
+- **Dry-run mode** - Test operations without consuming quota
+- **Configurable filtering** - Duration, content type, and custom criteria
+- **CSV reporting** - Detailed logs of processed videos
+- **Cron-friendly** - Designed for unattended scheduled runs
+- **Comprehensive error handling** - Graceful quota limit and network failure handling
+
+## Technical Stack
+
+- Python 3.x with YouTube Data API v3
+- OAuth 2.0 authentication with token refresh
+- Batch API operations (up to 50 items per call)
+- Persistent caching for playlist contents
+- Shell script wrappers for common workflows
+
+Built to solve YouTube's subscription feed limitations while respecting API quotas. Perfect for maintaining a curated playlist of recent uploads from channels you actually care about.
+
+Visit the [GitHub repository](https://github.com/keif/playlist-from-subs) for installation and usage instructions.

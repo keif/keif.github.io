@@ -5,11 +5,11 @@ modDatetime: 2025-10-09T07:08:46.501Z
 slug: in-defense-of-emojis-in-logs
 featured: true
 tags:
-    - logging
-    - developer-experience
-    - javascript
-    - cli
-    - productivity
+    - Logging
+    - Developer Experience
+    - JavaScript
+    - CLI
+    - Productivity
 description: AI may overuse emojis, but in developer logs they're more than decoration. Here's why ✅, ❌, ⚠️, and ℹ️ deserve a place in your terminal.
 excerpt: |
     Emojis are often criticized as noisy or gimmicky - especially with AI dropping them into every sentence.
