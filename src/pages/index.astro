@@ -7,7 +7,6 @@ import LinkButton from "@/components/LinkButton.astro"
 import Card from "@/components/Card.astro"
 import Hr from "@/components/Hr.astro"
 import getSortedPosts from "@/utils/getSortedPosts"
-import IconRss from "@/assets/icons/IconRss.svg"
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg"
 import { SITE } from "@/config"
 import { getFeaturedPosts } from "@/utils/getFeaturedPosts"
@@ -22,30 +21,6 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured)
 <Layout>
     <Header />
     <main id="main-content" data-layout="index">
-        <section id="hero" class="pt-12 pb-8">
-            <div class="text-center">
-                <h1 class="my-4 inline-block text-4xl font-bold sm:my-6 sm:text-6xl prose-headings">
-                    {SITE.title}
-                </h1>
-                <a
-                    target="_blank"
-                    href="/rss.xml"
-                    class="inline-block ml-3 opacity-70 hover:opacity-100 transition-opacity"
-                    aria-label="rss feed"
-                    title="RSS Feed"
-                >
-                    <IconRss width={24} height={24} class="stroke-accent stroke-2" />
-                    <span class="sr-only">RSS Feed</span>
-                </a>
-            </div>
-
-            <p class="mt-6 text-lg text-center text-muted-foreground max-w-2xl mx-auto">
-                {SITE.tagline}
-            </p>
-        </section>
-
-        <Hr />
-
         {
             featuredPosts.length > 0 && (
                 <>
