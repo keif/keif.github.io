@@ -1,7 +1,7 @@
 ---
 title: "From Localhost to Hetzner: A Love Story in Four Acts"
 pubDatetime: 2025-10-20T02:30:00.000Z
-modDatetime: 2025-10-20T07:04:23.770Z
+modDatetime: 2025-10-23T17:15:25.159Z
 slug: migration-to-hetzner
 featured: true
 draft: false
@@ -16,8 +16,6 @@ tags:
     - VPS
 description: How I became a hosting provider connoisseur by migrating from localhost to Render to Fly.io to Hetzner—all because of a memory-hungry sprite sheet and basic economics.
 ---
-
-# From Localhost to Hetzner: A Love Story in Four Acts
 
 _Or: How I Became a Hosting Provider Connoisseur Without Meaning To_
 

@@ -1,7 +1,7 @@
 ---
 title: In Defense of Emojis in Developer Logs
 pubDatetime: 2025-09-23T12:00:00.000Z
-modDatetime: 2025-10-09T07:08:46.501Z
+modDatetime: 2025-10-23T17:15:25.283Z
 slug: in-defense-of-emojis-in-logs
 featured: true
 tags:
@@ -16,8 +16,6 @@ excerpt: |
     But in developer logs, they're a powerful tool for clarity and speed.
     Here's why these tiny symbols can make your terminal output more useful.
 ---
-
-# In Defense of Emojis in Developer Logs
 
 There's been a growing backlash against emojis in tech writing. AI tools sprinkle them everywhere, blog posts get cluttered with 🚀✨🔥, and Slack channels feel like emoji soup. The sentiment is understandable: when everything is adorned with symbols, the impact is lost.
 

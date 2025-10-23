@@ -1,7 +1,7 @@
 ---
 title: "Never Rely on Color Alone: Why Symbols Matter More Than You Think"
 pubDatetime: 2025-10-22T12:00:00.000Z
-modDatetime: 2025-10-23T16:43:40.121Z
+modDatetime: 2025-10-23T17:15:25.375Z
 slug: symbols-over-color-accessibility
 featured: true
 tags:
@@ -16,8 +16,6 @@ excerpt: |
     But for approximately 1 in 12 men and 1 in 200 women with color vision deficiency, these distinctions disappear.
     Symbols aren't just nice-to-have — they're the difference between accessible and broken.
 ---
-
-# Never Rely on Color Alone: Why Symbols Matter More Than You Think
 
 Submitting a form only to see fields turn red or green — but you can't tell which — is a frustrating experience.
 
