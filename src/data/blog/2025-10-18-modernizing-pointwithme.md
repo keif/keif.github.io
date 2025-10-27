@@ -1,7 +1,7 @@
 ---
 title: "Forking and Modernizing PointWith.me: 52% Smaller, Dramatically Faster"
 pubDatetime: 2025-10-18T12:00:00.000Z
-modDatetime: 2025-10-19T01:39:19.473Z
+modDatetime: 2025-10-27T21:30:37.294Z
 slug: modernizing-pointwithme
 featured: true
 draft: false
@@ -18,7 +18,7 @@ description: |
     The story of forking an abandoned planning poker app and giving it a complete technical refresh: Vite, Tailwind CSS, 52% bundle reduction, and modern developer experience.
 ---
 
-> **TL;DR**: Forked [Phil Palmieri's](https://github.com/philpalmieri/pointwith.me) planning poker app, modernized it with Vite and Tailwind CSS, achieving 52% bundle reduction (1,402 KB → 679 KB), 96% CSS reduction, dramatically faster builds, and improved UX. Live at [pointwith.baker.is](https://pointwith.baker.is).
+> **TL;DR**: Forked [Phil Palmieri's](https://github.com/philpalmieri/pointwith.me) planning poker app, modernized it with Vite and Tailwind CSS, achieving 52% bundle reduction (1,402 KB → 679 KB), 96% CSS reduction, dramatically faster builds, and improved UX. Live at [PointPal.app](https://pointpal.app).
 
 In November 2023, I discovered PointWith.me — a real-time planning poker application for distributed teams built by Phil Palmieri in August 2019. It was exactly what I needed: real-time Fibonacci voting, Firebase-powered collaboration, and a clean interface for sprint planning.
 
@@ -553,7 +553,7 @@ The modernization is complete, but there are always improvements to consider:
 
 ## Try It Out
 
-**Live App:** [pointwith.baker.is](https://pointwith.baker.is)
+**Live App:** [PointPal.app](https://pointpal.app)
 **Original Project:** [github.com/philpalmieri/pointwith.me](https://github.com/philpalmieri/pointwith.me) (Phil Palmieri)
 **Updated Project:** [github.com/keif/pointwith.me](https://github.com/keif/pointwith.me) (My updates)
 
