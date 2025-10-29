@@ -1,7 +1,7 @@
 ---
 title: "Goodbye Jib: Modernizing Container Builds for a Simpler CI/CD Workflow"
 pubDatetime: 2025-10-07T21:00:00.000Z
-modDatetime: 2025-10-09T06:53:52.741Z
+modDatetime: 2025-10-29T02:07:43.425Z
 slug: goodbye-jib-modernizing-builds
 featured: true
 tags:
@@ -20,55 +20,55 @@ description: |
 
 ![Docker Modernization Cover](@/assets/images/docker-modernization-cover.webp)
 
-## The Backstory: When Build Tools Do “Too Much”
+## The Backstory: When Convenience Becomes a Liability
 
-When you first start containerizing Java applications, [**Jib**](https://github.com/GoogleContainerTools/jib) feels like a miracle.  
-No Dockerfile. No Docker daemon. Just a plugin that builds optimized images straight from our Gradle project. It removes friction and “just works.”
+[**Jib**](https://github.com/GoogleContainerTools/jib) felt like magic at first.
+No Dockerfile. No Docker daemon. Just a Gradle plugin that builds optimized images. It removes friction and "just works."
 
-That convenience is intoxicating — until it wasn’t. Who doesn't love long `kubectl` commands that can be simplified with a simple `jib switch <env>`?
+That convenience was great — until it wasn't.
 
-As the project entered a maintenance phase, its build tooling fell behind. Pinned Jib versions and out-of-date <abbr title="Google Cloud Platform">GCP</abbr> integrations made updates increasingly difficult. The need to modernize authentication (via updated `gcloud` tooling) and remove Jib altogether became a matter of aligning with existing developer tools and eliminating unnecessary dependencies.
+The project entered maintenance mode, and the build tooling fell behind. Pinned Jib versions, outdated GCP integrations, authentication issues — updates got harder and harder.
 
-Small plugin upgrades would change image layers unexpectedly. Caching behaved differently between CI and local builds. And debugging image-build issues meant spelunking through opaque plugin internals instead of simply reading a Dockerfile.
+Small plugin upgrades would change image layers unexpectedly. Caching worked differently in CI vs. local builds. Debugging meant digging through opaque plugin internals instead of just reading a Dockerfile.
 
-Over time, the cost of that abstraction started to outweigh its benefits.
+The abstraction cost more than it saved.
 
 ---
 
 ## Where It Started to Hurt
 
-The pain really began when we discovered that our GitLab-to-GCP deployment process was broken — and worse, there were no clear error logs explaining what had happened.
+The GitLab-to-GCP deployment process broke. No clear error logs, just failures.
 
-When we attempted to deploy the UI project (a custom Express app paired with an older Next.js framework), the build failed unexpectedly. Tracing the failure led us back through the CI pipeline and revealed that the problem wasn’t isolated to one repository - Jib was still in use across several layers, including the UI, caching, and API services. Each of these projects depended on the same outdated Jib configuration and shared plugin version.
+Trying to deploy the UI project (custom Express + old Next.js) failed unexpectedly. Tracing it back revealed Jib was still in use across multiple services: UI, caching, API. All using the same outdated Jib config and plugin version.
 
-Compounding the problem was the use of a custom Git token that was scoped too narrowly, causing authentication failures during image pushes. This token was embedded in the CI environment and not refreshed regularly, leading to silent failures that were difficult to diagnose.
+Worse: a custom Git token scoped too narrowly caused auth failures during image pushes. It was embedded in CI, not refreshed regularly, and failed silently.
 
-That investigation made it clear: Jib had become the common bottleneck. Its pinned version, opaque build behavior, and silent failures in the cloud environment were blocking updates and preventing deployments. Once identified, the only real path forward was to remove Jib entirely and streamline deployments by adopting a direct `kubectl`-based workflow, aligning all affected repositories under a consistent, transparent deployment process.
+Jib became the bottleneck. Pinned versions, opaque behavior, silent cloud failures — blocking updates and preventing deployments. The fix? Rip it out entirely and move to a direct `kubectl` workflow.
 
 ---
 
-## Defining the Modernization Goal
+## The Goal: Simplify and Standardize
 
-We didn’t want to just “get off Jib.” We wanted to **simplify** and **standardize**.
+We didn't just want to "get off Jib." We wanted simpler, more consistent builds.
 
-The modernization goals were clear:
+What that meant:
 
-1. **Transparency** — Every image should be reproducible from a visible, editable Dockerfile.
-2. **Consistency** — The same pattern should apply across all languages and services.
-3. **Observability** — CI logs should show every build step, not just plugin output.
-4. **Portability** — Local builds should be identical to what runs in production.
+1. **Transparency** — Every image reproducible from a visible Dockerfile
+2. **Consistency** — Same pattern across all languages and services
+3. **Observability** — CI logs showing every build step, not just plugin output
+4. **Portability** — Local builds identical to production
 
-In practice, these goals took shape through the modernization effort itself. Docker builds were already part of the system, but removing Jib brought transparency to how those images were built and deployed. The transition to direct `kubectl` deployments unified the process across multiple repositories—creating consistent pipelines, clearer logs, and an easier path to troubleshoot or reproduce deployments. Updating `gcloud` authentication (with `USE_GKE_CLOUD_AUTH_PLUGIN=true`) completed the picture, aligning CI and developer environments under the same tooling and meeting the goals of transparency, consistency, observability, and portability in one unified workflow.
+Docker builds were already in the system. Removing Jib made them transparent. Moving to direct `kubectl` deployments unified the process across repos — consistent pipelines, clearer logs, easier troubleshooting. Updating `gcloud` auth (with `USE_GKE_CLOUD_AUTH_PLUGIN=true`) aligned everything under the same tooling.
 
 ---
 
 ## The Migration Plan
 
-We rolled out the change in deliberate stages, focusing on one service at a time.
+One service at a time, deliberately.
 
-1. **Recreate the base image.**
+**1. Recreate the base image**
 
-We inspected what Jib was actually building under the hood and codified it in a Dockerfile:
+Inspected what Jib was building and codified it in a Dockerfile:
 
 ```
 FROM eclipse-temurin:17-jre-slim
@@ -76,19 +76,18 @@ COPY build/libs/app.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 ```
 
-2. Migrate secrets and configuration.
+**2. Migrate secrets and configuration**
 
-Environment variables replaced plugin-managed properties, aligning with Helm’s `env_secrets` convention.
+Environment variables replaced plugin-managed properties. Aligned with Helm's `env_secrets` convention.
 
-3. Update pipelines.
+**3. Update pipelines**
 
-Gradle tasks invoking Jib were swapped for standard docker build and docker push commands.
-Helm (or plain kubectl) handled deployment uniformly across environments.
+Swapped Gradle tasks invoking Jib for standard `docker build` and `docker push`.
+Helm (or plain kubectl) handled deployment uniformly.
 
-4. Automate and clean up.
+**4. Automate and clean up**
 
-Old plugin references, Jib cache folders, and redundant <abbr title="Yet Another Markup Language">YAML</abbr> fragments were removed.
-We added validation scripts to ensure each image had a Dockerfile and Helm values configured properly.
+Removed old plugin references, Jib cache folders, redundant YAML fragments. Added validation scripts to ensure each image had a Dockerfile and proper Helm values.
 
 > **Cloud Authentication Updates:**  
 > During the migration, we also discovered that our gcloud components were out of date. The older `gcloud` tooling no longer handled authentication correctly with newer Kubernetes clusters, which now require the `USE_GKE_CLOUD_AUTH_PLUGIN=true` environment variable. We updated the CI environment and local tooling to export this variable and align with the new gcloud authentication flow, ensuring seamless access to <abbr title="Google Kubernetes Engine">GKE</abbr> clusters during image deployment and Helm operations.
@@ -180,32 +179,33 @@ This shift not only simplified pipelines but unified how every team built and de
 
 ## The Payoff
 
-The results were immediate:
+Immediate results:
 
-- Simpler debugging. A broken build was now just a Docker build — readable, reproducible, and fixable.
-- Faster pipelines. Consistent caching across services reduced build times by roughly 30–40%.
-- Unified approach. The process was brought in line with existing internal development standards—no custom commands, no pinned versions, and no deviations from standard tooling.
-- Cleaner onboarding. New engineers didn’t need to learn Jib’s internals or setup custom integrations and scripts; the Dockerfile told the whole story.
-- CI/CD reliability. Local and CI builds produced identical images, removing environment drift.
+- **Simpler debugging** — Broken build? Just a Docker build. Readable, reproducible, fixable.
+- **Faster pipelines** — Consistent caching cut build times ~30-40%.
+- **Unified approach** — Aligned with existing internal standards. No custom commands, no pinned versions.
+- **Cleaner onboarding** — New engineers read the Dockerfile, not Jib internals.
+- **CI/CD reliability** — Local and CI builds identical. No environment drift.
 
 ---
 
-## Lessons Learned
+## What I Learned
 
-- Magic tools trade transparency for convenience. That’s fine early on, but can become a liability if it is not maintained.
-- CI/CD is part of your codebase. Treat it like production code — review, test, and evolve it.
-- Explicit beats implicit. A short Dockerfile is easier to maintain than a complex plugin.
-- Consistency compounds. Standardizing one layer of your stack often simplifies three others.
+- Magic tools trade transparency for convenience. Fine early on, liability later if unmaintained.
+- CI/CD _is_ part of your codebase. Treat it like production code.
+- Explicit beats implicit. Short Dockerfile > complex plugin.
+- Consistency compounds. Standardize one layer, simplify three others.
 
 ---
 
 ## Closing Thoughts
 
-Migrating away from Jib wasn’t about outgrowing the tool — it was about aligning our projects with existing internal tools and processes.  
-The reliance on pinned, outdated versions and custom integrations had become a hidden risk, one that made deployments unpredictable and maintenance more difficult.
+This wasn't about outgrowing Jib. It was about aligning with existing internal tools and processes.
 
-By simplifying the process and adopting the same workflow used across our other projects, we reduced friction, eliminated unnecessary dependencies, and gained consistency across environments.  
-The result wasn’t just easier builds — it was a more maintainable, transparent, and reliable system.
+The pinned versions and custom integrations had become a hidden risk — unpredictable deployments, harder maintenance.
 
-Sometimes progress isn’t about moving faster or adopting new tools.  
-It’s about realigning with the ones that already work best.
+Simplifying the process and adopting the same workflow as other projects reduced friction, eliminated dependencies, and brought consistency across environments.
+
+The result? More maintainable, transparent, reliable.
+
+Sometimes progress isn't about moving faster or adopting new tools. It's about realigning with the ones that already work.

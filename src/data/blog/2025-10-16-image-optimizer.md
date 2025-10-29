@@ -1,7 +1,7 @@
 ---
 title: "Building Image Optimizer: From Personal Tool to Developer API"
 pubDatetime: 2025-10-16T19:00:00.000Z
-modDatetime: 2025-10-21T14:29:40.389Z
+modDatetime: 2025-10-29T02:07:43.520Z
 slug: image-optimizer
 featured: true
 draft: false
@@ -28,9 +28,9 @@ So I built it.
 
 ## The Goal
 
-Initially, I wanted a straightforward utility: take any image, make it smaller and faster without sacrificing quality. But once I saw the results from libvips — the performance, the quality, the flexibility — I realized this could be more than just a personal tool.
+Started simple: take any image, make it smaller and faster without sacrificing quality. Then I saw what libvips could do — the performance, the quality, the flexibility — and realized this could be more.
 
-It evolved into:
+It grew into:
 
 - A **web UI** for drag-and-drop optimization
 - A **REST API** for programmatic access
@@ -254,27 +254,27 @@ Testing with typical web images shows significant improvements:
 - After oxipng: 167 KB
 - Additional savings: **31.8%**
 
-## Lessons Learned
+## What I Learned
 
-### 1. libvips is Vastly Underappreciated
+### 1. libvips is Seriously Underrated
 
-Coming from a Node.js background where `sharp` (which wraps libvips) is popular, I underestimated how much better the performance would be in Go. The streaming architecture and memory efficiency made handling concurrent requests trivial.
+Coming from Node.js where `sharp` (libvips wrapper) is popular, I still underestimated the performance boost in Go. Streaming architecture + memory efficiency made concurrent requests trivial.
 
-### 2. Privacy as a Feature
+### 2. Privacy Became a Feature
 
-Not storing images wasn't just a security decision — it became a selling point. Users care about privacy, especially when dealing with potentially sensitive images. Making ephemeral processing a core feature eliminated entire categories of security concerns.
+Not storing images wasn't just security — it became a selling point. Users care about privacy with potentially sensitive images. Ephemeral processing eliminated entire categories of security concerns.
 
-### 3. API-First Design Enables Flexibility
+### 3. API-First Design Pays Off
 
-Building the API first (before the UI) forced better design decisions. The web interface became just one client of the API, making it trivial to add the CLI tool later. The Swagger documentation became the single source of truth.
+Built the API before the UI. This forced better decisions. The web interface became just one client, making the CLI tool trivial to add later. Swagger docs became the single source of truth.
 
-### 4. Go's Deployment Story is Excellent
+### 4. Go Deployment is Bulletproof
 
-Single-binary deployment with minimal dependencies made Docker images tiny (~50MB) and deployments bulletproof. No dependency hell, no runtime version mismatches, no surprise breaking changes.
+Single binary, minimal dependencies. Docker images ~50MB. No dependency hell, no runtime mismatches, no surprise breakages.
 
-### 5. Static Export for Frontends Reduces Complexity
+### 5. Static Export Simplifies Everything
 
-Using Next.js static export eliminated the need for a Node.js server. The entire frontend is just HTML/CSS/JS served from GitHub Pages. Zero server maintenance, zero costs, infinite scalability for the UI.
+Next.js static export = no Node.js server needed. Entire frontend is HTML/CSS/JS on GitHub Pages. Zero server maintenance, zero costs, infinite UI scalability.
 
 ## Recent Updates: Spritesheet Packing for Game Development
 
@@ -348,21 +348,21 @@ The 8MB upload limit supports even large game spritesheets, and the ephemeral pr
 
 ## What's Next
 
-The service is live and production-ready, but there are areas for enhancement:
+Service is live and production-ready. Some ideas for later:
 
-**Planned Features:**
+**Planned:**
 
-- **Spritesheet UI improvements**: Frontend interface for the import/optimization workflow
-- **Additional XML formats**: Support for more game engine metadata formats
-- **Smart format selection**: Automatically choose optimal format based on image content
-- **Usage analytics**: Per-API-key metrics dashboard (requests, bandwidth saved, optimization stats)
-- **Advanced filtering**: Custom optimization profiles (e.g., "social media", "hero image", "thumbnail")
+- Spritesheet UI for the import/optimization workflow
+- More XML formats for additional game engines
+- Smart format selection based on image content
+- Per-API-key metrics dashboard
+- Custom optimization profiles ("social media", "hero image", etc.)
 
-**Maybe Someday:**
+**Maybe:**
 
-- Monetization tiers (currently completely free)
-- CDN integration for cached, optimized image delivery
-- WebSocket support for real-time progress on large batch operations
+- Monetization tiers (currently free)
+- CDN integration for cached delivery
+- WebSocket support for large batch progress
 - Atlas auto-generation from sprite animations
 
 ## Try It Out
@@ -371,6 +371,6 @@ The service is live and production-ready, but there are areas for enhancement:
 **API Docs:** [api.sosquishy.io/swagger/index.html](https://api.sosquishy.io/swagger/index.html)
 **Source Code:** [github.com/keif/image-optimizer](https://github.com/keif/image-optimizer)
 
-The project demonstrates that it's possible to build a fast, privacy-focused image optimization service without complex infrastructure or expensive third-party services. The combination of Go's performance, libvips' quality, and modern frontend tooling creates a developer-friendly platform that respects user privacy.
+You can build a fast, privacy-focused image optimization service without complex infrastructure or expensive third-party services. Go's performance + libvips' quality + modern frontend tooling = developer-friendly platform that respects privacy.
 
-If you're building something that processes images, I hope this serves as a practical reference for balancing performance, privacy, and developer experience.
+If you're building something that processes images, hopefully this is a useful reference for balancing performance, privacy, and developer experience.
