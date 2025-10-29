@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+
+  // Create redirect paths for old project slugs
+  const redirects = [
+    {
+      params: { slug: "pointwithme" },
+      props: { redirectTo: "/projects#pointpal" },
+    },
+  ];
+
+  return redirects;
+}
+
+const { redirectTo } = Astro.props;
+---
+
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=${redirectTo}`} />
+    <link rel="canonical" href={redirectTo} />
+  </head>
+  <body>
+    Redirecting to <a href={redirectTo}>projects</a>…
+  </body>
+</html>
