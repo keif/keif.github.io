@@ -1,7 +1,7 @@
 ---
 title: Making a Spotify Widget Work on macOS (and Fixing the Bugs)
 pubDatetime: 2025-10-31T00:00:00.000Z
-modDatetime: 2025-11-01T02:55:51.571Z
+modDatetime: 2025-11-01T07:56:50.766Z
 slug: busytag-spotify-widget
 featured: true
 draft: false
@@ -111,7 +111,7 @@ Made some reference configs, did trial and error, got it working. Now the LEDs p
 
 Works on macOS now. Updates reliably. LEDs shift from deep blues for jazz albums to vibrant reds for rock. It's oddly satisfying to watch.
 
-(Should still work on Windows too—I kept the original logic intact—but I didn't test it.)
+(Should still work on Windows too - I kept the original logic intact - but I didn't test it.)
 
 ## The Stack
 
@@ -127,9 +127,43 @@ Works on macOS now. Updates reliably. LEDs shift from deep blues for jazz albums
 
 **File buffering matters for USB devices.** You need explicit `fsync()` calls. USB doesn't behave like a regular filesystem.
 
-**Picking colors from images is harder than it looks.** There's no single "right" answer—it depends what you're going for.
+**Picking colors from images is harder than it looks.** There's no single "right" answer - it depends what you're going for.
 
 **Config formats are finicky.** Always validate against the actual device behavior, not what you think it should be.
+
+## UPDATE: The Animated GIF Experiment
+
+After getting the LED colors working, I thought it would be cool to capture animated GIFs of the album transitions - basically showing the BusyTag display updating as tracks change.
+
+### Finding Inspiration
+
+The original project had a feature branch with some canvas API experiments. Not documented in the main README, but it was there. Gave me some ideas about how to approach programmatic screen capture from the BusyTag.
+
+### The Canvas API Rabbit Hole
+
+The BusyTag has an undocumented canvas API. Not in the official docs, but it exists. You can programmatically read what's currently on the screen.
+
+I built out a system using `gifsicle` to:
+
+1. Capture the display state before/during/after track changes
+2. Stitch them into smooth animated GIFs
+3. Save them as a visual log of what was playing
+
+Got it working. Generated some test GIFs. They looked decent.
+
+### Why I Shelved It
+
+The implementation worked, but it didn't feel worth keeping:
+
+**Timing is finicky.** USB refresh rates aren't consistent. Sometimes you'd capture mid-transition, sometimes you'd miss frames entirely. Getting smooth animations required polling the device constantly, which felt excessive.
+
+**The API is undocumented for a reason.** No guarantees it'll keep working. Building a feature on top of something that could change or break without notice isn't great for long-term maintenance.
+
+**The payoff wasn't there.** Cool to look at once, but not actually useful. The static display updates work fine. Animated GIFs were mostly solving a problem I didn't have.
+
+So I pulled the code out. Maybe I'll revisit it if the canvas API gets officially documented, but for now, it's shelved.
+
+The core widget works. That's enough.
 
 ## Links
 
