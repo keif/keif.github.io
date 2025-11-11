@@ -38,7 +38,7 @@ const projects = defineCollection({
             image: z.string().optional(),
             tags: z.array(z.string()).default([]),
             launchDate: z.date(),
-            status: z.enum(["active", "archived", "beta"]).default("active"),
+            status: z.array(z.enum(["launched", "archived", "beta"])).default(["beta"]),
             draft: z.boolean().optional(),
             relatedPosts: z.array(z.string()).optional(),
         }),
