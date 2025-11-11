@@ -1,0 +1,87 @@
+---
+title: Phucking Cards
+slug: phucking-cards
+description: A free, no-login-required Cards Against Humanity clone for 3-20 players. Real-time multiplayer built with Socket.IO, Redis, and React.
+url: https://phuckingcards.com
+image: /images/projects/phucking-cards.png
+tags:
+    - web
+    - react
+    - socket.io
+    - redis
+    - express
+    - real-time
+    - game
+    - typescript
+    - multiplayer
+launchDate: 2023-06-01
+status: active
+draft: false
+relatedPosts:
+    - building-phucking-cards
+---
+
+A real-time multiplayer party game for 3-20 players. No account required, no ads, no tracking - just create a game, share the party code, and play with friends.
+
+Originally based on [Yusuf Ameri's implementation](https://github.com/yusufameri/cards-against-humanity), this modernized version features significant improvements to mobile UX, real-time synchronization, and game modes.
+
+## Features
+
+- **Real-time Multiplayer**: Socket.IO-powered instant updates across all connected players
+- **Flexible Player Count**: 3-20 players per game with automatic judge rotation
+- **Round Timers**: Configurable time limits with partial submission support
+- **User-Submitted Cards**: Community card submissions with moderation queue and vote tracking
+- **Session Persistence**: Redis-backed sessions allow page refreshes without losing game state
+- **Multiple Game Modes**:
+    - **Rebooting the Universe**: Trade a point for a completely new hand
+    - **Packing Heat**: Draw extra cards, keep your favorite
+    - **Happy Ending**: Final round is a "Make a Haiku" card
+    - **Never Have I Ever**: Discard cards you don't understand (with shame notifications)
+    - **God is Dead**: Everyone votes, no single judge
+    - **Survival of the Fittest**: Elimination voting until one card remains
+- **Mobile-First Touch Support**: Optimized tap and drag interactions for phones and tablets
+- **Privacy-Friendly**: No login required, minimal analytics via GoatCounter
+
+## Technical Stack
+
+**Backend:**
+
+- Express.js + Socket.IO for real-time communication
+- Redis for session storage and card management
+- TypeScript throughout
+- Winston for structured logging
+
+**Frontend:**
+
+- React 18 with TypeScript
+- Socket.IO client for real-time updates
+- React DnD with Touch Backend for desktop drag-drop and mobile tap
+- Vite for fast builds
+
+**Infrastructure:**
+
+- Deployed on DigitalOcean
+- nginx reverse proxy
+- Handles 10-15 concurrent games (30-60 players) with minimal load
+
+## Recent Improvements
+
+**Mobile UX Enhancements:**
+
+- Fixed touch event recognition by eliminating `delayTouchStart` delay
+- Added device-specific instructions (tap vs. pick)
+- Improved carousel swipe interactions
+
+**Real-Time Reliability:**
+
+- Fixed timeout state propagation by implementing dynamic callback updates
+- Added explicit `setRoundFinishedNotifier()` method for long-lived game instances
+- Enhanced Socket.IO room management for better broadcast reliability
+
+**Content Moderation:**
+
+- Spam detection for similar card submissions
+- Rate limiting (10 cards per hour per session)
+- Admin moderation queue with approve/reject workflow
+
+Visit [phuckingcards.com](https://phuckingcards.com) to play, or check out the [source code on GitHub](https://github.com/keif/cards-against-humanity).
