@@ -24,7 +24,8 @@ const statusColors = {
     href={url}
     target="_blank"
     rel="noopener noreferrer"
-    class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent project-link"
+    data-project={slugifyStr(title)}
   >
     {
       image && (
@@ -125,3 +126,22 @@ const statusColors = {
     )
   }
 </article>
+
+<script>
+  function setupProjectTracking() {
+    document.querySelectorAll('.project-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const project = (e.currentTarget as HTMLElement).dataset.project
+        if (project && typeof window.goatcounter !== 'undefined') {
+          window.goatcounter.count({
+            path: `project-click/${project}`,
+            event: true,
+          })
+        }
+      })
+    })
+  }
+
+  setupProjectTracking()
+  document.addEventListener('astro:after-swap', setupProjectTracking)
+</script>
