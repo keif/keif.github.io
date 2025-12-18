@@ -24,6 +24,7 @@ const readingTime = getReadingTimeFromMarkdown(body || "")
 const isModified = modDatetime && modDatetime > pubDatetime
 const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(postTimezone || SITE.timezone)
 const formattedDate = datetime.format("MMM D, YYYY")
+const originalPubDate = dayjs(pubDatetime).tz(postTimezone || SITE.timezone).format("MMM D, YYYY")
 
 const headerProps = {
     style: { viewTransitionName: slugifyStr(title) },
@@ -49,7 +50,12 @@ const headerProps = {
             <span>{readingTime}</span>
         </div>
 
-        <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
+        <p class="text-muted-foreground mb-2 leading-relaxed">{description}</p>
+        {isModified && (
+            <p class="text-xs text-muted-foreground mb-4 italic opacity-70">
+                Originally published {originalPubDate}
+            </p>
+        )}
 
         {
             tags.length > 0 && (

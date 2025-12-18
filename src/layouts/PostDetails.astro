@@ -14,6 +14,7 @@ import { slugifyStr } from "@/utils/slugify"
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg"
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg"
 import { SITE } from "@/config"
+import dayjs from "dayjs";
 
 export interface Props {
     post: CollectionEntry<"blog">
@@ -30,6 +31,7 @@ const {
     canonicalURL,
     pubDatetime,
     modDatetime,
+    postTimezone,
     timezone,
     tags,
     hideEditPost,
@@ -77,6 +79,9 @@ const currentPostIndex = allPosts.findIndex((a) => a.id === post.id)
 
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null
 const nextPost = currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null
+
+const isModified = modDatetime && modDatetime > pubDatetime
+const originalPubDate = dayjs(pubDatetime).tz(postTimezone || SITE.timezone).format("MMM D, YYYY")
 ---
 
 <Layout {...layoutProps}>
@@ -106,7 +111,13 @@ const nextPost = currentPostIndex !== allPosts.length ? allPosts[currentPostInde
 
         <hr class="my-8 border-dashed" />
 
-        <EditPost class="sm:hidden" {hideEditPost} {post} />
+        {isModified && (
+          <p class="text-xs text-muted-foreground mb-4 italic opacity-70">
+            Originally published {originalPubDate}
+          </p>
+        )}
+
+      <EditPost class="sm:hidden" {hideEditPost} {post} />
 
         <ul class="mt-4 mb-8 sm:my-8">
             {tags.map((tag) => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
