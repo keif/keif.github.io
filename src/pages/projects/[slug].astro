@@ -178,7 +178,11 @@ const layoutProps = {
 </Layout>
 
 <script>
-    function setupProjectTracking() {
+    function setupProjectPage() {
+        // Set back button URL to projects page
+        sessionStorage.setItem("backUrl", "/projects")
+
+        // Track project link clicks
         document.querySelectorAll(".project-link").forEach((link) => {
             link.addEventListener("click", (e) => {
                 const project = (e.currentTarget as HTMLElement).dataset.project
@@ -192,6 +196,6 @@ const layoutProps = {
         })
     }
 
-    setupProjectTracking()
-    document.addEventListener("astro:after-swap", setupProjectTracking)
+    setupProjectPage()
+    document.addEventListener("astro:after-swap", setupProjectPage)
 </script>
