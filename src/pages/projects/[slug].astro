@@ -1,29 +1,197 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Header from "@/components/Header.astro"
+import Footer from "@/components/Footer.astro"
+import BackButton from "@/components/BackButton.astro"
+import BackToTopButton from "@/components/BackToTopButton.astro"
+import { slugifyStr } from "@/utils/slugify"
+import { SITE } from "@/config"
+import dayjs from "dayjs"
 
-export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-
-  // Create redirect paths for old project slugs
-  const redirects = [
-    {
-      params: { slug: "pointwithme" },
-      props: { redirectTo: "/projects#pointpal" },
-    },
-  ];
-
-  return redirects;
+export interface Props {
+    project: CollectionEntry<"projects">
+    relatedPosts: CollectionEntry<"blog">[]
 }
 
-const { redirectTo } = Astro.props;
+export async function getStaticPaths() {
+    const projects = await getCollection("projects", ({ data }) => !data.draft)
+    const posts = await getCollection("blog", ({ data }) => !data.draft)
+
+    return projects.map((project) => {
+        const relatedPosts = posts.filter((post) =>
+            project.data.relatedPosts?.includes(post.data.slug || post.id.split("/").pop()?.replace(/\.mdx?$/, "") || "")
+        )
+
+        return {
+            params: { slug: project.data.slug || slugifyStr(project.data.title) },
+            props: { project, relatedPosts },
+        }
+    })
+}
+
+const { project, relatedPosts } = Astro.props
+const { title, description, url, image, tags = [], launchDate, status } = project.data
+
+const { Content } = await render(project)
+
+const formattedDate = dayjs(launchDate).format("MMMM YYYY")
+
+const statusColors = {
+    launched: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    beta: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    archived: "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-400",
+}
+
+const layoutProps = {
+    title: `${title} | Projects | ${SITE.title}`,
+    description,
+    ogImage: image,
+}
 ---
 
-<html>
-  <head>
-    <meta http-equiv="refresh" content={`0; url=${redirectTo}`} />
-    <link rel="canonical" href={redirectTo} />
-  </head>
-  <body>
-    Redirecting to <a href={redirectTo}>projects</a>…
-  </body>
-</html>
+<Layout {...layoutProps}>
+    <Header />
+    <BackButton />
+    <main
+        id="main-content"
+        class:list={["mx-auto w-full max-w-app px-4 pb-12", { "mt-8": !SITE.showBackButton }]}
+    >
+        <div class="mb-6">
+            <h1
+                transition:name={slugifyStr(title)}
+                class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+            >
+                {title}
+            </h1>
+
+            <div class="mt-3 flex flex-wrap items-center gap-3">
+                {status && status.length > 0 && (
+                    <div class="flex gap-2">
+                        {status.map((s) => (
+                            <span
+                                class={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[s]}`}
+                            >
+                                {s}
+                            </span>
+                        ))}
+                    </div>
+                )}
+                <span class="text-sm text-muted-foreground">
+                    Launched {formattedDate}
+                </span>
+            </div>
+        </div>
+
+        {image && (
+            <div class="mb-8 overflow-hidden rounded-xl border border-border">
+                <img
+                    src={image}
+                    alt={`${title} screenshot`}
+                    class="w-full"
+                />
+            </div>
+        )}
+
+        <div class="mb-8">
+            <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-accent inline-flex items-center gap-2 project-link"
+                data-project={slugifyStr(title)}
+            >
+                Visit Project
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z"
+                        clip-rule="evenodd"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+            </a>
+        </div>
+
+        <article
+            id="article"
+            class="app-prose mx-auto max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        >
+            <Content />
+        </article>
+
+        <hr class="my-8 border-dashed" />
+
+        {tags.length > 0 && (
+            <div class="mb-8">
+                <h2 class="text-sm font-medium text-muted-foreground mb-3">Technologies</h2>
+                <div class="flex flex-wrap gap-2">
+                    {tags.map((tag: string) => (
+                        <span class="tag-pill">{tag}</span>
+                    ))}
+                </div>
+            </div>
+        )}
+
+        {relatedPosts.length > 0 && (
+            <div class="mb-8">
+                <h2 class="text-sm font-medium text-muted-foreground mb-3">Related Blog Posts</h2>
+                <ul class="space-y-2">
+                    {relatedPosts.map((post) => (
+                        <li>
+                            <a
+                                href={`/posts/${post.data.slug || post.id.split('/').pop()?.replace(/\.mdx?$/, '')}`}
+                                class="text-foreground hover:text-accent transition-colors inline-flex items-center gap-2"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-4 flex-shrink-0"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                {post.data.title}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+
+        <BackToTopButton />
+    </main>
+    <Footer />
+</Layout>
+
+<script>
+    function setupProjectTracking() {
+        document.querySelectorAll(".project-link").forEach((link) => {
+            link.addEventListener("click", (e) => {
+                const project = (e.currentTarget as HTMLElement).dataset.project
+                if (project && typeof window.goatcounter !== "undefined") {
+                    window.goatcounter.count({
+                        path: `project-click/${project}`,
+                        event: true,
+                    })
+                }
+            })
+        })
+    }
+
+    setupProjectTracking()
+    document.addEventListener("astro:after-swap", setupProjectTracking)
+</script>
