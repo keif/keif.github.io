@@ -1,20 +1,25 @@
 ---
-title: "10 Git Commands Every Developer Should Know"
-description: "Practical Git commands that save you time, recover lost work, and help you debug faster. Think of this as your essential Git cheatsheet."
-pubDatetime: 2025-09-22T00:00:00Z
-modDatetime: 2025-09-26T00:00:00Z
-featured: true
+title: 10 Git Commands Every Developer Should Know
+pubDatetime: 2025-09-22T00:00:00.000Z
+modDatetime: 2025-12-18T16:55:49.529Z
 slug: essential-git-commands
-tags: ["git", "cheatsheet", "developer-tools", "cli"]
+featured: true
+tags:
+    - git
+    - cheatsheet
+    - developer-tools
+    - cli
+description: Practical Git commands that save you time, recover lost work, and help you debug faster. Think of this as your essential Git cheatsheet.
 ---
 
-Working with Git day-to-day can feel like second nature—until you hit one of those moments where you wish you knew the *right* command.
+Working with Git day-to-day can feel like second nature—until you hit one of those moments where you wish you knew the _right_ command.
 
 After years of tripping over the same pain points, here's a practical list of Git commands that act like superpowers.
 
 ---
 
-## 1. `git reflog` – *The Time Machine*
+## 1. `git reflog` – _The Time Machine_
+
 Accidentally deleted a branch? Reset to the wrong commit?
 Reflog is your safety net.
 
@@ -134,13 +139,15 @@ git reset --hard <commit>
 ## Honorable Mentions: Modern Alternatives
 
 - `git switch -c new-branch` → friendlier than `git checkout -b`
-   - Why? Because `git switch` is dedicated just to switching/creating branches, while `git checkout` is overloaded (it can also reset files, detach HEAD, etc.). This makes `switch` safer, clearer, and easier to learn.
+    - Why? Because `git switch` is dedicated just to switching/creating branches, while `git checkout` is overloaded (it can also reset files, detach HEAD, etc.). This makes `switch` safer, clearer, and easier to learn. I'm still working on getting this to replace my alias usage of `git co -b`
 - `git restore <file>` → safer way to discard changes
-   - Why? Because `git restore` only affects working directory changes, while `git checkout` could also switch branches or detach `HEAD`. This narrower scope makes it less error-prone for beginners.
+    - Why? Because `git restore` only affects working directory changes, while `git checkout` could also switch branches or detach `HEAD`. This narrower scope makes it less error-prone for beginners.
 
 ---
 
 ## Wrapping Up
 
-These aren't obscure tricks — they're practical tools that save time, frustration, and sometimes entire projects.
+These aren't obscure tricks — they're practical tools that save time, frustration, and sometimes entire projects (seriously, `git reflog`).
 Mastering them means fewer “oh no” moments and faster context switching.
+
+Up next on "need to learn/master" - `git worktree` - which sounds pretty interesting.

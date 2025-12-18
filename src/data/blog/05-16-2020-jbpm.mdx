@@ -1,21 +1,27 @@
 ---
-author: Keith Baker
-pubDatetime: 2020-05-16T00:00:00Z
-modDatetime: 2025-09-07T03:27:00Z
 title: jBPM Installation and Setup
+author: Keith Baker
+pubDatetime: 2020-05-16T00:00:00.000Z
+modDatetime: 2025-12-18T16:55:49.216Z
 slug: jbpm-installation-setup-osx
 featured: false
 draft: false
 tags:
-  - docker
-  - java
-  - bpm
-  - jbpm
+    - docker
+    - java
+    - bpm
+    - jbpm
 description: |
-  Learn how to set up jBPM on macOS using Docker, including prerequisites like Xcode CLI, Homebrew, and verification steps for Docker installation.
-opImage: ../../assets//docker.png
+    Learn how to set up jBPM on macOS using Docker, including prerequisites like Xcode CLI, Homebrew, and verification steps for Docker installation.
+opImage: ../../assets/docker.png
 ---
----
+
+import Callout from "@/components/Callout.astro";
+
+<Callout type="info">
+    This was originally written in 2020. I've noticed it getting attention, so I want to call out that I have not
+    revisited this recently.
+</Callout>
 
 So it seems, no matter where I go, I always come back to Docker! Not that this is problematic in and of itself, as it just starts highlighting why it's necessary, or at the very least, the kind of work Docker Containers will do _for you_ instead of the usual "what version of Java does this need? What other specific environment configs does _this project_ need that I need to notate so I don't conflict with _that project_" - and yes, I'm aware some Uber developers out there do this like nothing - but it's not a skill I picked up, and Docker fills that void for me.
 
@@ -48,9 +54,11 @@ xcode-select --install
 Alternatively, they can be downloaded from: [developer.apple.com/downloads](https://developer.apple.com/downloads) or the iTunes Store: [Xcode](https://itunes.apple.com/us/app/xcode/id497799835)
 
 ### Homebrew
+
 [Homebrew: https://brew.sh/](https://brew.sh/)
 
 #### Install Homebrew:
+
 (below copied from the Homebrew site):
 
 ```bash
@@ -78,11 +86,13 @@ _[Docker Installation: https://docs.docker.com/docker-for-mac/install/](https://
 _[Docker for Mac: https://docs.docker.com/docker-for-mac/](https://docs.docker.com/docker-for-mac/)_
 
 #### Installation via CLI:
+
 ```bash
 brew cask install docker
 ```
 
 #### Launch:
+
 1. Press `⌘ + Space` to bring up Spotlight Search and enter Docker to launch Docker.
 1. In the Docker needs privileged access dialog box, click OK.
 1. Enter password and click OK.
@@ -194,6 +204,7 @@ Once container and web applications started, you can navigate to it and login us
 **Password:** wbadmin
 
 That’s all that is needed to get fully configured and running jBPM distribution that includes:
+
 - WildFly server
 - Business Central
 - KIE Server
@@ -201,9 +212,8 @@ That’s all that is needed to get fully configured and running jBPM distributio
 - jBPM Service repository
 
 Everything configured to work together smoothly and you can access them at following locations:
+
 - Business Central - http://localhost:8080/business-central
 - KIE Server - http://localhost:8080/kie-server/services/rest/server
 - KIE Server Swagger docs - http://localhost:8080/kie-server/docs
 - jBPM case management - http://localhost:8080/jbpm-casemgmt
-
-

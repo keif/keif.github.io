@@ -2,7 +2,7 @@
 title: Building a Headless YouTube Playlist Generator with OAuth and Quota Management
 author: Keith Baker
 pubDatetime: 2025-09-11T19:32:00.000Z
-modDatetime: 2025-10-29T02:07:43.194Z
+modDatetime: 2025-12-18T16:55:48.976Z
 slug: headless-youtube-playlist-generator
 featured: false
 tags:
@@ -30,11 +30,11 @@ I feel like my kids reflect the modern YouTube users - subscribed to dozens or h
 - Filter content based on my preferences (duration, content type)
 - Create and maintain a curated playlist
 - Run unattended as a scheduled job
-- Minimize YouTube API quota usage (the daily limit is **only 10,000 units**)
+- Minimize YouTube API quota usage (the daily limit is **only 10,000 units**) _as of publish/edit date._
 
 ## Understanding YouTube's Data API v3
 
-The YouTube Data API v3 is powerful but comes with strict [quota limitations](https://developers.google.com/youtube/v3/determine_quota_cost). Each operation consumes "quota units":
+The YouTube Data API v3 is decent but has strict [quota limitations](https://developers.google.com/youtube/v3/determine_quota_cost). Each operation consumes "quota units":
 
 ### Key Endpoints and Their Costs
 
@@ -49,7 +49,7 @@ The YouTube Data API v3 is powerful but comes with strict [quota limitations](ht
 }
 ```
 
-Here's the problem: naive implementations burn through that 10,000 limit _fast_. My first version hit the quota in about 20 minutes.
+Here's the problem: poorly implementated solutions burn through that 10,000 limit _fast_. My first version hit the quota in about 20 minutes.
 
 ### The Expensive Operations
 
@@ -89,6 +89,8 @@ def get_authenticated_service():
                 creds = None  # Force new auth flow
 ```
 
+_note: these snippets may get out-of-sync versus their github equivalents. Apologies if this gets out-of-date!_
+
 ### Handling Refresh Token Expiration
 
 Google's refresh tokens can expire after extended periods of inactivity or if the user changes their password. The authentication module gracefully handles this:
@@ -108,11 +110,13 @@ with open(TOKEN_FILE, "wb") as token:
 
 ### Security Considerations
 
-The implementation stores tokens locally using Python's `pickle` module. For production deployments, consider:
+The implementation stores tokens locally using Python's `pickle` module. For a future production deployment, I need to consider:
 
 - Encrypting stored tokens
 - Using cloud-based secret management
 - Implementing token rotation policies
+
+…but I'm not 100% on the future of this project being more than a `cli` project.
 
 ## Intelligent Quota Management
 
@@ -156,7 +160,7 @@ def _get_videos_details(self, video_ids: List[str]) -> Dict[str, Dict[str, Any]]
         # Process batch results...
 ```
 
-This approach reduced video detail fetching from potentially hundreds of API calls to just a few batched requests.
+This approach reduced video detail fetching from potentially hundreds of API calls to just a few batched requests. Yes, this took a few days of me burning through 10,000 units and waiting until I created a dummy data set to test against.
 
 ### Caching Strategy
 
@@ -231,6 +235,8 @@ Key UX decisions:
 - **Verbose logging** for debugging and monitoring
 - **CSV reporting** for analyzing processed videos
 - **Limit flags** for quota-conscious operation
+
+I am very much a sucker for `dry-run` integration in my scripts. Sometimes, it's nice to verify and not assume, y'know?
 
 ### Shell Script Wrappers
 
