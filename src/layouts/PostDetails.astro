@@ -31,7 +31,6 @@ const {
     canonicalURL,
     pubDatetime,
     modDatetime,
-    postTimezone,
     timezone,
     tags,
     hideEditPost,
@@ -81,7 +80,7 @@ const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null
 const nextPost = currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null
 
 const isModified = modDatetime && modDatetime > pubDatetime
-const originalPubDate = dayjs(pubDatetime).tz(postTimezone || SITE.timezone).format("MMM D, YYYY")
+const originalPubDate = dayjs(pubDatetime).tz(timezone || SITE.timezone).format("MMM D, YYYY")
 ---
 
 <Layout {...layoutProps}>

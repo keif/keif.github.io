@@ -8,7 +8,7 @@ export interface Props extends CollectionEntry<"projects"> {
 }
 
 const { data, relatedPosts = [] } = Astro.props
-const { title, description, url, image, tags = [], launchDate, status } = data
+const { title, description, image, tags = [], launchDate, status } = data
 
 const formattedDate = dayjs(launchDate).format("MMM YYYY")
 
