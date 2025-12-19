@@ -1,7 +1,7 @@
 ---
 title: In Defense of Emojis in Developer Logs
 pubDatetime: 2025-09-23T12:00:00.000Z
-modDatetime: 2025-12-18T20:07:10.888Z
+modDatetime: 2025-12-19T21:31:33.170Z
 slug: in-defense-of-emojis-in-logs
 featured: true
 tags:
@@ -17,14 +17,15 @@ excerpt: |
     Here's why these tiny symbols can make your terminal output more useful.
 ---
 
-import { Image } from "astro:assets";
+import FigureImage from "@/components/FigureImage.astro";
 import rickAndMortyImage from "../../assets/images/blog/rick_morty_english.jpg";
 
 There's been a growing backlash against emojis in tech writing (and as observed, comments on social media, in general). AI tools sprinkle them everywhere, blog posts get cluttered with 🚀✨🔥, and Slack channels feel like emoji soup. The sentiment is understandable: when everything is adorned with symbols, the impact is lost. What worries me - if your grammar is _too good_ or you use _font-styling_ a little too much - people just ignore you as "AI wrote that." All this is going to do is kill bad grammar. I'm sorry that AI uses the em-dash–it's handy, it's grammatically useful–even if, when I use it, it's still inadequate because my grammar still isn't at a mastery level.
 
-<Image
+<FigureImage
     src={rickAndMortyImage}
     alt="Rick and Morty: You're still learning English? The language you speak? - when AI figures out pop-culture integration, we be fucked."
+    attribution="Image Credit: Rick and Morty / Adult Swim / The Cartoon Network, Inc."
 />
 
 But what about in **developer** logs?

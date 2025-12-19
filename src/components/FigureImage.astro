@@ -1,0 +1,121 @@
+---
+import { Image, Picture } from "astro:assets";
+
+type Attribution =
+  | string
+  | {
+      author?: string;
+      source?: string;
+      url?: string;
+      license?: string;
+    };
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+
+  /** Use Picture when you want art direction */
+  usePicture?: boolean;
+
+  /** Passed directly to Image/Picture */
+  widths?: number[];
+  sizes?: string;
+  width?: number;
+  height?: number;
+  aspectRatio?: string;
+
+  /** Optional caption text */
+  caption?: string;
+
+  /** Attribution / credit line */
+  attribution?: Attribution;
+
+  /** Styling hooks */
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  usePicture = false,
+  attribution,
+  caption,
+  class: className,
+  ...imageProps
+} = Astro.props;
+---
+
+<figure class={`figure-image ${className ?? ""}`}>
+  {usePicture ? (
+    <Picture src={src} alt={alt} {...imageProps} />
+  ) : (
+    <Image src={src} alt={alt} {...imageProps} />
+  )}
+
+  {(caption || attribution) && (
+    <figcaption>
+      {caption && <span class="caption">{caption}</span>}
+
+      {attribution && (
+        <span class="attribution">
+          {typeof attribution === "string" ? (
+            attribution
+          ) : (
+            <>
+              {attribution.author && <>© {attribution.author}</>}
+              {attribution.source && <> / {attribution.source}</>}
+              {attribution.url && (
+                <>
+                  {" "}
+                  —{" "}
+                  <a
+                    href={attribution.url}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    source
+                  </a>
+                </>
+              )}
+              {attribution.license && <> ({attribution.license})</>}
+            </>
+          )}
+        </span>
+      )}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .figure-image {
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-foreground);
+    opacity: 0.6;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  figcaption a {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  figcaption a:hover {
+    color: var(--color-accent);
+  }
+
+  .caption {
+    font-style: italic;
+  }
+
+  .attribution {
+    white-space: nowrap;
+  }
+</style>
