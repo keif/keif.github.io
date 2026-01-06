@@ -4,6 +4,8 @@ author: Keith Baker
 pubDatetime: 2020-05-27T00:00:00.000Z
 modDatetime: 2025-10-09T06:53:52.797Z
 slug: fun-code-snippets
+aliases:
+    - fun-code-snippets
 featured: true
 tags:
     - CLI

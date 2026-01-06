@@ -17,10 +17,54 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     const tags = getUniqueTags(posts);
 
     // legacy tag map for old tags to new tags
+    // Maps old URL patterns (as crawled by Google) to canonical slugified tags
     const legacyTagMap: Record<string, string> = {
+        // Tags with dots/special characters
+        "Socket.IO": "socket-io",
+        "Node.js": "node-js",
         "node.js": "node-js",
-        "Python": "python",
+        "next.js": "next-js",
+        "Fly.io": "fly-io",
+
+        // Tags with spaces
+        "Tailwind CSS": "tailwind-css",
+        "Spotify API": "spotify-api",
+        "Image Optimization": "image-optimization",
+        "Developer Experience": "developer-experience",
+        "Real-Time": "real-time",
+
+        // Tags with slashes
+        "CI/CD": "ci-cd",
+
+        // CamelCase/PascalCase tags
+        "BusyTag": "busy-tag",
+        "DevOps": "dev-ops",
+        "JavaScript": "java-script",
+        "TypeScript": "type-script",
         "YouTube": "you-tube",
+        "ContextAPI": "context-api",
+        "ReactJS": "react-js",
+
+        // Simple case variants (uppercase to lowercase)
+        "Shell": "shell",
+        "Accessibility": "accessibility",
+        "CLI": "cli",
+        "Infrastructure": "infrastructure",
+        "Design": "design",
+        "UX": "ux",
+        "Vite": "vite",
+        "Go": "go",
+        "Logging": "logging",
+        "Migration": "migration",
+        "Hosting": "hosting",
+        "Docker": "docker",
+        "React": "react",
+        "Astro": "astro",
+        "API": "api",
+        "Python": "python",
+
+        // Legacy tag that no longer exists (redirect to closest match)
+        "node": "node-js",
     };
 
     return tags.flatMap(({ tag: rawTag, tagName }) => {
