@@ -1,7 +1,7 @@
 ---
 title: "Never Rely on Color Alone: Why Symbols Matter More Than You Think"
 pubDatetime: 2025-10-22T12:00:00.000Z
-modDatetime: 2025-10-23T17:15:25.375Z
+modDatetime: 2026-01-15T02:13:04.776Z
 slug: symbols-over-color-accessibility
 featured: true
 tags:
@@ -325,13 +325,13 @@ The Web Content Accessibility Guidelines (WCAG) explicitly address this:
 >
 > Color is not used as the only visual means of conveying information, indicating an action, prompting a response, or distinguishing a visual element.
 
-This is a **Level A** requirement — the most basic level of accessibility. It's not optional. It's foundational.
+This is a **Level A** requirement — the most basic level of accessibility, it's foundational, not optional.
 
 ---
 
 ## The Takeaway
 
-Color is powerful. It's fast, it's beautiful, it's intuitive. But it's not universal.
+Color is powerful. It's fast, it's beautiful, it's intuitive, but it's **not universal**.
 
 For 300 million people worldwide, red and green are the same. Yellow and blue blur together. Interfaces that rely solely on color exclude them entirely.
 
