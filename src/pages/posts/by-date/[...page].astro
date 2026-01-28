@@ -8,21 +8,25 @@ import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import PostsSortToggle from "@/components/PostsSortToggle.astro";
-import getSortedPosts from "@/utils/getSortedPosts";
+import getSortedPostsByPubDate from "@/utils/getSortedPostsByPubDate";
 import { SITE } from "@/config";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
-  return paginate(getSortedPosts(posts), { pageSize: SITE.postPerPage });
+  return paginate(getSortedPostsByPubDate(posts), { pageSize: SITE.postPerPage });
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
+
+// Set canonical URL to point to the main /posts/ route to avoid duplicate content
+const canonicalPagePath = page.currentPage === 1 ? "/posts/" : `/posts/${page.currentPage}/`;
+const canonicalURL = new URL(canonicalPagePath, Astro.site);
 ---
 
-<Layout title={`Posts | ${SITE.title}`}>
+<Layout title={`Posts | ${SITE.title}`} canonicalURL={canonicalURL.href} noIndex={true}>
   <Header />
   <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
-    <PostsSortToggle currentSort="modified" />
+    <PostsSortToggle currentSort="published" />
     <ul>
       {page.data.map(data => <Card {...data} />)}
     </ul>

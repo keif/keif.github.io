@@ -14,6 +14,7 @@ export interface Props {
     pubDatetime?: Date
     modDatetime?: Date | null
     scrollSmooth?: boolean
+    noIndex?: boolean
 }
 
 const {
@@ -26,6 +27,7 @@ const {
     pubDatetime,
     modDatetime,
     scrollSmooth = false,
+    noIndex = false,
 } = Astro.props
 
 const socialImageURL = new URL(ogImage, Astro.url)
@@ -61,6 +63,7 @@ const structuredData = {
         <meta name="title" content={title} />
         <meta name="description" content={description} />
         <meta name="author" content={author} />
+        {noIndex && <meta name="robots" content="noindex, follow" />}
         <link rel="sitemap" href="/sitemap-index.xml" />
 
         <!-- Open Graph / Facebook -->

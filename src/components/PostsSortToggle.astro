@@ -1,0 +1,34 @@
+---
+export interface Props {
+  currentSort: "modified" | "published";
+}
+
+const { currentSort } = Astro.props;
+---
+
+<div class="mb-6 flex gap-2 text-sm border-b border-border">
+  <a
+    href="/posts/"
+    class:list={[
+      "px-4 py-2 transition-colors",
+      currentSort === "modified"
+        ? "border-b-2 border-accent text-accent font-medium"
+        : "text-muted-foreground hover:text-foreground",
+    ]}
+    aria-current={currentSort === "modified" ? "page" : undefined}
+  >
+    Last Updated
+  </a>
+  <a
+    href="/posts/by-date/"
+    class:list={[
+      "px-4 py-2 transition-colors",
+      currentSort === "published"
+        ? "border-b-2 border-accent text-accent font-medium"
+        : "text-muted-foreground hover:text-foreground",
+    ]}
+    aria-current={currentSort === "published" ? "page" : undefined}
+  >
+    Published Date
+  </a>
+</div>
