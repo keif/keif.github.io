@@ -10,7 +10,7 @@ tags:
     - UX
     - Web Development
     - Color Theory
-description: Color-coding is intuitive — until it isn't. For millions of color-blind users, red and green look identical. Here's why symbols aren't optional, they're essential.
+description: Color-coding is intuitive …until it isn't. For millions of color-blind users, red and green look identical. Here's why symbols aren't optional, they're essential.
 excerpt: |
     We rely on color to communicate meaning everywhere: red for errors, green for success, yellow for warnings.
     But for approximately 1 in 12 men and 1 in 200 women with color vision deficiency, these distinctions disappear.

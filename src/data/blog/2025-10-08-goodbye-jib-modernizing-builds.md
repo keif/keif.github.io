@@ -1,7 +1,7 @@
 ---
 title: "Goodbye Jib: Modernizing Container Builds for a Simpler CI/CD Workflow"
 pubDatetime: 2025-10-07T21:00:00.000Z
-modDatetime: 2025-10-29T02:07:43.425Z
+modDatetime: 2026-01-28T20:53:35.138Z
 slug: goodbye-jib-modernizing-builds
 featured: true
 tags:
@@ -25,13 +25,13 @@ description: |
 [**Jib**](https://github.com/GoogleContainerTools/jib) felt like magic at first.
 No Dockerfile. No Docker daemon. Just a Gradle plugin that builds optimized images. It removes friction and "just works."
 
-That convenience was great — until it wasn't.
+That convenience was great, until it became a liability. A bottleneck that slowed down progress on even the most basic of tasks, that required a fast turnaround.
 
-The project entered maintenance mode, and the build tooling fell behind. Pinned Jib versions, outdated GCP integrations, authentication issues — updates got harder and harder.
+The project entered maintenance mode, and the build tooling fell behind. Pinned Jib versions, outdated GCP integrations, authentication issues — updates got harder and more painful.
 
 Small plugin upgrades would change image layers unexpectedly. Caching worked differently in CI vs. local builds. Debugging meant digging through opaque plugin internals instead of just reading a Dockerfile.
 
-The abstraction cost more than it saved.
+The abstraction cost more than it saved, in the long run. This was partially from the project having sat in "maintenance-mode" for far too long.
 
 ---
 
@@ -43,13 +43,13 @@ Trying to deploy the UI project (custom Express + old Next.js) failed unexpected
 
 Worse: a custom Git token scoped too narrowly caused auth failures during image pushes. It was embedded in CI, not refreshed regularly, and failed silently.
 
-Jib became the bottleneck. Pinned versions, opaque behavior, silent cloud failures — blocking updates and preventing deployments. The fix? Rip it out entirely and move to a direct `kubectl` workflow.
+Jib became a bottleneck, with pinned versions, opaque behavior, silent cloud failures — blocking updates and preventing deployments. The fix? Rip it out entirely and move to a direct `kubectl` workflow.
 
 ---
 
 ## The Goal: Simplify and Standardize
 
-We didn't just want to "get off Jib." We wanted simpler, more consistent builds.
+I didn't just want to "get off Jib." I wanted simpler, more consistent builds for this project while we determined if/where it would move to.
 
 What that meant:
 
@@ -90,7 +90,7 @@ Helm (or plain kubectl) handled deployment uniformly.
 Removed old plugin references, Jib cache folders, redundant YAML fragments. Added validation scripts to ensure each image had a Dockerfile and proper Helm values.
 
 > **Cloud Authentication Updates:**  
-> During the migration, we also discovered that our gcloud components were out of date. The older `gcloud` tooling no longer handled authentication correctly with newer Kubernetes clusters, which now require the `USE_GKE_CLOUD_AUTH_PLUGIN=true` environment variable. We updated the CI environment and local tooling to export this variable and align with the new gcloud authentication flow, ensuring seamless access to <abbr title="Google Kubernetes Engine">GKE</abbr> clusters during image deployment and Helm operations.
+> During the migration, I also discovered that the gcloud components were out of date. The older `gcloud` tooling no longer handled authentication correctly with newer Kubernetes clusters, which now require the `USE_GKE_CLOUD_AUTH_PLUGIN=true` environment variable. I updated the CI environment and local tooling to export this variable and align with the new gcloud authentication flow, ensuring seamless access to <abbr title="Google Kubernetes Engine">GKE</abbr> clusters during image deployment and Helm operations.
 
 > **Callout:** Part of this cleanup was unpinning the build from the plugin version entirely. By moving to an explicit `Dockerfile`, base-image bumps (e.g., JRE updates or distroless refreshes) became small, isolated PRs instead of risky plugin upgrades.
 
@@ -139,11 +139,13 @@ build_job:
 - No build-tool coupling — works the same for any language.
 - Local and CI builds are identical.
 
-This shift cut CI build time by roughly 30–40%, eliminated version drift, and simplified debugging — the logs now show exactly what’s happening step-by-step.
+This shift cut CI build time by roughly 30–40%, eliminated version drift, and simplified debugging: the logs now show exactly what’s happening step-by-step.
 
 ---
 
 ## Diagram: Build Flow Before vs. After
+
+> _note: this was generated via AI, because I ain't styling that_
 
 ```
           ┌──────────────────────────────┐
@@ -173,7 +175,7 @@ This shift cut CI build time by roughly 30–40%, eliminated version drift, and 
           └──────────────────────────────┘
 ```
 
-This shift not only simplified pipelines but unified how every team built and deployed services — regardless of language or framework.
+This shift not only simplified pipelines but unified how the different services were built and deployed — regardless of language or framework. A huge boost when you are split across multiple projects and languages.
 
 ---
 
@@ -195,17 +197,21 @@ Immediate results:
 - CI/CD _is_ part of your codebase. Treat it like production code.
 - Explicit beats implicit. Short Dockerfile > complex plugin.
 - Consistency compounds. Standardize one layer, simplify three others.
+- Maintenance mode doesn't guarantee the architecture won't need updated.
+- And we all know - the amount spent on a task to "fix it" sometimes justifies the future "migration and termination" of the old services.
 
 ---
 
 ## Closing Thoughts
 
-This wasn't about outgrowing Jib. It was about aligning with existing internal tools and processes.
+This wasn't _just_ about outgrowing Jib, it was about aligning with existing internal tools and processes.
 
-The pinned versions and custom integrations had become a hidden risk — unpredictable deployments, harder maintenance.
+The pinned versions and custom integrations had become a hidden risk, with unpredictable deployments, harder maintenance.
 
 Simplifying the process and adopting the same workflow as other projects reduced friction, eliminated dependencies, and brought consistency across environments.
 
 The result? More maintainable, transparent, reliable.
 
 Sometimes progress isn't about moving faster or adopting new tools. It's about realigning with the ones that already work.
+
+And as of this year, all this work _should_ be thrown away, in favor of migrating the site into the internal repositories and handing off to a team that only has to deal with the front-end, as we integrate with the existing backend!
