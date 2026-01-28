@@ -14,6 +14,7 @@ A developer's blog built on the AstroPaper theme, featuring automatic date manag
 - [x] Type-safe markdown with frontmatter validation
 - [x] **Automatic date management** with Git hooks
 - [x] **Featured post rotation** with smart selection
+- [x] **Multi-sort post views** (by last updated or published date)
 - [x] Interactive post creation with CLI tools
 - [x] Draft posts & pagination support
 - [x] Fuzzy search functionality
@@ -227,6 +228,14 @@ This blog setup includes several enhancements over the standard AstroPaper theme
 - **Configurable count** (default: 6 featured posts)
 - **Directory exclusions** (skips \_releases/, examples/ folders)
 - **Dry-run mode** to preview changes before applying
+
+### Multi-Sort Post Views
+
+- **Dual sorting options** - View posts by last updated date or original published date
+- **SEO-safe implementation** with canonical URLs pointing to main route
+- **Noindex meta tags** on alternate views to prevent duplicate content penalties
+- **Sitemap exclusion** for alternate sort routes
+- **Separate pagination** maintained for each sort view
 
 ### Developer Experience
 
