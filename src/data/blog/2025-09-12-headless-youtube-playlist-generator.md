@@ -2,7 +2,7 @@
 title: Building a Headless YouTube Playlist Generator with OAuth and Quota Management
 author: Keith Baker
 pubDatetime: 2025-09-11T19:32:00.000Z
-modDatetime: 2025-12-18T16:55:48.976Z
+modDatetime: 2026-01-28T19:00:00.928Z
 slug: headless-youtube-playlist-generator
 featured: false
 tags:
@@ -17,6 +17,8 @@ tags:
 description: How I built a CLI tool to create YouTube playlists from my subscriptions, with quota-aware API calls, OAuth caching, and no frontend.
 image: ""
 ---
+
+> **Brief update:** this has fallen by the wayside (as side projects often do). The whole purpose of this was to "give me something new to listen to" while I work, and since I started this, I was invited to a group for 1001 albums to listen to before you die (via [1001 Albums Generator](https://1001albumsgenerator.com/)). As I joined the group late, I've been listening to a LOT of albums during the day (and night), but once I'm caught up, I'll come back and work on ironing more of this out.
 
 > **TL;DR**: I built a CLI tool that creates YouTube playlists from your subscriptions without a frontend. It uses OAuth, respects API quota, handles caching and retries, and works great as a cron job. [Source code on GitHub](https://github.com/keif/playlist-from-subs).
 
