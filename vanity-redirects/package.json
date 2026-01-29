@@ -1,0 +1,6 @@
+{
+  "name": "vanity-redirects",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static HTML redirects with analytics tracking"
+}
