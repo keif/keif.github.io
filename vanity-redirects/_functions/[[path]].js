@@ -46,7 +46,7 @@ const githubHTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-export async function onRequest(context: { request: Request }) {
+export async function onRequest(context) {
   const { request } = context;
   const url = new URL(request.url);
   const hostname = url.hostname;
