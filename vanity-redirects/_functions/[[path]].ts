@@ -1,25 +1,65 @@
-interface Env {
-  ASSETS: { fetch: (request: Request) => Promise<Response> };
-}
+const linkedinHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="1;url=https://www.linkedin.com/in/keithbaker/">
+    <script data-goatcounter="https://stats.baker.is/count"
+            data-goatcounter-settings='{"path": "/out/linkedin"}'
+            async src="https://stats.baker.is/count.js"></script>
+</head>
+<body style="font-family: system-ui, sans-serif; text-align: center; padding: 2rem;">
+    <div>
+        <p>Redirecting to LinkedIn...</p>
+        <p><a href="https://www.linkedin.com/in/keithbaker/">Click here if you are not redirected</a></p>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.replace('https://www.linkedin.com/in/keithbaker/');
+        }, 100);
+    </script>
+</body>
+</html>`;
 
-export async function onRequest(context: { request: Request; env: Env }) {
-  const { request, env } = context;
+const githubHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="1;url=https://github.com/keif">
+    <script data-goatcounter="https://stats.baker.is/count"
+            data-goatcounter-settings='{"path": "/out/github"}'
+            async src="https://stats.baker.is/count.js"></script>
+</head>
+<body style="font-family: system-ui, sans-serif; text-align: center; padding: 2rem;">
+    <div>
+        <p>Redirecting to GitHub...</p>
+        <p><a href="https://github.com/keif">Click here if you are not redirected</a></p>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.replace('https://github.com/keif');
+        }, 100);
+    </script>
+</body>
+</html>`;
+
+export async function onRequest(context: { request: Request }) {
+  const { request } = context;
   const url = new URL(request.url);
   const hostname = url.hostname;
 
-  // Route based on subdomain
   if (hostname.startsWith('linkedin.')) {
-    // Serve the LinkedIn redirect page
-    const assetUrl = new URL('/linkedin/index.html', url.origin);
-    const assetRequest = new Request(assetUrl, request);
-    return env.ASSETS.fetch(assetRequest);
+    return new Response(linkedinHTML, {
+      headers: { 'Content-Type': 'text/html' },
+    });
   } else if (hostname.startsWith('github.')) {
-    // Serve the GitHub redirect page
-    const assetUrl = new URL('/github/index.html', url.origin);
-    const assetRequest = new Request(assetUrl, request);
-    return env.ASSETS.fetch(assetRequest);
+    return new Response(githubHTML, {
+      headers: { 'Content-Type': 'text/html' },
+    });
   }
 
-  // Default: return 404
   return new Response('Not Found', { status: 404 });
 }
