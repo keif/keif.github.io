@@ -10,12 +10,14 @@ export async function onRequest(context: { request: Request; env: Env }) {
   // Route based on subdomain
   if (hostname.startsWith('linkedin.')) {
     // Serve the LinkedIn redirect page
-    const html = await env.ASSETS.fetch(new URL('/linkedin/', url.origin));
-    return html;
+    const assetUrl = new URL('/linkedin/index.html', url.origin);
+    const assetRequest = new Request(assetUrl, request);
+    return env.ASSETS.fetch(assetRequest);
   } else if (hostname.startsWith('github.')) {
     // Serve the GitHub redirect page
-    const html = await env.ASSETS.fetch(new URL('/github/', url.origin));
-    return html;
+    const assetUrl = new URL('/github/index.html', url.origin);
+    const assetRequest = new Request(assetUrl, request);
+    return env.ASSETS.fetch(assetRequest);
   }
 
   // Default: return 404
