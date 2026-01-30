@@ -34,7 +34,7 @@ If you'd like to install them yourself:
 
     xcode-select --install
 
-Alternatively, they can be downloaded from: [developer.apple.com/downloads](developer.apple.com/downloads) or the iTunes Store: [Xcode](https://itunes.apple.com/us/app/xcode/id497799835)
+Alternatively, they can be downloaded from: [https://developer.apple.com/downloads](https://developer.apple.com/downloads) or the iTunes Store: [Xcode](https://itunes.apple.com/us/app/xcode/id497799835)
 
 ### Homebrew
 [Homebrew: https://brew.sh/](https://brew.sh/)
