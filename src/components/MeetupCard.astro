@@ -1,0 +1,104 @@
+---
+import { slugifyStr } from "@/utils/slugify"
+import type { CollectionEntry } from "astro:content"
+
+export interface Props extends CollectionEntry<"meetups"> {}
+
+const { data } = Astro.props
+const { title, description, url, location, frequency, tags = [], active } = data
+
+const statusColor = active
+  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+  : "bg-gray-100 text-gray-800 dark:bg-gray-800/30 dark:text-gray-400"
+
+const statusLabel = active ? "Active" : "On Hiatus"
+---
+
+<article class="card card-hover group">
+  <div class="p-6">
+    <div class="flex items-start justify-between gap-3 mb-3">
+      <h3
+        style={{ viewTransitionName: slugifyStr(title) }}
+        class="text-xl font-semibold text-foreground transition-colors prose-headings"
+      >
+        {title}
+      </h3>
+      <span
+        class={`text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${statusColor}`}
+      >
+        {statusLabel}
+      </span>
+    </div>
+
+    <div class="mb-3 flex flex-wrap gap-3 text-sm text-muted-foreground">
+      <span class="flex items-center gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="size-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        {location}
+      </span>
+      {
+        frequency && (
+          <span class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="size-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            {frequency}
+          </span>
+        )
+      }
+    </div>
+
+    <p class="text-muted-foreground mb-4 leading-relaxed">{description}</p>
+
+    {
+      tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {tags.map((tag: string) => (
+            <span class="tag-pill">{tag}</span>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      url && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center text-accent text-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded"
+        >
+          Visit meetup page
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="ml-1 size-4 transition-transform group-hover:translate-x-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+          </svg>
+        </a>
+      )
+    }
+  </div>
+</article>

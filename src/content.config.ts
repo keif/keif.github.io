@@ -4,6 +4,7 @@ import { SITE } from "@/config";
 
 export const BLOG_PATH = "src/data/blog";
 export const PROJECTS_PATH = "src/data/projects";
+export const MEETUPS_PATH = "src/data/meetups";
 
 const blog = defineCollection({
     loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${BLOG_PATH}` }),
@@ -44,4 +45,22 @@ const projects = defineCollection({
         }),
 });
 
-export const collections = { blog, projects };
+const meetups = defineCollection({
+    loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${MEETUPS_PATH}` }),
+    schema: () =>
+        z.object({
+            title: z.string(),
+            slug: z.string().optional(),
+            description: z.string(),
+            url: z.string().url().optional(),
+            location: z.string(),
+            frequency: z.string().optional(),
+            tags: z.array(z.string()).default([]),
+            active: z.boolean().default(true),
+            draft: z.boolean().optional(),
+            sourceUrl: z.string().url().optional(),
+            sourceAuthor: z.string().optional(),
+        }),
+});
+
+export const collections = { blog, projects, meetups };
