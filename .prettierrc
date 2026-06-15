@@ -1,8 +1,8 @@
 {
-  "eslintIntegration": true,
-  "printWidth": 120,
-  "quote-props": "always",
-  "singleQuote": false,
-  "tabWidth": 4,
-  "trailingComma": "es5"
+    "eslintIntegration": true,
+    "printWidth": 120,
+    "quote-props": "always",
+    "singleQuote": false,
+    "tabWidth": 4,
+    "trailingComma": "es5"
 }

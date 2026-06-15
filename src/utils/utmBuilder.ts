@@ -9,18 +9,18 @@
  * @returns A full URL with UTM params
  */
 export function buildUTMUrl(
-	baseUrl: string,
-	source: string,
-	medium: string,
-	campaign: string,
-	content?: string
+    baseUrl: string,
+    source: string,
+    medium: string,
+    campaign: string,
+    content?: string
 ): string {
-	const url = new URL(baseUrl);
-	url.searchParams.set("utm_source", source);
-	url.searchParams.set("utm_medium", medium);
-	url.searchParams.set("utm_campaign", campaign);
-	if (content) {
-		url.searchParams.set("utm_content", content);
-	}
-	return url.toString();
+    const url = new URL(baseUrl);
+    url.searchParams.set("utm_source", source);
+    url.searchParams.set("utm_medium", medium);
+    url.searchParams.set("utm_campaign", campaign);
+    if (content) {
+        url.searchParams.set("utm_content", content);
+    }
+    return url.toString();
 }

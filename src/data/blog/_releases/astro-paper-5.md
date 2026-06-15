@@ -1,13 +1,14 @@
 ---
-pubDatetime: 2025-03-08T08:18:19.693Z
 title: AstroPaper 5.0
+pubDatetime: 2025-03-08T08:18:19.693Z
+modDatetime: 2026-06-15T08:26:34.111Z
 slug: astro-paper-v5
 featured: true
 draft: true
-ogImage: ../../../assets/images/AstroPaper-v5.png
 tags:
-  - release
+    - release
 description: "AstroPaper v5: keep the clean look, updates under the hood."
+ogImage: ../../../assets/images/AstroPaper-v5.png
 ---
 
 At last, the long-awaited AstroPaper v5 is finally here. AstroPaper v5 keeps the same minimal & clean look, but comes with significant updates under the hood.
@@ -33,19 +34,19 @@ Additionally, the color palette across the UI has been updated. The new palette 
 ```css
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+    --background: #fdfdfd;
+    --foreground: #282728;
+    --accent: #006cac;
+    --muted: #e6e6e6;
+    --border: #ece9e9;
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60bf;
-  --border: #ab4b08;
+    --background: #212737;
+    --foreground: #eaedf3;
+    --accent: #ff6b01;
+    --muted: #343f60bf;
+    --border: #ab4b08;
 }
 ```
 
