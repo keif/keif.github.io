@@ -93,7 +93,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
         // legacy aliases for old tags redirecting to new sanitized tags
         const legacyAliases = Object.entries(legacyTagMap)
-            .filter(([oldTag, newTag]) => newTag === safeTag)
+            .filter(([, newTag]) => newTag === safeTag)
             .map(([oldTag]) => ({
                 params: { tag: oldTag },
                 props: { redirectTo: `/tags/${safeTag}/` },

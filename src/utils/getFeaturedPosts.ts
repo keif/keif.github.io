@@ -4,8 +4,8 @@ export async function getFeaturedPosts(limit = 6) {
     const posts = await getCollection("blog");
 
     // Separate evergreen and featured
-    const evergreen = posts.filter(p => p.data.evergreen);
-    const candidates = posts.filter(p => p.data.featured && !p.data.evergreen && !p.data.draft);
+    const evergreen = posts.filter((p) => p.data.evergreen);
+    const candidates = posts.filter((p) => p.data.featured && !p.data.evergreen && !p.data.draft);
 
     // Sort candidates by date (newest first)
     candidates.sort(
@@ -29,7 +29,7 @@ export async function getFeaturedPosts(limit = 6) {
     const slots = Math.max(limit - picked.length, 0);
 
     // Rotation: deterministic weekly rotation across the sorted candidates
-    let rotated: typeof candidates = [];
+    const rotated: typeof candidates = [];
     if (candidates.length > 0 && slots > 0) {
         const week = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
         const start = week % candidates.length;
