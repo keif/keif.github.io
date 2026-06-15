@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Header from "@/components/Header.astro"
+import Footer from "@/components/Footer.astro"
+import Datetime from "@/components/Datetime.astro"
+import Hr from "@/components/Hr.astro"
+import { SITE } from "@/config"
+
+const allEntries = await getCollection("overthinking", ({ data }) => !data.draft)
+
+const entries = allEntries.sort(
+    (a, b) => b.data.pubDatetime.getTime() - a.data.pubDatetime.getTime()
+)
+---
+
+<Layout
+    title={`Overthinking It | ${SITE.title}`}
+    description="Long-form essays and cultural criticism."
+>
+    <Header />
+    <main id="main-content" class="mx-auto w-full max-w-app px-4 md:px-8">
+        <section class="pt-12 pb-8">
+            <h1 class="text-4xl font-bold sm:text-5xl prose-headings mb-4">Overthinking It</h1>
+            <p class="text-lg text-muted-foreground max-w-3xl leading-relaxed">
+                Long-form takes on TV, film, music, and culture. Less hot take, more slow burn.
+            </p>
+        </section>
+
+        <Hr />
+
+        {
+            entries.length > 0 ? (
+                <section class="pt-8 pb-16">
+                    <ul class="space-y-10">
+                        {entries.map((entry) => (
+                            <li>
+                                <article>
+                                    <a
+                                        href={`/overthinking/${entry.id}`}
+                                        class="group block"
+                                    >
+                                        <h2 class="text-2xl font-semibold text-foreground group-hover:text-accent transition-colors prose-headings">
+                                            {entry.data.title}
+                                        </h2>
+                                    </a>
+                                    <div class="mt-2">
+                                        <Datetime
+                                            pubDatetime={entry.data.pubDatetime}
+                                            modDatetime={entry.data.modDatetime}
+                                            timezone={undefined}
+                                            size="sm"
+                                        />
+                                    </div>
+                                    <p class="mt-3 text-base text-muted-foreground leading-relaxed max-w-3xl">
+                                        {entry.data.description}
+                                    </p>
+                                </article>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            ) : (
+                <section class="pt-12 pb-16">
+                    <p class="text-muted-foreground text-center">Nothing posted yet. Check back soon.</p>
+                </section>
+            )
+        }
+    </main>
+    <Footer />
+</Layout>

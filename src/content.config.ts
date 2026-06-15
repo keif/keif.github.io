@@ -5,6 +5,7 @@ import { SITE } from "@/config";
 export const BLOG_PATH = "src/data/blog";
 export const PROJECTS_PATH = "src/data/projects";
 export const MEETUPS_PATH = "src/data/meetups";
+export const OVERTHINKING_PATH = "src/data/overthinking";
 
 const blog = defineCollection({
     loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${BLOG_PATH}` }),
@@ -63,4 +64,18 @@ const meetups = defineCollection({
         }),
 });
 
-export const collections = { blog, projects, meetups };
+const overthinking = defineCollection({
+    loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${OVERTHINKING_PATH}` }),
+    schema: () =>
+        z.object({
+            title: z.string(),
+            description: z.string(),
+            pubDatetime: z.date(),
+            modDatetime: z.date().optional().nullable(),
+            slug: z.string().optional(),
+            draft: z.boolean().optional(),
+            tags: z.array(z.string()).default([]),
+        }),
+});
+
+export const collections = { blog, projects, meetups, overthinking };
