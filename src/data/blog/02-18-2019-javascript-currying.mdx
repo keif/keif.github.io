@@ -1,18 +1,17 @@
 ---
-author: Keith Baker
-pubDatetime: 2019-02-18T00:00:00Z
-modDatetime: 2025-09-07T03:27:00Z
 title: JavaScript Currying Explained
+author: Keith Baker
+pubDatetime: 2019-02-18T00:00:00.000Z
+modDatetime: 2026-06-15T08:26:34.162Z
 slug: javascript-currying
 featured: true
 draft: false
 tags:
-  - javascript
-  - functions
-  - react
-  - currying
-description:
-  A discussion on currying and partial application in JavaScript with practical examples including React's connect and letter ciphering.
+    - javascript
+    - functions
+    - react
+    - currying
+description: A discussion on currying and partial application in JavaScript with practical examples including React's connect and letter ciphering.
 opImage: ../../assets//slack.png
 ---
 
@@ -26,6 +25,7 @@ If you’re familiar with `react-redux`, it has a `connect` HOC is used liked so
 `connect(mapStateToProps)(SomeComponent)`
 
 Its implementation might look like something like this:
+
 ```javascript
   const connect = (mstp, mdtp) => Component => {
   const someNewProps = mstp(state);
@@ -41,28 +41,30 @@ called _partial application_—and its actual mathematical meaning.
 Most of the time the difference is unimportant. But imagine a function that cyphers letters: you give it an offset, _o_ and a letter, and the output is a letter _o_ places away from the input letter.
 
 So `cypher(1, 'A')` would return `B`. `cypher(1, 'Z')` would return `A`
- 
-You can partially apply this function (usually synonymous with currying) by “binding” the first argument to a value. In JS you can do this with `.bind`: `cypher.bind(null, 1)` will return a function where the first argument is _always_ `1`. 
+
+You can partially apply this function (usually synonymous with currying) by “binding” the first argument to a value. In JS you can do this with `.bind`: `cypher.bind(null, 1)` will return a function where the first argument is _always_ `1`.
 (the `null` argument to `.bind` is used to re-bind `this` and probably should be avoided)
 
 ## Putting the two ideas together: our cypher function and partial application.
 
 If we have a string of letters that we want to cypher, we could do:
+
 ```javascript
-  "FRIENDS, ROMANS, COUNTRYMAN, LEND ME YOUR EARS"
-  .split('') // split into individual characters
-  .filter(isALetter) // remove characters that aren't letters, because you can't cypher commas etc
-  .map(cypher.bind(this, 1)) // cypher every letter in the string
-  .join('') // return it to a string
+"FRIENDS, ROMANS, COUNTRYMAN, LEND ME YOUR EARS"
+    .split("") // split into individual characters
+    .filter(isALetter) // remove characters that aren't letters, because you can't cypher commas etc
+    .map(cypher.bind(this, 1)) // cypher every letter in the string
+    .join(""); // return it to a string
 ```
+
 Which would return:
 `"GSJFOETSPNBOTDPVOUSZNFOMFOENFZPVSFBST"`
- 
+
 Which is the input string cyphered to the right by one place. F->G, R->S, etc.
 
 But we could create many different cyphers with different offsets
 
-*Ok, that’s partial application.*
+_Ok, that’s partial application._
 
 ## Currying is just a _tiny_ bit different.
 

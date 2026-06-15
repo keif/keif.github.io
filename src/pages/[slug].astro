@@ -1,7 +1,9 @@
 ---
+type PostModule = { frontmatter: { slug: string; aliases?: string[] } };
+
 export async function getStaticPaths() {
-  const posts = Object.values(import.meta.glob(['../data/blog/*.md', '../data/blog/*.mdx'], { eager: true }));
-  const aliasPaths = posts.flatMap((post: any) => {
+  const posts = Object.values(import.meta.glob<PostModule>(['../data/blog/*.md', '../data/blog/*.mdx'], { eager: true }));
+  const aliasPaths = posts.flatMap((post) => {
     const canonicalSlug = post.frontmatter.slug;
     const reserved = ["about", "archives", "now", "search", "tags"];
     const aliases = (post.frontmatter.aliases || []).filter(

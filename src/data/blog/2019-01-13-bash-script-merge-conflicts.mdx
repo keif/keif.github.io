@@ -1,21 +1,22 @@
 ---
-author: Keith Baker
-pubDatetime: 2019-01-13T12:00:00Z
-modDatetime: 2025-09-07T03:27:00Z
 title: Bash Script to Resolve Merge Conflicts
+author: Keith Baker
+pubDatetime: 2019-01-13T12:00:00.000Z
+modDatetime: 2026-06-15T08:26:34.333Z
 slug: bash-script-merge-conflicts
-aliases:
-  - bash-script-test-merge-conflicts
 featured: false
 tags:
-  - automation
-  - bash
-  - devops
-  - git
+    - automation
+    - bash
+    - devops
+    - git
 description: |
-  A script to automate resolution of common merge conflict patterns using bash.
+    A script to automate resolution of common merge conflict patterns using bash.
+aliases:
+    - bash-script-test-merge-conflicts
 ---
-import GistEmbed from '@/components/GistEmbed.astro';
+
+import GistEmbed from "@/components/GistEmbed.astro";
 
 A reoccuring problem I run into at work is handling multiple branches on a dev environment comprised of Java, JavaScript, SQL, and SCSS files.
 
@@ -28,13 +29,14 @@ But who has time for that? In that time, three new JavaScript frameworks were re
 Also, as the code example lives in a gist - my entry may not always match the code (which will be the most up-to-date version).
 
 ## What this script does:
+
 - for my needs, it checks out `develop` and pulls to be sure it's up to date
 - create a branch `test-merge` that is appended with the day/month/seconds
 - we reference a `branches.txt` file that holds the branches (each branch on a new line)
 - for each branch:
-  - ignores any `# comments`
-  - fetches the branch
-  - we merge (using `refs/remotes/origin/` so we don't need to check out each branch locally)
+    - ignores any `# comments`
+    - fetches the branch
+    - we merge (using `refs/remotes/origin/` so we don't need to check out each branch locally)
 - output "SUCCESS" or "FAIL" to `build-result.txt`
 - output the content of `build-result.txt`
 - we grep against the file to check if "FAIL" is present
@@ -42,6 +44,7 @@ Also, as the code example lives in a gist - my entry may not always match the co
 - checkout `develop` and delete `test-merge`
 
 ### What it still needs to do:
+
 - Stash and save the current code (in case you haven't committed yet) and apply when you're done
 - run from the current branch (saving the current branch, switching to `develop`, and switching back to your original branch)
 - fix the issue where it's applying to `develop`, requiring a `reset`

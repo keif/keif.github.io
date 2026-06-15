@@ -1,14 +1,15 @@
 ---
+title: AstroPaper 2.0
 author: Sat Naing
 pubDatetime: 2023-01-30T15:57:52.737Z
-title: AstroPaper 2.0
+modDatetime: 2026-06-15T08:26:33.985Z
 slug: astro-paper-2
-draft: true
 featured: false
-ogImage: https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png
+draft: true
 tags:
-  - release
+    - release
 description: AstroPaper with the enhancements of Astro v2. Type-safe markdown contents, bug fixes and better dev experience etc.
+ogImage: https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png
 ---
 
 Astro 2.0 has been released with some cool features, breaking changes, DX improvements, better error overlay and so on. AstroPaper takes advantage of those cool features, especially Content Collections API.
@@ -62,11 +63,11 @@ If a blog post doesn't have any tag (in other words, frontmatter property `tags`
 ```ts
 // src/contents/_schemas.ts
 export const blogSchema = z.object({
-  // ---
-  // replace "others" with whatever you want
-  tags: z.array(z.string()).default(["others"]),
-  ogImage: z.string().optional(),
-  description: z.string(),
+    // ---
+    // replace "others" with whatever you want
+    tags: z.array(z.string()).default(["others"]),
+    ogImage: z.string().optional(),
+    description: z.string(),
 });
 ```
 

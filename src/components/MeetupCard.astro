@@ -2,7 +2,7 @@
 import { slugifyStr } from "@/utils/slugify"
 import type { CollectionEntry } from "astro:content"
 
-export interface Props extends CollectionEntry<"meetups"> {}
+export type Props = CollectionEntry<"meetups">;
 
 const { data } = Astro.props
 const { title, description, url, location, frequency, tags = [], active } = data

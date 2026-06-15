@@ -1,17 +1,16 @@
 ---
-author: Keith Baker
-pubDatetime: 2020-06-17T00:00:00Z
-modDatetime: 2025-09-07T03:27:00Z
 title: Getting a List of Images
+author: Keith Baker
+pubDatetime: 2020-06-17T00:00:00.000Z
+modDatetime: 2026-06-15T08:26:33.903Z
 slug: getting-a-list-of-images
 draft: false
 tags:
-  - wget
-  - automation
-  - bash
-  - csv
-description:
-  Learn how to use wget and parallel to download thousands of images from a URL list, with setup instructions and syntax examples for macOS.
+    - wget
+    - automation
+    - bash
+    - csv
+description: Learn how to use wget and parallel to download thousands of images from a URL list, with setup instructions and syntax examples for macOS.
 opImage: ../../assets//code.jpeg
 ---
 
@@ -45,4 +44,4 @@ cat text_file.txt | parallel --gnu "wget {}"
 
 ...thanks to [StackOverflow](https://stackoverflow.com/questions/40986340/how-to-wget-a-list-of-urls-in-a-text-file) for this one, which would've sped up the process (I was attempting THOUSANDS of images). This ALSO requires you to install `parallel` as it's not a native OSX command, again, simply by `brew install parallel`.
 
-* [Additional reading and configuration of `wget`](https://linuxize.com/post/wget-command-examples/)
+- [Additional reading and configuration of `wget`](https://linuxize.com/post/wget-command-examples/)
