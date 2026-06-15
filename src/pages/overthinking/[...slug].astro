@@ -1,14 +1,15 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content"
 import OverthinkingDetails from "@/layouts/OverthinkingDetails.astro"
+import postFilter from "@/utils/postFilter"
 
 export interface Props {
     post: CollectionEntry<"overthinking">
 }
 
 export async function getStaticPaths() {
-    const entries = await getCollection("overthinking", ({ data }) => !data.draft)
-    return entries.map((post) => ({
+    const entries = await getCollection("overthinking")
+    return entries.filter(postFilter).map((post) => ({
         params: { slug: post.id },
         props: { post },
     }))

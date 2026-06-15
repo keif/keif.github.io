@@ -5,13 +5,14 @@ import Header from "@/components/Header.astro"
 import Footer from "@/components/Footer.astro"
 import Datetime from "@/components/Datetime.astro"
 import Hr from "@/components/Hr.astro"
+import postFilter from "@/utils/postFilter"
 import { SITE } from "@/config"
 
-const allEntries = await getCollection("overthinking", ({ data }) => !data.draft)
+const allEntries = await getCollection("overthinking")
 
-const entries = allEntries.sort(
-    (a, b) => b.data.pubDatetime.getTime() - a.data.pubDatetime.getTime()
-)
+const entries = allEntries
+    .filter(postFilter)
+    .sort((a, b) => b.data.pubDatetime.getTime() - a.data.pubDatetime.getTime())
 ---
 
 <Layout
