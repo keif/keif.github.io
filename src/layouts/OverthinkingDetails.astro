@@ -1,0 +1,136 @@
+---
+import { render, type CollectionEntry } from "astro:content"
+import Layout from "@/layouts/Layout.astro"
+import Header from "@/components/Header.astro"
+import Footer from "@/components/Footer.astro"
+import Datetime from "@/components/Datetime.astro"
+import ShareLinks from "@/components/ShareLinks.astro"
+import BackButton from "@/components/BackButton.astro"
+import BackToTopButton from "@/components/BackToTopButton.astro"
+import { slugifyStr } from "@/utils/slugify"
+import { SITE } from "@/config"
+import dayjs from "dayjs"
+import dayjsTimezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
+
+dayjs.extend(utc)
+dayjs.extend(dayjsTimezone)
+
+export interface Props {
+    post: CollectionEntry<"overthinking">
+}
+
+const { post } = Astro.props
+
+const { title, description, pubDatetime, modDatetime, tags } = post.data
+
+const { Content } = await render(post)
+
+const layoutProps = {
+    title: `${title} | ${SITE.title}`,
+    author: SITE.author,
+    description,
+    pubDatetime,
+    modDatetime,
+    scrollSmooth: true,
+}
+
+const isModified = modDatetime && modDatetime > pubDatetime
+const originalPubDate = dayjs(pubDatetime).tz(SITE.timezone).format("MMM D, YYYY")
+---
+
+<Layout {...layoutProps}>
+    <Header />
+    <BackButton />
+    <main
+        id="main-content"
+        class:list={["mx-auto w-full max-w-app px-4 pb-12", { "mt-8": !SITE.showBackButton }]}
+        data-pagefind-body
+    >
+        <h1 transition:name={slugifyStr(title)} class="inline-block text-2xl font-bold text-accent sm:text-3xl">
+            {title}
+        </h1>
+        <div class="my-2 flex items-center gap-2">
+            <Datetime {pubDatetime} {modDatetime} timezone={undefined} size="lg" />
+        </div>
+        <article
+            id="article"
+            class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        >
+            <Content />
+        </article>
+
+        <hr class="my-8 border-dashed" />
+
+        {isModified && (
+          <p class="text-xs text-muted-foreground mb-4 italic opacity-70">
+            Originally published {originalPubDate}
+          </p>
+        )}
+
+        {tags.length > 0 && (
+          <ul class="mt-4 mb-8 flex flex-wrap gap-2 sm:my-8">
+            {tags.map((tag) => (
+              <li class="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <BackToTopButton />
+
+        <ShareLinks campaign="overthinking_share" postUrl={Astro.url.pathname} />
+    </main>
+    <Footer />
+</Layout>
+
+<script is:inline data-astro-rerun>
+    function createProgressBar() {
+        const progressContainer = document.createElement("div")
+        progressContainer.className = "progress-container fixed top-0 z-10 h-1 w-full bg-background"
+
+        const progressBar = document.createElement("div")
+        progressBar.className = "progress-bar h-1 w-0 bg-accent"
+        progressBar.id = "myBar"
+
+        progressContainer.appendChild(progressBar)
+        document.body.appendChild(progressContainer)
+    }
+    createProgressBar()
+
+    function updateScrollProgress() {
+        document.addEventListener("scroll", () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight
+            const scrolled = (winScroll / height) * 100
+            if (document) {
+                const myBar = document.getElementById("myBar")
+                if (myBar) {
+                    myBar.style.width = scrolled + "%"
+                }
+            }
+        })
+    }
+    updateScrollProgress()
+
+    function addHeadingLinks() {
+        const headings = Array.from(document.querySelectorAll("h2, h3, h4, h5, h6"))
+        for (const heading of headings) {
+            heading.classList.add("group")
+            const link = document.createElement("a")
+            link.className =
+                "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
+            link.href = "#" + heading.id
+
+            const span = document.createElement("span")
+            span.ariaHidden = "true"
+            span.innerText = "#"
+            link.appendChild(span)
+            heading.appendChild(link)
+        }
+    }
+    addHeadingLinks()
+
+    document.addEventListener("astro:after-swap", () => window.scrollTo({ left: 0, top: 0, behavior: "instant" }))
+</script>
