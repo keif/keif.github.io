@@ -1,0 +1,48 @@
+---
+title: PRivity
+slug: privity
+description: A macOS menu bar app that keeps every GitHub pull request across all my repos in sight — review requests, my own PRs, approvals, drafts, deploys, issues — without ever switching tabs.
+url: https://fullybakedlabs.com/privity/
+image: /images/projects/privity.png
+tags:
+    - macos
+    - swift
+    - swiftui
+    - github
+    - menu-bar
+    - developer-tools
+    - sparkle
+    - personal
+launchDate: 2026-06-21
+status: ["launched", "beta"]
+relatedPosts:
+    - building-privity
+---
+
+PRivity is a free macOS menu bar app that surfaces everything happening across your GitHub pull requests — review requests, your own open PRs, approvals, draft changes, CI status, deploys, and issues — without ever switching tabs.
+
+It runs natively, signs in via GitHub's OAuth device flow, stores tokens in the macOS Keychain, and updates itself in the background via Sparkle.
+
+## Features
+
+- **PRs tab** — every PR that's yours, requested for your review, or assigned to you, across all repos and accounts
+- **Issues tab** — open GitHub Issues from per-account watched repos, filterable by repo
+- **Dashboard tab** — per-repo summary cards: open PR count, last commit, deploys today (Deployments API + Actions), GitHub Environments
+- **Smart filtering** — All / Review / Pending / Approved / Changes / Drafts. Approved-but-still-draft PRs go in Drafts, where they belong
+- **"Already approved" badge** — on review-requested PRs that another reviewer has already greenlit, so you know which queue items still block someone
+- **Block by org/user** — hide whole organizations (e.g. block work repos on your personal Mac, block side-project orgs on your work Mac)
+- **Native notifications** — review requests, change requests, approvals fire as system notifications
+- **GitHub Actions CI** — surfaces real CI status from the modern check-runs API, not just the legacy commit-status endpoint
+- **Multi-account** — switch between personal and work GitHub accounts; data is scoped per account
+- **Keyboard-driven** — ⌘1/2/3 switch tabs, ⌘R refreshes, ⌘, toggles Settings, ↑/↓ navigate the PR list, Return opens the selected PR
+
+## Technical stack
+
+- **Swift 5.9 + SwiftUI** targeting macOS 14+
+- **Sparkle** for code-signed auto-updates with EdDSA signatures
+- **macOS Keychain** for token storage (off-main-thread reads to avoid MDM stalls)
+- **GitHub REST API v3** — search, repos, commits, check-runs, deployments, environments, actions/runs
+- **Notarized + stapled** with Apple Developer ID, hardened runtime, secure timestamps
+- **Distributed** via DMG hosted on [fullybakedlabs.com/privity](https://fullybakedlabs.com/privity/) with a Sparkle appcast
+
+Free, no account on my end, no telemetry. [Download for macOS](https://fullybakedlabs.com/privity/) or read the [changelog](https://fullybakedlabs.com/privity/changelog/).
