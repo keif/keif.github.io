@@ -58,9 +58,9 @@ export const SOCIALS: Social[] = [
         icon: IconThreads,
     },
     {
-        name: "X",
+        name: "Xitter",
         href: "https://x.com/ikeif",
-        linkTitle: `${SITE.title} on X`,
+        linkTitle: `${SITE.title} on Xitter`,
         icon: IconBrandX,
     },
     {
