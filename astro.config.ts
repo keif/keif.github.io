@@ -59,7 +59,4 @@ export default defineConfig({
             }),
         },
     },
-    experimental: {
-        preserveScriptOrder: true,
-    },
 });
