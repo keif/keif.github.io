@@ -36,7 +36,7 @@ So I wrote my own implementation. Not a Chrome plugin (which felt sketchy in and
 
 But it's good enough for the fridge. Good job, champ! You made something!
 
-That's the [YouTube Playlist Generator](/posts/headless-youtube-playlist-generator/). The YouTube Downloader (which kind of inspired this post). The [image compression site](/posts/image-optimizer/) (hosted on [Hetzner](https://www.hetzner.com/), and runnable locally!). The random utility app with three users. The side project that solves one very specific problem for one very specific user.
+That's the [YouTube Playlist Generator](/posts/headless-youtube-playlist-generator/). The [YouTube Downloader](https://github.com/keif/ytdl) (which kind of inspired this post). The [image compression site](/posts/image-optimizer/) (hosted on [Hetzner](https://www.hetzner.com/), and runnable locally!). The random utility app with three users. The side project that solves one very specific problem for one very specific user.
 
 There's nothing wrong with that.
 
