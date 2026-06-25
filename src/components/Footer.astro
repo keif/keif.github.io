@@ -5,30 +5,30 @@ import Socials from "./Socials.astro";
 const currentYear = new Date().getFullYear();
 
 export interface Props {
-    noMarginTop?: boolean;
+  noMarginTop?: boolean;
 }
 
 const { noMarginTop = false } = Astro.props;
 ---
 
 <footer class:list={["w-full", { "mt-auto": !noMarginTop }]}>
-    <Hr noPadding />
-    <nav aria-label="Footer links" class="flex justify-center gap-6 pt-4 text-sm">
-        <a href="/tags/" class="hover:text-accent">Tags</a>
-    </nav>
-    <div
-        class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"
-    >
-        <Socials centered />
-        <div class="my-2 flex flex-col items-center sm:items-start">
-            <div class="flex flex-col items-center whitespace-nowrap sm:flex-row">
-                <span>Copyright &#169; {currentYear}</span>
-                <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-                <span>All rights reserved.</span>
-            </div>
-            <div class="mt-1 text-xs text-skin-base opacity-70">
-                <span>Some links may be affiliate links.</span>
-            </div>
-        </div>
+  <Hr noPadding />
+  <nav aria-label="Footer links" class="flex justify-center gap-6 pt-4 text-sm">
+    <a href="/tags/" class="hover:text-accent">Tags</a>
+  </nav>
+  <div
+    class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"
+  >
+    <Socials centered />
+    <div class="my-2 flex flex-col items-center sm:items-start">
+      <div class="flex flex-col items-center whitespace-nowrap sm:flex-row">
+        <span>Copyright &#169; {currentYear}</span>
+        <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
+        <span>All rights reserved.</span>
+      </div>
+      <div class="mt-1 text-xs text-skin-base opacity-70">
+        <span>Some links may be affiliate links.</span>
+      </div>
     </div>
+  </div>
 </footer>
