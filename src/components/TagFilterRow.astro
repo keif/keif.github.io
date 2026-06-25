@@ -11,7 +11,7 @@ const { activeTag } = Astro.props;
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 const topTags = getUniqueTags(posts)
     .slice()
-    .sort((a, b) => b.count - a.count)
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
     .slice(0, 8);
 ---
 
