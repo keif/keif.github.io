@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import getUniqueTags from "@/utils/getUniqueTags";
+
+export interface Props {
+    activeTag?: string;
+}
+
+const { activeTag } = Astro.props;
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const topTags = getUniqueTags(posts)
+    .slice()
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+---
+
+<nav aria-label="Browse posts by tag" class="my-4">
+    <ul class="flex flex-wrap gap-2 p-0 list-none">
+        {
+            topTags.map(({ tag, tagName }) => (
+                <li>
+                    <a
+                        href={`/tags/${tag}/`}
+                        class:list={[
+                            "inline-flex items-center rounded-full border border-border px-3 py-1 text-sm transition-colors hover:bg-accent hover:text-background",
+                            { "active-nav": activeTag === tag },
+                        ]}
+                    >
+                        {tagName}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</nav>
