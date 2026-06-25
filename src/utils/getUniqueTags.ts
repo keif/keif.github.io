@@ -13,8 +13,11 @@ const getUniqueTags = (posts: CollectionEntry<"blog">[]) => {
     const tagCounts = new Map<string, { tagName: string; count: number }>();
 
     for (const post of filteredPosts) {
+        const seenInThisPost = new Set<string>();
         for (const rawTag of post.data.tags) {
             const slug = slugifyStr(rawTag);
+            if (seenInThisPost.has(slug)) continue;
+            seenInThisPost.add(slug);
             const existing = tagCounts.get(slug);
             if (existing) {
                 existing.count += 1;
