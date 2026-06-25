@@ -7,6 +7,7 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
+import TagFilterRow from "@/components/TagFilterRow.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
 import { SITE } from "@/config";
@@ -128,6 +129,7 @@ const { page, tagName, redirectTo } = Astro.props;
                 pageDesc={`All the articles with the tag "${tagName}".`}
             >
                 <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
+                <TagFilterRow activeTag={tag} />
                 <ul>
                     {page && page.data.map((data) => (
                         <Card {...data} />
