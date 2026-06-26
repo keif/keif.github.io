@@ -5,7 +5,7 @@
     "packageManager": "pnpm@10.27.0",
     "pnpm": {
         "overrides": {
-            "svelte": "^5.55.7",
+            "svelte": "^5.56.4",
             "fast-uri": "^3.1.2",
             "fast-xml-builder": "^1.1.7",
             "fast-xml-parser": "^5.7.0",
