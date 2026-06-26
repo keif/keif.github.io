@@ -33,10 +33,19 @@ const BROKEN_CANONICAL_SLUGS = new Set([
 ]);
 
 const posts = await getCollection("blog", ({ data }) => !data.draft);
-const topTags = getUniqueTags(posts)
-    .filter(({ tag }) => !BROKEN_CANONICAL_SLUGS.has(tag))
+const safeTags = getUniqueTags(posts).filter(({ tag }) => !BROKEN_CANONICAL_SLUGS.has(tag));
+const topTags = safeTags
+    .slice()
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
     .slice(0, 8);
+
+// Ensure the active tag is always visible as a chip so the activeTag highlight
+// reflects "you are here" even on long-tail tag pages where the current tag
+// isn't in the top-8 by post count.
+if (activeTag && !topTags.some((t) => t.tag === activeTag)) {
+    const activeEntry = safeTags.find((t) => t.tag === activeTag);
+    if (activeEntry) topTags.push(activeEntry);
+}
 ---
 
 <nav aria-label="Browse posts by tag" class="my-4">
