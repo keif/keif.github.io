@@ -8,9 +8,34 @@ export interface Props {
 
 const { activeTag } = Astro.props;
 
+// Slugs whose canonical /tags/<slug>/ route is overwritten by a case-variant
+// legacyTagMap alias during getStaticPaths generation, leaving the page as a
+// redirect-to-self loop. Derived from src/pages/tags/[tag]/[...page].astro
+// legacyTagMap entries where key.toLowerCase() === value. Re-derive when those
+// entries change.
+const BROKEN_CANONICAL_SLUGS = new Set([
+    "accessibility",
+    "api",
+    "astro",
+    "cli",
+    "design",
+    "docker",
+    "go",
+    "hosting",
+    "infrastructure",
+    "logging",
+    "migration",
+    "python",
+    "react",
+    "shell",
+    "ux",
+    "vite",
+]);
+
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 const topTags = getUniqueTags(posts)
     .slice()
+    .filter(({ tag }) => !BROKEN_CANONICAL_SLUGS.has(tag))
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
     .slice(0, 8);
 ---
