@@ -1,0 +1,54 @@
+---
+title: ytdl
+slug: ytdl
+description: A self-hosted yt-dlp queue with a FastAPI backend and a React web UI. Paste a URL, hit Queue (or Enter), the job downloads. SQLite-backed queue survives restarts, SSE pushes progress to the UI, single-operator by design.
+url: https://github.com/keif/ytdl
+image: /images/projects/ytdl.png
+tags:
+    - python
+    - fastapi
+    - react
+    - typescript
+    - sqlite
+    - yt-dlp
+    - self-hosted
+    - cli
+    - personal
+launchDate: 2026-06-24
+status: ["beta"]
+relatedPosts:
+    - building-ytdl
+---
+
+A small persistent queue around `yt-dlp` for one user on their own machine. Paste a URL into the web UI, hit Queue (or Enter), and the input clears so you can move on to the next one. The job downloads in the background, progress streams to the UI live, and the queue survives restarts. A CLI ships with feature parity for headless / scripted use.
+
+Built for a single operator running it on their own LAN, behind Tailscale, or via SSH tunnel. Not designed to be hosted publicly — `SECURITY.md` leads with the threat-model reasoning.
+
+## Features
+
+- **Paste-and-go submit** — Queue button + Enter submit the moment the URL passes a shape check; preview keeps loading in parallel as informational context
+- **5-second auto-submit countdown** — hands-off fallback after preview resolves into a single-video preview
+- **Persistent SQLite queue** — jobs survive restarts; cancelled / failed / done states tracked with timestamps and attempt counts
+- **Playlist picker** — preview a playlist's contents, check the entries you want, queue the subset under a playlist parent (cancel the parent → cascade-cancel all children)
+- **Audio-only checkbox** — one click to pull just the audio for podcasts / music / lectures
+- **Subtitle support** — real subtitles in the user's locale + English fallback, embedded in the MP4 AND saved as sidecar `.vtt` for Plex / Jellyfin
+- **Per-job output directory** — Advanced disclosure with a "Save to" input; tilde expansion handled server-side, path validated before queuing
+- **Live progress via SSE** — percent, speed, ETA push to the UI without polling; persisted event IDs let the UI replay missed events after a reconnect
+- **30-second probe timeout, killable** — probes run in a subprocess with `subprocess.run` so a hung yt-dlp call gets terminated by the OS, not just abandoned. Three layered timeouts: yt-dlp's `socket_timeout`, the subprocess timeout, and an `asyncio.wait_for` backstop
+- **Cookies auto-detect** — startup probes for Chrome / Firefox / Safari / Brave / Edge cookie stores so age-gated content "just works"
+- **Docker self-host** — multi-stage build (Node web-build → uv slim Python with bundled ffmpeg), one `docker compose up`
+
+## Technical stack
+
+- **Python 3.12 + uv** for the backend and dependency management
+- **FastAPI + Uvicorn** for the HTTP API and SSE bus
+- **SQLite** in WAL mode for the job queue; ULID job IDs for monotonic creation order; schema migrations versioned forward
+- **yt-dlp** as a library (not a subprocess), with the EJS challenge solver opted in via `remote_components=["ejs:github"]`
+- **asyncio worker supervisor** with N configurable workers, per-attempt backoff, cooperative cancellation, and atomic claim via `UPDATE … RETURNING`. Probes run in a subprocess so the OS can terminate them when they hang — Python signals can't reach yt-dlp's non-interruptible C calls
+- **React 19 + TypeScript + Vite + Tailwind 3** for the frontend
+- **Typer** for the CLI (`ytdl get`, `ytdl queue add`, `ytdl preview`, etc.)
+- **deno** as the JS runtime for YouTube's "n" signature challenge
+
+One repo, two surfaces. The CLI and the web both call the same `enqueue`, `probe`, and `download` helpers — any feature that lands in the web UI works in the CLI within the same PR.
+
+See [Building ytdl](/posts/building-ytdl) for the design narrative, the AI-assisted development loop, and the bug stories.
