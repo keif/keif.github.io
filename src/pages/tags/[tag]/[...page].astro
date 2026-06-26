@@ -19,6 +19,10 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
     // legacy tag map for old tags to new tags
     // Maps old URL patterns (as crawled by Google) to canonical slugified tags
+    // NOTE: case-only-variant entries (e.g. "Python": "python") collide with the
+    // canonical route during static-path dedup. TagFilterRow keeps a parallel
+    // BROKEN_CANONICAL_SLUGS set to filter those from chips — update both if you
+    // add a new case-only-variant entry here.
     const legacyTagMap: Record<string, string> = {
         // Tags with dots/special characters
         "Socket.IO": "socket-io",

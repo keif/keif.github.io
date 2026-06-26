@@ -34,7 +34,6 @@ const BROKEN_CANONICAL_SLUGS = new Set([
 
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 const topTags = getUniqueTags(posts)
-    .slice()
     .filter(({ tag }) => !BROKEN_CANONICAL_SLUGS.has(tag))
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
     .slice(0, 8);
