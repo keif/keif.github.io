@@ -12,65 +12,11 @@ import getUniqueTags from "@/utils/getUniqueTags";
 import getPostsByTag from "@/utils/getPostsByTag";
 import { SITE } from "@/config";
 import sanitizeTag from "@/utils/sanitizeTag";
+import legacyTagMap from "@/utils/legacyTagMap";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     const posts = await getCollection("blog");
     const tags = getUniqueTags(posts);
-
-    // legacy tag map for old tags to new tags
-    // Maps old URL patterns (as crawled by Google) to canonical slugified tags
-    // NOTE: case-only-variant entries (e.g. "Python": "python") collide with the
-    // canonical route during static-path dedup. TagFilterRow keeps a parallel
-    // BROKEN_CANONICAL_SLUGS set to filter those from chips — update both if you
-    // add a new case-only-variant entry here.
-    const legacyTagMap: Record<string, string> = {
-        // Tags with dots/special characters
-        "Socket.IO": "socket-io",
-        "Node.js": "node-js",
-        "node.js": "node-js",
-        "next.js": "next-js",
-        "Fly.io": "fly-io",
-
-        // Tags with spaces
-        "Tailwind CSS": "tailwind-css",
-        "Spotify API": "spotify-api",
-        "Image Optimization": "image-optimization",
-        "Developer Experience": "developer-experience",
-        "Real-Time": "real-time",
-
-        // Tags with slashes
-        "CI/CD": "ci-cd",
-
-        // CamelCase/PascalCase tags
-        "BusyTag": "busy-tag",
-        "DevOps": "dev-ops",
-        "JavaScript": "java-script",
-        "TypeScript": "type-script",
-        "YouTube": "you-tube",
-        "ContextAPI": "context-api",
-        "ReactJS": "react-js",
-
-        // Simple case variants (uppercase to lowercase)
-        "Shell": "shell",
-        "Accessibility": "accessibility",
-        "CLI": "cli",
-        "Infrastructure": "infrastructure",
-        "Design": "design",
-        "UX": "ux",
-        "Vite": "vite",
-        "Go": "go",
-        "Logging": "logging",
-        "Migration": "migration",
-        "Hosting": "hosting",
-        "Docker": "docker",
-        "React": "react",
-        "Astro": "astro",
-        "API": "api",
-        "Python": "python",
-
-        // Legacy tag that no longer exists (redirect to closest match)
-        "node": "node-js",
-    };
 
     return tags.flatMap(({ tag: rawTag, tagName }) => {
         // skip "archives" tag to avoid conflict with /archives page
