@@ -86,9 +86,12 @@ async function captureScreenshot(browser, project) {
   const page = await context.newPage();
 
   try {
-    // Navigate to the page
+    // Navigate to the page. Use 'load' instead of 'networkidle' so we don't
+    // hang on apps with long-lived connections (SSE, WebSockets, polling) that
+    // keep the network "busy" forever. The explicit waitForTimeout below
+    // handles fonts/animations.
     await page.goto(targetUrl, {
-      waitUntil: 'networkidle',
+      waitUntil: 'load',
       timeout: WAIT_TIMEOUT,
     });
 
