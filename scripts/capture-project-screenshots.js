@@ -41,16 +41,42 @@ async function extractProjectData(filePath) {
   return {
     slug,
     url: data.url,
+    screenshotUrl: data.screenshotUrl,
     title: data.title,
     draft: data.draft || false,
   };
 }
 
+// Quick reachability probe so we don't try to screenshot a URL whose service
+// isn't running (typical for local-only projects). Any HTTP response counts as
+// "running" — Playwright handles redirects/error pages itself. Only connection
+// failures and timeouts cause us to skip.
+async function isUrlReachable(url, timeoutMs = 3000) {
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      signal: AbortSignal.timeout(timeoutMs),
+      redirect: 'manual',
+    });
+    // Drain so the connection closes cleanly
+    await res.body?.cancel().catch(() => {});
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function captureScreenshot(browser, project) {
-  const { slug, url, title } = project;
+  const { slug, url, screenshotUrl, title } = project;
+  const targetUrl = screenshotUrl || url;
 
   console.log(`\n📸 Capturing screenshot for: ${title}`);
-  console.log(`   URL: ${url}`);
+  console.log(`   URL: ${targetUrl}${screenshotUrl ? ' (screenshotUrl override)' : ''}`);
+
+  if (!(await isUrlReachable(targetUrl))) {
+    console.log(`   ⏭️  Skipped: ${targetUrl} not reachable (service not running?)`);
+    return { success: false, slug, error: 'URL not reachable', skipped: true };
+  }
 
   const context = await browser.newContext({
     viewport: VIEWPORT,
@@ -61,7 +87,7 @@ async function captureScreenshot(browser, project) {
 
   try {
     // Navigate to the page
-    await page.goto(url, {
+    await page.goto(targetUrl, {
       waitUntil: 'networkidle',
       timeout: WAIT_TIMEOUT,
     });
@@ -141,9 +167,14 @@ async function main() {
   console.log('📊 Summary\n');
 
   const successful = results.filter(r => r.success);
-  const failed = results.filter(r => !r.success);
+  const skipped = results.filter(r => r.skipped);
+  const failed = results.filter(r => !r.success && !r.skipped);
 
   console.log(`✅ Successful: ${successful.length}`);
+  if (skipped.length > 0) {
+    console.log(`⏭️  Skipped: ${skipped.length}`);
+    skipped.forEach(s => console.log(`   - ${s.slug}: ${s.error}`));
+  }
   if (failed.length > 0) {
     console.log(`❌ Failed: ${failed.length}`);
     failed.forEach(f => console.log(`   - ${f.slug}: ${f.error}`));

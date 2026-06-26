@@ -37,6 +37,10 @@ const projects = defineCollection({
             slug: z.string().optional(),
             description: z.string(),
             url: z.string().url(),
+            // Override URL used by scripts/capture-project-screenshots.js. Set
+            // when `url` is a canonical link that isn't useful to screenshot
+            // (e.g., a GitHub repo) and the actual UI lives somewhere local.
+            screenshotUrl: z.string().url().optional(),
             image: z.string().optional(),
             tags: z.array(z.string()).default([]),
             launchDate: z.date(),
