@@ -13,6 +13,9 @@ const { noMarginTop = false } = Astro.props;
 
 <footer class:list={["w-full", { "mt-auto": !noMarginTop }]}>
   <Hr noPadding />
+  <nav aria-label="Footer links" class="flex justify-center gap-6 pt-4 text-sm">
+    <a href="/tags/" class="hover:text-accent">Tags</a>
+  </nav>
   <div
     class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"
   >

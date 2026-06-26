@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import getUniqueTags from "@/utils/getUniqueTags";
+
+export interface Props {
+    activeTag?: string;
+}
+
+const { activeTag } = Astro.props;
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const allTags = getUniqueTags(posts);
+const topTags = allTags
+    .slice()
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
+    .slice(0, 8);
+
+// Ensure the active tag is always visible as a chip so the activeTag highlight
+// reflects "you are here" even on long-tail tag pages where the current tag
+// isn't in the top-8 by post count.
+if (activeTag && !topTags.some((t) => t.tag === activeTag)) {
+    const activeEntry = allTags.find((t) => t.tag === activeTag);
+    if (activeEntry) topTags.push(activeEntry);
+}
+---
+
+<nav aria-label="Browse posts by tag" class="my-4">
+    <ul class="flex flex-wrap gap-2 p-0 list-none">
+        {
+            topTags.map(({ tag, tagName }) => (
+                <li>
+                    <a
+                        href={`/tags/${tag}/`}
+                        class:list={[
+                            "inline-flex items-center rounded-full border border-border px-3 py-1 text-sm transition-colors hover:bg-accent hover:text-background",
+                            { "active-nav": activeTag === tag },
+                        ]}
+                    >
+                        {tagName}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</nav>

@@ -8,6 +8,7 @@ import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import PostsSortToggle from "@/components/PostsSortToggle.astro";
+import TagFilterRow from "@/components/TagFilterRow.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
 
@@ -22,6 +23,7 @@ const { page } = Astro.props;
 <Layout title={`Posts | ${SITE.title}`}>
   <Header />
   <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
+    <TagFilterRow />
     <PostsSortToggle currentSort="modified" />
     <ul>
       {page.data.map(data => <Card {...data} />)}
