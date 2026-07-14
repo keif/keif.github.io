@@ -1,0 +1,351 @@
+---
+title: "Building AS Bump Maker: From a Random Docker Image to a Deployed Site"
+pubDatetime: 2026-07-13T21:00:00.000Z
+modDatetime: 2026-07-14T23:16:44.980Z
+slug: building-as-bump-maker
+featured: false
+draft: false
+tags:
+    - Docker
+    - nginx
+    - ffmpeg-wasm
+    - GitHub Actions
+    - Coolify
+    - Caddy
+    - Cloudflare
+    - Reverse Engineering
+    - Claude Code
+    - Codex
+    - Dependabot
+description: |
+    Started from someone else's Docker image, extracted the container filesystem, kept the 3 files that actually mattered, and rebuilt everything around them: Dockerfile, docker-compose, GitHub-hosted repo with branch protection + CI + Dependabot + Codex review gate, a URL-load path for CC-licensed audio, and a Coolify deploy pipeline. Along the way, caught + fixed a latent config bug the CI smoke test surfaced on its first run — nginx's `add_header` inheritance rule was silently stripping the cross-origin isolation headers from `/index.html`, a landmine for anyone who ever bumped to the multi-threaded ffmpeg core.
+---
+
+import GitHubEmbed from "@/components/GitHubEmbed.astro";
+
+> **TL;DR**: Adopted `matthuey/as-bump-maker`'s Docker image, ripped the Alpine/nginx boilerplate off it, kept the four files that made it work, and rebuilt everything around them: Dockerfile, docker-compose, GitHub repo with branch protection + CI + Dependabot + a local Codex review gate, a URL-load path for CC-licensed audio, and a Coolify deploy on my Hetzner box. Also caught + fixed a latent config bug the CI smoke test surfaced on its first run — nginx's `add_header` inheritance rule was silently stripping the cross-origin isolation headers from `/index.html`. No user-visible symptom on today's single-threaded ffmpeg core, but a landmine for anyone who bumped to the multi-threaded core. Live at [as-bump.baker.is](https://as-bump.baker.is/). Bug stories at the bottom.
+
+I've had an [ErsatzTV](https://ersatztv.org/) install running for a while — it's the "pretend you have cable" thing that lets you build a fake linear channel out of your own library. What it doesn't do out of the box is give you the little in-between bumps that made channel-flipping in 1998 feel like an experience: the Adult Swim card, the promo cutaway, the "we now return you to your regularly scheduled…". I wanted to make those. Not import them, make them — brand card, timing, background loop, audio bed, done.
+
+There's a project on Docker Hub that does exactly this, but the git repo is… empty: [`matthuey/as-bump-maker`](https://github.com/Matthunker/as-bump-maker/). It's a browser-based implementation. You upload an audio track and a background image or video, add text cards with per-card durations, hit Export MP4, and it composites the whole thing client-side via `@ffmpeg/ffmpeg` WASM. No server, no upload — the browser does the rendering.
+
+The image works, but I wanted the source. I wanted it in a repo I could bump, patch, deploy on my own infrastructure, and reuse for future variants (Cartoon Network bumps, TCM bumps, a static-noise transition maker). And I wanted CI + branch protection + a review gate around it so future changes couldn't silently regress.
+
+So I started from the container.
+
+## Extracting the source from a running image
+
+The trick with `docker create` + `docker cp` is that you can extract the entire container filesystem to a local directory without ever running it:
+
+```sh
+docker pull matthuey/as-bump-maker
+docker create --name tmp matthuey/as-bump-maker
+docker cp tmp:/ /tmp/as-bump-maker
+docker rm tmp
+```
+
+Those steps gave me the complete filesystem the image would boot into, which for an `nginx:alpine`-based image is a **full Alpine Linux userland** — `bin/`, `sbin/`, `etc/`, `usr/`, `var/`, `lib/`, plus the OS marker files (`.dockerenv`, stock nginx configs, docker-entrypoint scripts). About 100 MB of stuff, 99% of which is the base image. (I've been delving more into base image configuration for other projects, so this was a useful rabbit hole I ended going down and thinking about)
+
+The actual application, once you know where to look (haha), is four files:
+
+- `usr/share/nginx/html/index.html` — 5 KB, the page markup
+- `usr/share/nginx/html/app.js` — 27 KB, the entire client-side app (canvas rendering, `@ffmpeg/ffmpeg` invocation, `MediaRecorder` orchestration)
+- `usr/share/nginx/html/style.css` — 7 KB, dark theme
+- `etc/nginx/conf.d/default.conf` — 20 lines of custom nginx config
+
+Everything else in the extracted tarball is stock Alpine + stock nginx + a docker entrypoint from `nginxinc/docker-nginx`. Deleting the cruft left me with a repo that's small enough to understand.
+
+## What was in the custom nginx config
+
+This is the part that told me what the app actually needs to run:
+
+```nginx
+server {
+  listen 80;
+  server_name _;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  # helps wasm/workers behave nicer
+  add_header Cross-Origin-Opener-Policy "same-origin" always;
+  add_header Cross-Origin-Embedder-Policy "require-corp" always;
+  add_header Cross-Origin-Resource-Policy "same-origin" always;
+
+  location = /index.html {
+    add_header Cache-Control "no-store" always;
+  }
+}
+```
+
+Those three headers set up **cross-origin isolation**, which is the prerequisite for `SharedArrayBuffer` — which in turn is what `@ffmpeg/ffmpeg`'s multi-threaded WASM build (`@ffmpeg/core-mt`) needs to run. This app actually loads the _single-threaded_ core (`@ffmpeg/core@0.12.10/dist/umd`), so it doesn't strictly need SAB to work today. But the config sets the headers anyway, which is defense in depth: the moment someone bumps a dep to the `-mt` core (a common change if you want faster exports on longer bumps), you want cross-origin isolation to already be in place.
+
+That comment — _"helps wasm/workers behave nicer"_ — is doing a lot of work. It's the only clue in the file that the config author _intended_ the page to be cross-origin isolated.
+
+## Building the repo around it
+
+Once I had the four files, the rest was standard scaffolding — but I did it deliberately so future variants can copy the same shape:
+
+```
+as-bump-maker/
+├── Dockerfile           # nginx:1.27-alpine + our conf + assets
+├── docker-compose.yml   # local dev, one service, port 8080:80
+├── default.conf         # the custom nginx server block
+├── index.html
+├── app.js
+├── style.css
+├── LICENSE              # MIT
+├── README.md
+├── CONTRIBUTING.md      # documents the AI-agent gate
+├── .gitignore
+├── .dockerignore
+├── .github/
+│   ├── workflows/docker.yml       # build + smoke test on PR, push GHCR on merge
+│   ├── dependabot.yml             # weekly Monday bumps for docker + gh-actions
+│   └── pull_request_template.md   # forces the AI-agent-gate checkbox
+└── deploy/
+    ├── docker-compose.yml   # production: Caddy + web
+    ├── Caddyfile            # {{DOMAIN}} placeholder
+    └── README.md            # Coolify + Caddy runbooks
+```
+
+The `Dockerfile` is short-and-sweet:
+
+```dockerfile
+FROM nginx:1.27-alpine
+
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY index.html app.js style.css /usr/share/nginx/html/
+
+EXPOSE 80
+```
+
+Only four lines because nginx's base image already sets `CMD ["nginx", "-g", "daemon off;"]` and runs its own entrypoint. Re-declaring that here would just be noise.
+
+## The CI setup
+
+The Docker workflow does two things on every PR against `main`:
+
+1. **Build** the image with `docker/build-push-action@v7` + GitHub Actions cache.
+2. **Smoke test**: run the image, `curl` the served pages, and _assert the COOP/COEP headers are actually present in the response_. That last part turned out to be the most valuable line of CI on the whole project — more on that in a minute.
+
+On merge to `main`, the same job additionally logs in to GHCR and publishes `ghcr.io/keif/as-bump-maker:latest` + `:<sha>` with OCI source labels linking back to the repo. Immutable per-sha tags make rollback trivial — just pin to a different SHA and redeploy!
+
+Branch protection on `main` (…you all ARE adding branch protections, right?):
+
+- Direct pushes blocked (all changes go through PRs)
+    - As a single-developer-lead project, this is overkill, but it also enforces a workflow I like to maintain, single dev or not.
+- The `Docker` build check is a **required status check**
+- Force pushes and branch deletion disabled
+- Admin bypass allowed (I'm the only maintainer, but it's unlikely this repo will ever need that)
+- 0 approving reviews required (solo repo)
+
+That's paired with a documented **local-only AI-agent review gate**. Every PR gets an independent second-opinion review from an AI-agent before I merge. This is deliberately not a CI job — automating it costs API tokens per PR, leaks source through Actions logs, and turns a nuanced review into a box-tick. The gate is a policy, not a pipeline. This is the kind of "use AI, but human reviews without having it be an AI-costly gatekeeping" process.
+
+Honestly, this workflow is becoming more and more repeatable as a SOP - from branch configuration to code reviews to general CI/CD setup. I'll likely end up repeating this configuration with future posts/projects, but I'll work on circling around to monitor/update earlier projects (a new project I'm working on - a dashboard of sorts - is in the works).
+
+## The latent config bug CI caught on day one
+
+CI's smoke test — the one that curls the served page and greps the response for `Cross-Origin-Embedder-Policy: require-corp` — **failed on the first run.** (Listen, I know people complain about "AI-writing tells" which leads to me using — more, but I refuse to use less **bold** and _italics_ to convince anyone of anything).
+
+The thing is, the site was serving. `curl http://localhost:8080/` returned 200 OK with the full HTML. The image built cleanly. Nginx was up. Everything looked fine except that the header the app needs was missing from the exact response the browser parses.
+
+The bug is evidently a classic nginx trip-up–looking again at the custom config:
+
+```nginx
+server {
+  # ... server-level add_header directives for COOP/COEP/CORP ...
+
+  location = /index.html {
+    add_header Cache-Control "no-store" always;
+  }
+}
+```
+
+**Nginx's `add_header` doesn't stack across scopes.** If you set _any_ `add_header` inside a location block, ALL inherited `add_header` directives from parent scopes are silently dropped for that location. The `always` flag doesn't control inheritance — it controls when to emit (all status codes vs just 2xx/3xx).
+
+So requests to `/`, which the `try_files` fallback internally rewrites to `/index.html`, matched the `location = /index.html` block, got _only_ `Cache-Control: no-store`, and lost the three cross-origin isolation headers.
+
+The consequence is subtle: `/index.html` is served without cross-origin isolation, even though the config clearly _intends_ to enable it. In practice, the current app kept working — it loads the single-threaded ffmpeg core (which doesn't require `SharedArrayBuffer`), and the primary MP4 export path goes through `MediaRecorder` directly without touching ffmpeg at all in Chrome. So the config bug had no user-visible symptom in this exact build.
+
+But the moment anyone bumped to `@ffmpeg/core-mt` — a change that could get faster exports on longer bumps — or added any other SAB-dependent API, the app would silently regress. It's a bug-bomb with a delayed fuse. And this same config had been shipping in the original Docker Hub image for as long as it had existed, waiting for the wrong dep bump.
+
+The fix: repeat the COOP/COEP/CORP headers inside the `location = /index.html` block alongside `Cache-Control`. Live from `main` at the SHA this post was written against:
+
+<GitHubEmbed
+    repo="keif/as-bump-maker"
+    path="default.conf"
+    ref="95a4e3c90770f7e196f36be3b9eadce5504c982f"
+    lines="17-26"
+/>
+
+CI green. First substantive commit on the branch.
+
+If I hadn't added the header assertion to the smoke test — if I'd stopped at "build compiles + response is 2xx" — I would have inherited the same latent config bug the original was shipping, and it would have detonated the next time someone reached for `-mt` or another cross-origin-isolated API. The lesson is that "the site loads" is not the same as "the site is configured the way you think it is." Modern web apps have semantic contracts (cross-origin isolation, CSP, service workers, permissions policy) that a plain 200 doesn't validate. Y'all are testing that, right?
+
+## Loading audio from a URL (the feature the original didn't have)
+
+The original app only accepted local file uploads. If you wanted to use a Creative Commons track from Pixabay Music, you had to download it, then re-upload it from the same browser tab. Two-step, annoying, and the download step often happens in a different tab / session than the upload.
+
+I wanted "paste a URL from any CC source, click Load, it's in the pipeline." That required three changes:
+
+### 1. Relax the COEP header
+
+The original config sets `Cross-Origin-Embedder-Policy: require-corp`, which is the strictest COEP value. Under `require-corp`, every cross-origin subresource _must_ opt in via a `Cross-Origin-Resource-Policy` header. In practice, no third-party audio CDN sets CORP correctly, so `require-corp` means the URL-load path fails for basically every source.
+
+I switched to `Cross-Origin-Embedder-Policy: credentialless`. That's a newer value (Chrome 96+, Firefox 119+, Safari 17.4+) that keeps `SharedArrayBuffer` available _and_ allows cross-origin fetches without requiring the source to opt in — as long as no credentials are sent. That's exactly the sweet spot for a static site that wants to fetch public audio from anywhere.
+
+### 2. The URL loader itself
+
+Added a `<input type="url">` next to the file picker with a Load button. The handler:
+
+<GitHubEmbed repo="keif/as-bump-maker" path="app.js" ref="95a4e3c90770f7e196f36be3b9eadce5504c982f" lines="449-504" />
+
+The fetched blob is wrapped in a `File` and threaded through the same `currentAudioFile` state variable that the file input feeds. That way the export pipeline (canvas + `captureStream` direct-mux, OR ffmpeg-wasm mux fallback) doesn't need to know or care about the source.
+
+### 3. The curated sources panel
+
+Added a collapsible `<details>` element listing six vetted CC / public-domain sources with license notes: Pixabay Music, Free Music Archive, ccMixter, Musopen, Internet Archive Audio, Jamendo. Pixabay is the pragmatically easiest — its CDN serves direct MP3 URLs with CORS headers set correctly. Some of the others hide the direct URL behind a player and require inspecting network traffic to find it.
+
+## The Codex review dance
+
+The URL-load PR was where the review gate paid for itself. I ran my custom skill `/codex review` on the branch four times before it converged. Each round found issues:
+
+- **Round 1**: Two `[P2]` findings. (1) The `Content-Type` sniffing was too strict — many CDNs serve MP3s as `application/octet-stream`, so the audio check needed to fall back to URL-path extension. (2) The Enter key on the URL input still fired the load handler even when the button was disabled, so overlapping loads could race.
+- **Round 2** (after fixing round 1): Two more `[P2]`s. (1) `video/*` MIME types could slip through and disrupt ffmpeg's stream selection in the mux fallback. (2) If a URL load was in-flight and the user picked a local file, the pending fetch would still resolve and clobber the newer selection. Fixed with an `AbortController` per load, cancelled by the file-input change handler.
+- **Round 3** (after my abort-controller fix): One `[P2]`. The cancel path called `abort()` and set the controller reference to `null`, but the aborted handler's `finally` block guarded UI reset on `urlLoadAbort === controller` — which was now `false`. So `urlLoadInFlight` stayed `true` and the Load button stayed disabled until page refresh. **My own fix introduced a new bug**, which is exactly what a review gate is supposed to catch. Fix: move the UI reset into the canceller so the state stays consistent.
+- **Round 4**: Clean. No findings.
+
+Five `[P2]`s total, all fixed. The convergence pattern — each fix creating the next issue until round four — is a completely normal shape for code that touches concurrent state. If I'd merged after round 1 or round 2, I'd have shipped a stuck-button regression. If I'd stopped iterating at round 3 because I was tired, same thing. These are the little testing gotchas that I feel a lot of developers miss - one pass, "did you fix those things? Okay, approved" without returning and revisiting. _Because it happens._
+
+## Codex's false-positive streak
+
+Codex is not an oracle. On this project it fired two confident `[P1]` claims that were factually wrong, and both would have blocked merge if I'd taken the gate literally without verifying.
+
+**False positive #1 — Dependabot bumped `actions/checkout` from v4 to v7.** Codex reviewed the PR and returned:
+
+> `actions/checkout@v7` does not currently resolve to a published checkout ref, so every push/PR run will fail while downloading the action before the Docker build starts. Pin this to an existing published major such as the latest available `v6` instead of `v7`.
+
+Except **the PR's own CI had already run green in 37 seconds** using `actions/checkout@v7` successfully. A quick `gh api repos/actions/checkout/releases/latest` confirmed v7.0.0 was published two weeks earlier. Codex's `web_search_cached` index had lagged the actual release. Overrode, merged, no problem.
+
+**False positive #2 — the GHCR settings URL in the deploy README.** Codex claimed I had the URL wrong (missing a `/package/` segment). I verified:
+
+```sh
+curl -sI "https://github.com/users/keif/packages/container/as-bump-maker/settings"
+# HTTP/2 302  ← correct behavior for an auth-gated settings page
+
+curl -sI "https://github.com/users/keif/packages/container/package/as-bump-maker/settings"
+# HTTP/2 404  ← the URL codex suggested
+```
+
+Overrode, merged. Both false positives followed the same pattern: Codex made a confident factual claim ("this API doesn't exist", "this URL is wrong") that fell apart the moment I fetched fresh evidence, highlighting you can't blindly believe/listen to AI's findings, you need to verify.
+
+The generalizable lesson: for any `[P1]` claim about the _existence_ of something (a package version, a URL, an API endpoint), spend the 10 seconds to verify with a concrete probe (`curl`, `gh api`, `docker manifest inspect`) before either fixing or overriding. Both times, the override was correct.
+
+## Deploying to Coolify
+
+I run [Coolify](https://coolify.io) on a Hetzner box for hobby stuff. Coolify uses Traefik under the hood for reverse proxy + auto-TLS via Let's Encrypt, so the Caddy setup I built for a bare-Linux deploy became "the alternative path" — Coolify users skip it entirely.
+
+The Coolify flow for this app is five UI steps:
+
+1. **+ New Resource → Docker Image**
+2. **Docker Image**: `ghcr.io/keif/as-bump-maker:latest`
+3. **Domains**: `as-bump.baker.is`
+4. **Ports Exposes**: `80` (the internal port nginx listens on)
+5. **Deploy**
+
+Coolify pulls the image from GHCR (public, so no auth), wires Traefik to route the domain to the container, and provisions a Let's Encrypt cert. First-time TLS takes 10-30 seconds. Traefik's `reverse_proxy` passes upstream response headers through unchanged, so the COOP/COEP/CORP headers our nginx sets still reach the browser and `SharedArrayBuffer` stays available.
+
+I also added a webhook step to the CI workflow that fires after every GHCR push on merges to `main`:
+
+```yaml
+- name: Trigger Coolify redeploy
+  if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  env:
+      COOLIFY_WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+  run: |
+      if [ -z "$COOLIFY_WEBHOOK_URL" ]; then
+        echo "COOLIFY_WEBHOOK_URL not set — skipping."
+        exit 0
+      fi
+      curl --fail-with-body -sS -X POST "$COOLIFY_WEBHOOK_URL"
+```
+
+The `if [ -z "$COOLIFY_WEBHOOK_URL" ]` guard means the workflow stays green for anyone forking the repo who doesn't use Coolify. For me, with the secret set, every merge to `main` now: builds → pushes to GHCR → hits the Coolify webhook → Coolify pulls the fresh image → zero-touch deploy. About 90 seconds end-to-end from git-push to live-in-browser.
+
+## The Cloudflare gotcha (of course)
+
+DNS lives on Cloudflare. First `dig` after adding the A record:
+
+```
+$ dig +short as-bump.baker.is
+104.21.34.56
+172.67.155.30
+```
+
+Those are Cloudflare edge IPs. The record was orange-clouded (Proxied), which means Cloudflare terminates TLS with its own cert and would break Coolify's Let's Encrypt HTTP-01 challenge. Flipped to gray cloud (DNS only) — 30 seconds later:
+
+```
+$ dig +short as-bump.baker.is
+xxx.xxx.xxx.xxx # commented out, minimal obfuscation, this isn't difficult to find, y'know?
+```
+
+That's the Hetzner box. Deploy in Coolify → cert provisioned in ~15 seconds → site live.
+
+The orange-cloud trap is the single most common cause of "why is my Let's Encrypt failing" support tickets on any self-hosted stack. Rule of thumb: if the destination has its own cert story (Coolify, k3s, any Caddy/Traefik/nginx-with-certbot setup), start on gray cloud, add orange later only if you also set Cloudflare's SSL/TLS mode to **Full (strict)**. "Flexible" mode breaks things in subtle ways.
+
+## What it does now
+
+Live at [as-bump.baker.is](https://as-bump.baker.is/).
+
+You get a canvas with a background (image or video, cover / contain, adjustable opacity), a stack of text cards with per-card durations and per-card position control (including a "DVD-logo bouncing" mode because of course), an audio track (upload OR paste a URL from any CC source), and an Export MP4 button that produces a fully-baked H.264/AAC file in 15-30 seconds. Resolution / FPS / font / fade / grain toggles for the rest.
+
+Example export I generated to test the URL-load path — a 15-second bump with a Pixabay Music lofi track:
+
+- 1920×1080, H.264 Baseline L4.0, 29.97 fps, 171 kbps video
+- 44.1 kHz stereo AAC-LC, 125 kbps audio
+- 553 KB total
+- Universal codec string (`avc1.420028, mp4a.40.2`) — plays in any browser or player without transcoding
+
+## The whole project in a paragraph
+
+Extracted four static files from a Docker Hub image. Wrapped them in a Dockerfile, a docker-compose, a GitHub repo with branch protection + required CI + Dependabot + a local Codex review gate + a PR template that enforces the gate. Caught a latent config bug via CI where nginx's `add_header` inheritance rule silently stripped cross-origin isolation from `/index.html` — no user-visible symptom on today's single-threaded ffmpeg core, but a landmine for any future bump to the multi-threaded core. Added URL-based audio loading with a curated free-source panel. Iterated with Codex through four review rounds catching five real concurrency and validation issues, and overrode two false positives after verifying with fresh evidence. Deployed to Coolify with auto-redeploy on merge, behind Cloudflare DNS (gray cloud, obviously). Total elapsed time: two evenings.
+
+The whole repo is public: [github.com/keif/as-bump-maker](https://github.com/keif/as-bump-maker).
+
+## Bug stories, in order of embarrassment
+
+### The `add_header` inheritance trap (worst — a creeping issue with a delayed fuse)
+
+Covered above. The lesson isn't just "know nginx's `add_header` rules" — it's that **CI needs to assert semantic contracts, not just successful builds.** If your app depends on specific response headers, curl for them in CI. If it depends on CSP directives being present, curl for them. If it depends on a service worker being served with the right MIME type, curl for it. **"HTTP 200" is not a specification.**
+
+### My URL-load abort refactor stuck the button (mid — introduced by my own fix)
+
+I added `AbortController` support to cancel in-flight URL loads when the user changed source another way. Great feature. Wrote it as a helper:
+
+```js
+function cancelInFlightUrlLoad() {
+    if (urlLoadAbort) {
+        urlLoadAbort.abort();
+        urlLoadAbort = null;
+    }
+}
+```
+
+The awaited load's `finally` block guarded its UI reset on `urlLoadAbort === controller`. After cancel, `urlLoadAbort` is `null`, so the guard fires false, so `urlLoadInFlight` stays `true` and the button stays disabled forever. Codex caught this on the next review round. Fix was moving the UI reset into `cancelInFlightUrlLoad()` itself so the canceller owns the state transition.
+
+The generalized version of this bug: **when you introduce a canceller for an async operation, the canceller has to own the state cleanup, not just abort the work.** If the awaited operation's cleanup path checks for identity ("am I still the current one?"), the canceller changing that identity to `null` means neither side runs the cleanup.
+
+### The Cloudflare orange-cloud (best — pure "everyone hits this once" - right? RIGHT?! I've hit it twice now…)
+
+Also covered above. I even flagged this exact gotcha in a note _before_ I set up the DNS record, then set it up, then dug and got Cloudflare edge IPs and went "…oh." Some traps are so canonical you can predict them and still fall in.
+
+---
+
+If you're curious about the app itself, [try it](https://as-bump.baker.is/). If you're curious about the repo scaffolding — Dockerfile + docker-compose + CI + branch protection + Dependabot + Codex gate + Coolify deploy — the source is [here](https://github.com/keif/as-bump-maker) and the deploy runbook covers both Coolify and bare-Linux (Caddy) paths in the `deploy/` folder.
+
+Next up: the aspect-ratio / quality / duration presets I punted on to get this out the door, and probably a variant for Cartoon Network-style bumps because now I want that too.
