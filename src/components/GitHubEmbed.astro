@@ -1,0 +1,298 @@
+---
+/**
+ * GitHubEmbed — inline a slice of a file from any public GitHub repo.
+ *
+ * Fetches the raw content at build time from raw.githubusercontent.com,
+ * slices to the requested line range, and syntax-highlights it locally
+ * using the same Shiki config as fenced code blocks in MDX posts.
+ * No client-side JavaScript. No third-party embed script. Fully static.
+ *
+ * Usage:
+ *
+ *   ```mdx
+ *   import GitHubEmbed from "@/components/GitHubEmbed.astro";
+ *
+ *   <!-- structured props (recommended) -->
+ *   <GitHubEmbed
+ *     repo="keif/as-bump-maker"
+ *     path="app.js"
+ *     ref="a1b2c3d"
+ *     lines="100-120"
+ *   />
+ *
+ *   <!-- or paste a GitHub blob URL directly -->
+ *   <GitHubEmbed url="https://github.com/keif/as-bump-maker/blob/a1b2c3d/app.js#L100-L120" />
+ *   ```
+ *
+ * Always pin `ref` to a commit SHA for blog posts — a branch ref means
+ * the post's code drifts every time the site is rebuilt. A dev-mode
+ * warning fires if ref is main / master / HEAD.
+ */
+
+import { Code } from "astro:components";
+import {
+    transformerNotationDiff,
+    transformerNotationHighlight,
+    transformerNotationWordHighlight,
+} from "@shikijs/transformers";
+
+interface Props {
+    /** Full GitHub blob URL. If provided, other structured props are ignored. */
+    url?: string;
+    /** owner/repo, e.g. "keif/as-bump-maker". */
+    repo?: string;
+    /** Repo-relative file path, e.g. "src/app.js". */
+    path?: string;
+    /** Commit SHA (recommended) or branch name. Defaults to "main". */
+    ref?: string;
+    /** Line range: "12-45" or single "42". Omit for whole file. */
+    lines?: string;
+    /** Language override; auto-detected from file extension if omitted. */
+    lang?: string;
+    /** Show the file path + line range header above the code. */
+    showFileMeta?: boolean;
+    /** Show the "View on GitHub" link below the code. */
+    showLink?: boolean;
+}
+
+// --- helpers ---
+
+interface EmbedTarget {
+    repo: string;
+    path: string;
+    ref: string;
+    lines?: string;
+}
+
+function parseBlobUrl(url: string): EmbedTarget {
+    // Expected format:
+    //   https://github.com/{owner}/{repo}/blob/{ref}/{path}[#L{start}[-L{end}]]
+    const parsed = new URL(url);
+    if (parsed.hostname !== "github.com") {
+        throw new Error(`GitHubEmbed: url must be a github.com URL (got ${parsed.hostname})`);
+    }
+    const segs = parsed.pathname.split("/").filter(Boolean);
+    // segs = [owner, repo, "blob", ref, ...pathParts]
+    if (segs.length < 5 || segs[2] !== "blob") {
+        throw new Error(`GitHubEmbed: url path must look like /{owner}/{repo}/blob/{ref}/{path} (got ${parsed.pathname})`);
+    }
+    const [owner, repoName, , ref, ...pathParts] = segs;
+    const repo = `${owner}/${repoName}`;
+    const path = pathParts.join("/");
+    // Hash may be "#L42" or "#L42-L60".
+    const hash = parsed.hash.replace(/^#/, "");
+    const lineMatch = hash.match(/^L(\d+)(?:-L(\d+))?$/);
+    const lines = lineMatch ? (lineMatch[2] ? `${lineMatch[1]}-${lineMatch[2]}` : lineMatch[1]) : undefined;
+    return { repo, path, ref, lines };
+}
+
+function parseLineRange(range: string): { start: number; end: number } {
+    const parts = range.split("-").map((n) => parseInt(n, 10));
+    if (parts.length === 0 || Number.isNaN(parts[0])) {
+        throw new Error(`GitHubEmbed: invalid lines="${range}"`);
+    }
+    const start = parts[0];
+    const end = parts.length > 1 && !Number.isNaN(parts[1]) ? parts[1] : start;
+    if (end < start) {
+        throw new Error(`GitHubEmbed: lines="${range}" — end (${end}) is before start (${start})`);
+    }
+    return { start, end };
+}
+
+const LANG_BY_EXT: Record<string, string> = {
+    js: "js",
+    mjs: "js",
+    cjs: "js",
+    ts: "ts",
+    tsx: "tsx",
+    jsx: "jsx",
+    html: "html",
+    htm: "html",
+    css: "css",
+    scss: "scss",
+    json: "json",
+    md: "md",
+    mdx: "mdx",
+    yml: "yaml",
+    yaml: "yaml",
+    sh: "bash",
+    bash: "bash",
+    zsh: "bash",
+    py: "python",
+    rb: "ruby",
+    go: "go",
+    rs: "rust",
+    swift: "swift",
+    kt: "kotlin",
+    java: "java",
+    php: "php",
+    sql: "sql",
+    dockerfile: "dockerfile",
+    conf: "nginx",
+    toml: "toml",
+    xml: "xml",
+    svg: "xml",
+};
+
+function detectLanguage(path: string): string {
+    const base = path.split("/").pop() ?? "";
+    if (base.toLowerCase() === "dockerfile") return "dockerfile";
+    if (base.toLowerCase() === "caddyfile") return "caddyfile";
+    const ext = base.includes(".") ? base.split(".").pop()?.toLowerCase() ?? "" : "";
+    return LANG_BY_EXT[ext] ?? "text";
+}
+
+// --- resolve props ---
+
+const {
+    url,
+    repo: propRepo,
+    path: propPath,
+    ref: propRef,
+    lines: propLines,
+    lang: langOverride,
+    showFileMeta = true,
+    showLink = true,
+} = Astro.props;
+
+let target: EmbedTarget;
+if (url) {
+    target = parseBlobUrl(url);
+    // Structured props can still override individual fields if both are set.
+    if (propRepo) target.repo = propRepo;
+    if (propPath) target.path = propPath;
+    if (propRef) target.ref = propRef;
+    if (propLines) target.lines = propLines;
+} else {
+    if (!propRepo || !propPath) {
+        throw new Error(`GitHubEmbed: either a "url" prop or both "repo" and "path" props are required.`);
+    }
+    target = {
+        repo: propRepo,
+        path: propPath,
+        ref: propRef ?? "main",
+        lines: propLines,
+    };
+}
+
+// Warn (build/dev only) if ref looks like a branch — the embed will freeze
+// to whatever the branch pointed at during the last site build.
+if (target.ref === "main" || target.ref === "master" || target.ref === "HEAD") {
+    // eslint-disable-next-line no-console
+    console.warn(
+        `[GitHubEmbed] ${target.repo}/${target.path} uses ref="${target.ref}" — pin to a commit SHA to freeze the snapshot.`,
+    );
+}
+
+// --- fetch + slice ---
+
+const rawUrl = `https://raw.githubusercontent.com/${target.repo}/${target.ref}/${target.path}`;
+const res = await fetch(rawUrl);
+if (!res.ok) {
+    throw new Error(`GitHubEmbed: fetch ${rawUrl} → ${res.status} ${res.statusText}`);
+}
+const fullContent = await res.text();
+
+let display = fullContent;
+let sliceInfo: { start: number; end: number } | null = null;
+if (target.lines) {
+    sliceInfo = parseLineRange(target.lines);
+    const all = fullContent.split("\n");
+    display = all.slice(sliceInfo.start - 1, sliceInfo.end).join("\n");
+}
+
+// --- derived display data ---
+
+const lang = langOverride ?? detectLanguage(target.path);
+
+// GitHub blob viewer link with the line range highlighted.
+const hashPart = sliceInfo
+    ? sliceInfo.start === sliceInfo.end
+        ? `#L${sliceInfo.start}`
+        : `#L${sliceInfo.start}-L${sliceInfo.end}`
+    : "";
+const blobUrl = `https://github.com/${target.repo}/blob/${target.ref}/${target.path}${hashPart}`;
+
+const metaLabel = sliceInfo
+    ? sliceInfo.start === sliceInfo.end
+        ? `${target.path}:L${sliceInfo.start}`
+        : `${target.path}:L${sliceInfo.start}-L${sliceInfo.end}`
+    : target.path;
+
+const linkLabel = sliceInfo
+    ? sliceInfo.start === sliceInfo.end
+        ? `View line ${sliceInfo.start} on GitHub`
+        : `View lines ${sliceInfo.start}-${sliceInfo.end} on GitHub`
+    : "View on GitHub";
+---
+
+<figure class="not-prose github-embed">
+    {
+        showFileMeta && (
+            <figcaption class="github-embed__meta">
+                <span class="github-embed__path">{metaLabel}</span>
+                <span class="github-embed__repo">{target.repo}@{target.ref.length === 40 ? target.ref.slice(0, 7) : target.ref}</span>
+            </figcaption>
+        )
+    }
+    <Code
+        code={display}
+        lang={lang as never}
+        themes={{ light: "min-light", dark: "night-owl" }}
+        defaultColor={false}
+        wrap={false}
+        transformers={[transformerNotationHighlight(), transformerNotationWordHighlight(), transformerNotationDiff({ matchAlgorithm: "v3" })]}
+    />
+    {
+        showLink && (
+            <a class="github-embed__link" href={blobUrl} target="_blank" rel="noopener noreferrer">
+                {linkLabel} <span aria-hidden="true">→</span>
+            </a>
+        )
+    }
+    <p style="font-size: 0.875em; color: #666; margin-top: 0.5rem;">
+        <em>
+            Note: This embedded Git contains the most up-to-date version of the script, which may differ slightly from
+            the explanation. And as it's a custom component, the appearance may vary as time goes on.
+        </em>
+    </p>
+</figure>
+
+<style is:global>
+    .app-prose .github-embed {
+        margin: 1.5em 0;
+    }
+    .app-prose .github-embed__meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 1em;
+        font-size: 0.8125em;
+        color: #6b7280;
+        margin-bottom: 0.375em;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .app-prose .github-embed__path {
+        overflow-wrap: anywhere;
+    }
+    .app-prose .github-embed__repo {
+        white-space: nowrap;
+        opacity: 0.8;
+    }
+    .app-prose .github-embed__link {
+        display: inline-block;
+        margin-top: 0.375em;
+        font-size: 0.8125em;
+        color: #6b7280;
+        text-decoration: none;
+    }
+    .app-prose .github-embed__link:hover {
+        color: inherit;
+        text-decoration: underline;
+    }
+    /* Neutralize prose margins on the <pre> inside so meta + code + link
+       read as one block. */
+    .app-prose .github-embed pre {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+</style>
